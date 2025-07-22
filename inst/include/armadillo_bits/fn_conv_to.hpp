@@ -29,19 +29,19 @@ class conv_to
   public:
   
   template<typename in_eT>
-  arma_frown("use as_scalar() instead") inline static out_eT from(const in_eT& in, const typename arma_scalar_only<in_eT>::result* junk = nullptr);
+  arma_frown("replace conv_to<...>::from(X) with as_scalar(X)") inline static out_eT from(const in_eT& in, const typename arma_scalar_only<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  arma_frown("use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  arma_frown("replace conv_to<...>::from(X) with as_scalar(X)") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  arma_frown("use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("replace conv_to<...>::from(X) with as_scalar(X)") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  arma_frown("use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  arma_frown("replace conv_to<...>::from(X) with as_scalar(X)") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  arma_frown("use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("replace conv_to<...>::from(X) with as_scalar(X)") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 

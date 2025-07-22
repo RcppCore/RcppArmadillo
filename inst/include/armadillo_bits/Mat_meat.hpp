@@ -5201,7 +5201,7 @@ Mat<eT>::Mat(const eOp<T1, eop_type>& X)
   
   init_cold();
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -5231,7 +5231,7 @@ Mat<eT>::operator=(const eOp<T1, eop_type>& X)
   
   init_warm(X.get_n_rows(), X.get_n_cols());
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -5260,7 +5260,7 @@ Mat<eT>::operator+=(const eOp<T1, eop_type>& X)
   
   if(bad_alias)  { const Mat<eT> tmp(X); return (*this).operator+=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -5289,7 +5289,7 @@ Mat<eT>::operator-=(const eOp<T1, eop_type>& X)
   
   if(bad_alias)  { const Mat<eT> tmp(X); return (*this).operator-=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -5335,7 +5335,7 @@ Mat<eT>::operator%=(const eOp<T1, eop_type>& X)
   
   if(bad_alias)  { const Mat<eT> tmp(X); return (*this).operator%=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     
@@ -5364,7 +5364,7 @@ Mat<eT>::operator/=(const eOp<T1, eop_type>& X)
   
   if(bad_alias)  { const Mat<eT> tmp(X); return (*this).operator/=(tmp); }
   
-  if(is_same_type<eop_type, eop_pow>::value)
+  if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
     constexpr bool eT_non_int = is_non_integral<eT>::value;
     

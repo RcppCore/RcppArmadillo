@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.6.1-1 (2025-07-21) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.1 (Caffe Mocha)
+    \itemize{
+      \item Fix for speed regression in \code{mean()}
+      \item Fix for detection of compiler configuration
+      \item Use of \code{pow} optimization now optional
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.6.0-1 (2025-07-02)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.0 (Caffe Mocha)
