@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-08) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.2 (Caffe Mocha)
+    \itemize{
+      \item Fix for corner-case speed regression in \code{sum()}
+      \item Better handling of OpenMP in \code{omit_nan()} and
+      \code{omit_nonfinite()}
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.6.1-1 (2025-07-21) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.1 (Caffe Mocha)
