@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));  // for consistency with op_pinv
   
-  if( (is_sym_size_ok) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
+  if( (is_sym_size_ok) && (arma_config::optimise_sym) )
     {
     do_sym = is_sym_expr<T1>::eval(expr.get_ref());
     

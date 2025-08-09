@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,10 +24,8 @@
 #if defined(ARMA_USE_FFTW3)
 
 template<typename cx_type, bool inverse>
-class fft_engine_wrapper
+struct fft_engine_wrapper
   {
-  public:
-  
   static constexpr uword threshold = 512;
   
   fft_engine_kissfft<cx_type,inverse>* worker_kissfft = nullptr;
@@ -47,7 +45,7 @@ class fft_engine_wrapper
     {
     arma_debug_sigprint();
     
-    const bool use_fftw3 = N_samples >= (threshold / N_exec);
+    const bool use_fftw3 = (N_samples >= (threshold / N_exec)) && (is_cx_fp16<cx_type>::no);
     
     worker_kissfft = (use_fftw3 == false) ? new fft_engine_kissfft<cx_type,inverse>(N_samples) : nullptr;
     worker_fftw3   = (use_fftw3 == true ) ? new fft_engine_fftw3  <cx_type,inverse>(N_samples) : nullptr;

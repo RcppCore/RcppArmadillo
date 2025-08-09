@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -5203,10 +5203,10 @@ Mat<eT>::Mat(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return; }
+    if(          X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return; }
     }
   
   eop_type::apply(*this, X);
@@ -5233,10 +5233,10 @@ Mat<eT>::operator=(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    if(          X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
   eop_type::apply(*this, X);
@@ -5262,10 +5262,10 @@ Mat<eT>::operator+=(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_plus(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_plus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    if(          X.aux == eT(2)   )  { eop_square::apply_inplace_plus(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_plus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
   eop_type::apply_inplace_plus(*this, X);
@@ -5291,10 +5291,10 @@ Mat<eT>::operator-=(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    if(          X.aux == eT(2)   )  { eop_square::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
   eop_type::apply_inplace_minus(*this, X);
@@ -5337,10 +5337,10 @@ Mat<eT>::operator%=(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_schur(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_schur(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    if(          X.aux == eT(2)   )  { eop_square::apply_inplace_schur(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_schur(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
   eop_type::apply_inplace_schur(*this, X);
@@ -5366,10 +5366,10 @@ Mat<eT>::operator/=(const eOp<T1, eop_type>& X)
   
   if(arma_config::optimise_powexpr && is_same_type<eop_type, eop_pow>::value)
     {
-    constexpr bool eT_non_int = is_non_integral<eT>::value;
+    constexpr bool eT_ok = is_real_or_cx<eT>::value;
     
-    if(               X.aux == eT(2)   )  { eop_square::apply_inplace_div(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
-    if(eT_non_int && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_div(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    if(          X.aux == eT(2)   )  { eop_square::apply_inplace_div(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
+    if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_div(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
   eop_type::apply_inplace_div(*this, X);

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,9 +44,9 @@ class spsolve_factoriser
   
   inline double rcond() const;
   
-  template<typename T1> inline bool factorise(const SpBase<typename T1::elem_type,T1>& A_expr, const spsolve_opts_base& settings = spsolve_opts_none(), const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr);
+  template<typename T1> inline bool factorise(const SpBase<typename T1::elem_type,T1>& A_expr, const spsolve_opts_base& settings = spsolve_opts_none(), const typename arma_blas_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr);
   
-  template<typename T1> inline bool solve(Mat<typename T1::elem_type>& X, const Base<typename T1::elem_type,T1>& B_expr, const typename arma_blas_type_only<typename T1::elem_type>::result* junk = nullptr);
+  template<typename T1> inline bool solve(Mat<typename T1::elem_type>& X, const Base<typename T1::elem_type,T1>& B_expr, const typename arma_blas_real_or_cx_only<typename T1::elem_type>::result* junk = nullptr);
   
   inline      spsolve_factoriser(const spsolve_factoriser&) = delete;
   inline void operator=         (const spsolve_factoriser&) = delete;

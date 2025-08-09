@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -85,7 +85,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && (is_cx_float<typename T1::elem_type>::yes || is_cx_double<typename T1::elem_type>::yes)),
+  (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes),
   Mat< std::complex<typename T1::pod_type> >
   >::result
 ifft2(const T1& A)
@@ -114,7 +114,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && (is_cx_float<typename T1::elem_type>::yes || is_cx_double<typename T1::elem_type>::yes)),
+  (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes),
   Mat< std::complex<typename T1::pod_type> >
   >::result
 ifft2(const T1& A, const uword n_rows, const uword n_cols)

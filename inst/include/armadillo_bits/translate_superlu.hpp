@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ namespace superlu
   void
   gssv(superlu_options_t* options, SuperMatrix* A, int* perm_c, int* perm_r, SuperMatrix* L, SuperMatrix* U, SuperMatrix* B, SuperLUStat_t* stat, superlu::int_t* info)
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value)
       {
@@ -70,7 +70,7 @@ namespace superlu
         GlobalLU_t* glu, mem_usage_t* mu, SuperLUStat_t* stat, superlu::int_t* info
        )
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
     
     if(is_float<eT>::value)
       {
@@ -112,7 +112,7 @@ namespace superlu
         GlobalLU_t* Glu, SuperLUStat_t* stat, superlu::int_t* info
        )
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
 
     if(is_float<eT>::value)
       {
@@ -146,7 +146,7 @@ namespace superlu
         SuperMatrix* B, SuperLUStat_t* stat, int* info
        )
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
 
     if(is_float<eT>::value)
       {
@@ -176,7 +176,7 @@ namespace superlu
   typename get_pod_type<eT>::result
   langs(char* norm, superlu::SuperMatrix* A)
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
     
     typedef typename get_pod_type<eT>::result T;
     
@@ -210,7 +210,7 @@ namespace superlu
   void
   gscon(char* norm, superlu::SuperMatrix* L, superlu::SuperMatrix* U, typename get_pod_type<eT>::result anorm, typename get_pod_type<eT>::result* rcond, superlu::SuperLUStat_t* stat, int* info)
     {
-    arma_type_check(( is_supported_blas_type<eT>::value == false ));
+    arma_type_check(( is_blas_type<eT>::value == false ));
 
     if(is_float<eT>::value)
       {

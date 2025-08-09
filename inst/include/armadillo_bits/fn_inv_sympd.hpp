@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_spd_default> >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_spd_default> >::result
 inv_sympd
   (
   const Base<typename T1::elem_type, T1>& X
@@ -39,7 +39,7 @@ inv_sympd
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, bool >::result
 inv_sympd
   (
          Mat<typename T1::elem_type>&    out,
@@ -64,7 +64,7 @@ inv_sympd
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_spd_full> >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_spd_full> >::result
 inv_sympd
   (
   const Base<typename T1::elem_type, T1>& X,
@@ -80,7 +80,7 @@ inv_sympd
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, bool >::result
 inv_sympd
   (
          Mat<typename T1::elem_type>&    out,
@@ -105,7 +105,7 @@ inv_sympd
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, bool >::result
 inv_sympd
   (
          Mat<typename T1::elem_type>&    out_inv,

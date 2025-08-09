@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -78,13 +78,8 @@
 #endif
 
 
-#if !defined(ARMA_HAVE_CXX11)
-  #error "*** C++11 compiler required; enable C++11 mode in your compiler, or use an earlier version of Armadillo"
-#endif
-
-
-#if (!defined(ARMA_HAVE_CXX14)) && (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
-  #pragma message ("INFO: support for C++11 is deprecated; minimum recommended standard is C++14")
+#if !defined(ARMA_HAVE_CXX14)
+  #error "*** C++14 compiler required; enable C++14 mode in your compiler, or use an earlier version of Armadillo"
 #endif
 
 

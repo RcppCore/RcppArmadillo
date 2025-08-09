@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,15 +20,14 @@
 //! @{
 
 
-class spop_norm
+struct spop_norm
   : public traits_op_default
   {
-  public:
-  
   template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_1(const SpMat<eT>& X);
 
-  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename arma_real_only<eT>::result* junk = nullptr);
-  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename   arma_cx_only<eT>::result* junk = nullptr);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename       arma_blas_real_only<eT>::result* junk = nullptr);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename         arma_blas_cx_only<eT>::result* junk = nullptr);
+  template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_2(const SpMat<eT>& X, const typename arma_fp16_real_or_cx_only<eT>::result* junk = nullptr);
 
   template<typename eT> inline static typename get_pod_type<eT>::result mat_norm_inf(const SpMat<eT>& X);
   

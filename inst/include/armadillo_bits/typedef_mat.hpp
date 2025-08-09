@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,6 +98,20 @@ typedef Col <cx_double> cx_colvec;
 typedef Row <cx_double> cx_rowvec;
 typedef Cube<cx_double> cx_cube;
 
+#if defined(ARMA_HAVE_FP16)
+typedef Mat <fp16> hmat;
+typedef Col <fp16> hvec;
+typedef Col <fp16> hcolvec;
+typedef Row <fp16> hrowvec;
+typedef Cube<fp16> hcube;
+
+typedef Mat <cx_fp16> cx_hmat;
+typedef Col <cx_fp16> cx_hvec;
+typedef Col <cx_fp16> cx_hcolvec;
+typedef Row <cx_fp16> cx_hrowvec;
+typedef Cube<cx_fp16> cx_hcube;
+#endif
+
 
 
 typedef SpMat <uword> sp_umat;
@@ -139,6 +153,19 @@ typedef SpMat <cx_double> sp_cx_mat;
 typedef SpCol <cx_double> sp_cx_vec;
 typedef SpCol <cx_double> sp_cx_colvec;
 typedef SpRow <cx_double> sp_cx_rowvec;
+
+#if defined(ARMA_HAVE_FP16)
+typedef SpMat <fp16> sp_hmat;
+typedef SpCol <fp16> sp_hvec;
+typedef SpCol <fp16> sp_hcolvec;
+typedef SpRow <fp16> sp_hrowvec;
+
+typedef SpMat <cx_fp16> sp_cx_hmat;
+typedef SpCol <cx_fp16> sp_cx_hvec;
+typedef SpCol <cx_fp16> sp_cx_hcolvec;
+typedef SpRow <cx_fp16> sp_cx_hrowvec;
+#endif
+
 
 
 //! @}

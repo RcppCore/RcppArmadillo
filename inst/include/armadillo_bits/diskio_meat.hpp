@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,7 +22,7 @@
 
 //! Generate the first line of the header used for saving matrices in text format.
 //! Format: "ARMA_MAT_TXT_ABXYZ".
-//! A is one of: I (for integral types) or F (for floating point types).
+//! A is one of: I (for integral types) or F (for floating point types)
 //! B is one of: U (for unsigned types), S (for signed types), N (for not applicable) or C (for complex types).
 //! XYZ specifies the width of each element in terms of bytes, eg. "008" indicates eight bytes.
 template<typename eT>
@@ -40,8 +40,10 @@ diskio::gen_txt_header(const Mat<eT>&)
   const char* ARMA_MAT_TXT_IS004 = "ARMA_MAT_TXT_IS004";
   const char* ARMA_MAT_TXT_IU008 = "ARMA_MAT_TXT_IU008";
   const char* ARMA_MAT_TXT_IS008 = "ARMA_MAT_TXT_IS008";
+  const char* ARMA_MAT_TXT_FN002 = "ARMA_MAT_TXT_FN002";
   const char* ARMA_MAT_TXT_FN004 = "ARMA_MAT_TXT_FN004";
   const char* ARMA_MAT_TXT_FN008 = "ARMA_MAT_TXT_FN008";
+  const char* ARMA_MAT_TXT_FC004 = "ARMA_MAT_TXT_FC004";
   const char* ARMA_MAT_TXT_FC008 = "ARMA_MAT_TXT_FC008";
   const char* ARMA_MAT_TXT_FC016 = "ARMA_MAT_TXT_FC016";
   
@@ -59,8 +61,10 @@ diskio::gen_txt_header(const Mat<eT>&)
   else if(is_slng_t_32<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_IS004); }
   else if(is_ulng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_IU008); }
   else if(is_slng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_IS008); }
+  else if(     is_fp16<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FN002); }
   else if(    is_float<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FN004); }
   else if(   is_double<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FN008); }
+  else if(  is_cx_fp16<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FC004); }
   else if( is_cx_float<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FC008); }
   else if(is_cx_double<eT>::value)  { header = const_cast<char*>(ARMA_MAT_TXT_FC016); }
   
@@ -89,8 +93,10 @@ diskio::gen_bin_header(const Mat<eT>&)
   const char* ARMA_MAT_BIN_IS004 = "ARMA_MAT_BIN_IS004";
   const char* ARMA_MAT_BIN_IU008 = "ARMA_MAT_BIN_IU008";
   const char* ARMA_MAT_BIN_IS008 = "ARMA_MAT_BIN_IS008";
+  const char* ARMA_MAT_BIN_FN002 = "ARMA_MAT_BIN_FN002";
   const char* ARMA_MAT_BIN_FN004 = "ARMA_MAT_BIN_FN004";
   const char* ARMA_MAT_BIN_FN008 = "ARMA_MAT_BIN_FN008";
+  const char* ARMA_MAT_BIN_FC004 = "ARMA_MAT_BIN_FC004";
   const char* ARMA_MAT_BIN_FC008 = "ARMA_MAT_BIN_FC008";
   const char* ARMA_MAT_BIN_FC016 = "ARMA_MAT_BIN_FC016";  
   
@@ -108,8 +114,10 @@ diskio::gen_bin_header(const Mat<eT>&)
   else if(is_slng_t_32<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_IS004); }
   else if(is_ulng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_IU008); }
   else if(is_slng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_IS008); }
+  else if(     is_fp16<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FN002); }
   else if(    is_float<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FN004); }
   else if(   is_double<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FN008); }
+  else if(  is_cx_fp16<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FC004); }
   else if( is_cx_float<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FC008); }
   else if(is_cx_double<eT>::value)  { header = const_cast<char*>(ARMA_MAT_BIN_FC016); }
   
@@ -138,10 +146,12 @@ diskio::gen_bin_header(const SpMat<eT>&)
   const char* ARMA_SPM_BIN_IS004 = "ARMA_SPM_BIN_IS004";
   const char* ARMA_SPM_BIN_IU008 = "ARMA_SPM_BIN_IU008";
   const char* ARMA_SPM_BIN_IS008 = "ARMA_SPM_BIN_IS008";
+  const char* ARMA_SPM_BIN_FN002 = "ARMA_SPM_BIN_FN002";
   const char* ARMA_SPM_BIN_FN004 = "ARMA_SPM_BIN_FN004";
   const char* ARMA_SPM_BIN_FN008 = "ARMA_SPM_BIN_FN008";
+  const char* ARMA_SPM_BIN_FC004 = "ARMA_SPM_BIN_FC004";
   const char* ARMA_SPM_BIN_FC008 = "ARMA_SPM_BIN_FC008";
-  const char* ARMA_SPM_BIN_FC016 = "ARMA_SPM_BIN_FC016";  
+  const char* ARMA_SPM_BIN_FC016 = "ARMA_SPM_BIN_FC016";
   
   char* header = nullptr;
   
@@ -157,8 +167,10 @@ diskio::gen_bin_header(const SpMat<eT>&)
   else if(is_slng_t_32<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_IS004); }
   else if(is_ulng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_IU008); }
   else if(is_slng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_IS008); }
+  else if(     is_fp16<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FN002); }
   else if(    is_float<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FN004); }
   else if(   is_double<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FN008); }
+  else if(  is_cx_fp16<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FC004); }
   else if( is_cx_float<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FC008); }
   else if(is_cx_double<eT>::value)  { header = const_cast<char*>(ARMA_SPM_BIN_FC016); }
   
@@ -186,8 +198,10 @@ diskio::gen_txt_header(const Cube<eT>&)
   const char* ARMA_CUB_TXT_IS004 = "ARMA_CUB_TXT_IS004";
   const char* ARMA_CUB_TXT_IU008 = "ARMA_CUB_TXT_IU008";
   const char* ARMA_CUB_TXT_IS008 = "ARMA_CUB_TXT_IS008";
+  const char* ARMA_CUB_TXT_FN002 = "ARMA_CUB_TXT_FN002";
   const char* ARMA_CUB_TXT_FN004 = "ARMA_CUB_TXT_FN004";
   const char* ARMA_CUB_TXT_FN008 = "ARMA_CUB_TXT_FN008";
+  const char* ARMA_CUB_TXT_FC004 = "ARMA_CUB_TXT_FC004";
   const char* ARMA_CUB_TXT_FC008 = "ARMA_CUB_TXT_FC008";
   const char* ARMA_CUB_TXT_FC016 = "ARMA_CUB_TXT_FC016";
   
@@ -205,8 +219,10 @@ diskio::gen_txt_header(const Cube<eT>&)
   else if(is_slng_t_32<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_IS004); }
   else if(is_ulng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_IU008); }
   else if(is_slng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_IS008); }
+  else if(     is_fp16<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FN002); }
   else if(    is_float<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FN004); }
   else if(   is_double<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FN008); }
+  else if(  is_cx_fp16<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FC004); }
   else if( is_cx_float<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FC008); }
   else if(is_cx_double<eT>::value)  { header = const_cast<char*>(ARMA_CUB_TXT_FC016); }
   
@@ -235,8 +251,10 @@ diskio::gen_bin_header(const Cube<eT>&)
   const char* ARMA_CUB_BIN_IS004 = "ARMA_CUB_BIN_IS004";
   const char* ARMA_CUB_BIN_IU008 = "ARMA_CUB_BIN_IU008";
   const char* ARMA_CUB_BIN_IS008 = "ARMA_CUB_BIN_IS008";
+  const char* ARMA_CUB_BIN_FN002 = "ARMA_CUB_BIN_FN002";
   const char* ARMA_CUB_BIN_FN004 = "ARMA_CUB_BIN_FN004";
   const char* ARMA_CUB_BIN_FN008 = "ARMA_CUB_BIN_FN008";
+  const char* ARMA_CUB_BIN_FC004 = "ARMA_CUB_BIN_FC004";
   const char* ARMA_CUB_BIN_FC008 = "ARMA_CUB_BIN_FC008";
   const char* ARMA_CUB_BIN_FC016 = "ARMA_CUB_BIN_FC016";
   
@@ -254,8 +272,10 @@ diskio::gen_bin_header(const Cube<eT>&)
   else if(is_slng_t_32<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_IS004); }
   else if(is_ulng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_IU008); }
   else if(is_slng_t_64<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_IS008); }
+  else if(     is_fp16<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FN002); }
   else if(    is_float<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FN004); }
   else if(   is_double<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FN008); }
+  else if(  is_cx_fp16<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FC004); }
   else if( is_cx_float<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FC008); }
   else if(is_cx_double<eT>::value)  { header = const_cast<char*>(ARMA_CUB_BIN_FC016); }
   
@@ -655,7 +675,7 @@ diskio::prepare_stream(std::ostream& f)
     
     // NOTE: for 'float' the optimum settings are f.precision(8) and cell_width = 15
     // NOTE: however, to avoid introducing errors in case single precision data is loaded as double precision,
-    // NOTE: the same settings must be used for both 'float' and 'double'
+    // NOTE: the same settings must be used for both 'float' and 'double' (and other floating-point types)
     }
   else
   if(is_cx<eT>::value)

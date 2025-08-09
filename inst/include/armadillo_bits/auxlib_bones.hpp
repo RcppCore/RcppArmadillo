@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,10 +21,8 @@
 
 
 //! low-level interface functions for accessing LAPACK
-class auxlib
+struct auxlib
   {
-  public:
-  
   //
   // inv
   
@@ -188,12 +186,6 @@ class auxlib
   template<typename eT>
   inline static bool chol_band(Mat<eT>& X, const uword KD, const uword layout);
   
-  template<typename  T>
-  inline static bool chol_band(Mat< std::complex<T> >& X, const uword KD, const uword layout);
-  
-  template<typename eT>
-  inline static bool chol_band_common(Mat<eT>& X, const uword KD, const uword layout);
-  
   template<typename eT>
   inline static bool chol_pivot(Mat<eT>& X, Mat<uword>& P, const uword layout);
   
@@ -299,9 +291,6 @@ class auxlib
   inline static bool solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
   
   template<typename T1>
-  inline static bool solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
-  
-  template<typename T1>
   inline static bool solve_sympd_rcond(Mat<typename T1::pod_type>& out, bool& out_sympd_state, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr);
   
   template<typename T1>
@@ -340,22 +329,10 @@ class auxlib
   //
   
   template<typename T1>
-  inline static bool solve_band_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const uword KL, const uword KU, const Base<typename T1::pod_type,T1>& B_expr);
+  inline static bool solve_band_fast(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr);
   
   template<typename T1>
-  inline static bool solve_band_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const uword KL, const uword KU, const Base< std::complex<typename T1::pod_type>,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_band_fast_common(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_band_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const uword KL, const uword KU, const Base<typename T1::pod_type,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_band_rcond(Mat< std::complex<typename T1::pod_type> >& out, typename T1::pod_type& out_rcond, Mat< std::complex<typename T1::pod_type> >& A, const uword KL, const uword KU, const Base< std::complex<typename T1::pod_type>,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr);
+  inline static bool solve_band_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr);
   
   template<typename T1>
   inline static bool solve_band_refine(Mat<typename T1::pod_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const uword KL, const uword KU, const Base<typename T1::pod_type,T1>& B_expr, const bool equilibrate);
@@ -366,13 +343,7 @@ class auxlib
   //
   
   template<typename T1>
-  inline static bool solve_tridiag_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_tridiag_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const Base< std::complex<typename T1::pod_type>,T1>& B_expr);
-  
-  template<typename T1>
-  inline static bool solve_tridiag_fast_common(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
+  inline static bool solve_tridiag_fast(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr);
   
   
   //
@@ -457,9 +428,6 @@ class auxlib
   
   //
   // misc
-  
-  template<typename T1>
-  inline static bool crippled_lapack(const Base<typename T1::elem_type, T1>&);
   
   template<typename eT>
   inline static bool rudimentary_sym_check(const Mat<eT>& X);

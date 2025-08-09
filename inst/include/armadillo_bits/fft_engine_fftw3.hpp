@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,16 +31,14 @@ struct fft_engine_fftw3_aux
   };
 
 template<typename cx_type, bool inverse>
-class fft_engine_fftw3
+struct fft_engine_fftw3
   {
-  public:
+  static constexpr int fftw3_sign_forward  = -1;
+  static constexpr int fftw3_sign_backward = +1;
   
-  constexpr static int fftw3_sign_forward  = -1;
-  constexpr static int fftw3_sign_backward = +1;
-  
-  constexpr static unsigned int fftw3_flag_destroy  = (1u << 0);
-  constexpr static unsigned int fftw3_flag_preserve = (1u << 4);
-  constexpr static unsigned int fftw3_flag_estimate = (1u << 6);
+  static constexpr unsigned int fftw3_flag_destroy  = (1u << 0);
+  static constexpr unsigned int fftw3_flag_preserve = (1u << 4);
+  static constexpr unsigned int fftw3_flag_estimate = (1u << 6);
   
   const uword N;
   

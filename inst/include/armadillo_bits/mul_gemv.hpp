@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,11 +23,8 @@
 
 //! for tiny square matrices, size <= 4x4
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class gemv_emul_tinysq
+struct gemv_emul_tinysq
   {
-  public:
-  
-  
   template<const uword row, const uword col>
   struct pos
     {
@@ -140,10 +137,8 @@ class gemv_emul_tinysq
 
 
 
-class gemv_emul_helper
+struct gemv_emul_helper
   {
-  public:
-  
   template<typename eT, typename TA>
   arma_hot
   inline
@@ -213,10 +208,8 @@ class gemv_emul_helper
 //! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class gemv_emul
+struct gemv_emul
   {
-  public:
-  
   template<typename eT, typename TA>
   arma_hot
   inline
@@ -233,7 +226,7 @@ class gemv_emul
       {
       if(A_n_rows == 1)
         {
-        const eT acc = op_dot::direct_dot_arma(A_n_cols, A.memptr(), x);
+        const eT acc = op_dot::direct_dot(A_n_cols, A.memptr(), x);
         
              if( (use_alpha == false) && (use_beta == false) )  { y[0] =       acc;             }
         else if( (use_alpha == true ) && (use_beta == false) )  { y[0] = alpha*acc;             }
@@ -269,7 +262,7 @@ class gemv_emul
           //   acc += A_coldata[row] * x[row];
           //   }
           
-          const eT acc = op_dot::direct_dot_arma(A_n_rows, A.colptr(col), x);
+          const eT acc = op_dot::direct_dot(A_n_rows, A.colptr(col), x);
           
                if( (use_alpha == false) && (use_beta == false) )  { y[col] =       acc;               }
           else if( (use_alpha == true ) && (use_beta == false) )  { y[col] = alpha*acc;               }
@@ -297,10 +290,8 @@ class gemv_emul
 //! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class gemv
+struct gemv
   {
-  public:
-  
   template<typename eT, typename TA>
   inline
   static

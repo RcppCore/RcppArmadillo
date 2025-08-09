@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,253 +20,207 @@
 //! @{
 
 
-class spop_scalar_times
+struct spop_scalar_times
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_scalar_times>& in);
   };
 
 
 
-class spop_cx_scalar_times
+struct spop_cx_scalar_times
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat< std::complex<typename T1::pod_type> >& out, const mtSpOp< std::complex<typename T1::pod_type>, T1, spop_cx_scalar_times>& in);
   };
 
 
 
-class spop_square
+struct spop_square
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_square>& in);
   };
 
 
 
-class spop_sqrt
+struct spop_sqrt
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_sqrt>& in);
   };
 
 
 
-class spop_cbrt
+struct spop_cbrt
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_cbrt>& in);
   };
 
 
 
-class spop_abs
+struct spop_abs
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_abs>& in);
   };
 
 
 
-class spop_cx_abs
+struct spop_cx_abs
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_cx_abs>& in);
   };
 
 
 
-class spop_arg
+struct spop_arg
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_arg>& in);
   };
 
 
 
-class spop_cx_arg
+struct spop_cx_arg
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_cx_arg>& in);
   };
 
 
 
-class spop_real
+struct spop_real
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_real>& in);
   };
 
 
 
-class spop_imag
+struct spop_imag
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_imag>& in);
   };
 
 
 
-class spop_conj
+struct spop_conj
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_conj>& in);
   };
 
 
 
-class spop_repelem
+struct spop_repelem
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_repelem>& in);
   };
 
 
 
-class spop_reshape
+struct spop_reshape
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_reshape>& in);
   };
 
 
 
-class spop_resize
+struct spop_resize
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_resize>& in);
   };
 
 
 
-class spop_floor
+struct spop_floor
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_floor>& in);
   };
 
 
 
-class spop_ceil
+struct spop_ceil
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_ceil>& in);
   };
 
 
 
-class spop_round
+struct spop_round
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_round>& in);
   };
 
 
 
-class spop_trunc
+struct spop_trunc
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_trunc>& in);
   };
 
 
 
-class spop_sign
+struct spop_sign
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_sign>& in);
   };
 
 
 
-class spop_flipud
+struct spop_flipud
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_flipud>& in);
   };
 
 
 
-class spop_fliplr
+struct spop_fliplr
   : public traits_op_passthru
   {
-  public:
-  
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_fliplr>& in);
   };
 
 
 
-class spop_replace
+struct spop_replace
   : public traits_op_passthru
   {
-  public:
-  
   template<typename eT, typename T1>
   inline static void apply(SpMat<eT>& out, const mtSpOp<eT, T1, spop_replace>& in);
   };

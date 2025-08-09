@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,10 +56,8 @@
 
 
 template<typename cx_type, bool inverse>
-class fft_engine_kissfft
+struct fft_engine_kissfft
   {
-  public:
-  
   typedef typename get_pod_type<cx_type>::result T;
   
   const uword N;
@@ -384,8 +382,6 @@ class fft_engine_kissfft
       default: butterfly_N(Y, stride, m, r);  break;
       }
     }
-
-
   };
 
 

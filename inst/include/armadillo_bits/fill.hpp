@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ namespace fill
     {
     static constexpr bool value = true;
     };
-
+  
   template<> struct allow_conversion<std::complex<double>, double> { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<double>, float > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<double>, u64   > { static constexpr bool value = false; };
@@ -57,7 +57,10 @@ namespace fill
   template<> struct allow_conversion<std::complex<double>, s16   > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<double>, u8    > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<double>, s8    > { static constexpr bool value = false; };
-
+  #if defined(ARMA_HAVE_FP16)
+  template<> struct allow_conversion<std::complex<double>, fp16  > { static constexpr bool value = false; };
+  #endif
+  
   template<> struct allow_conversion<std::complex<float>, double> { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<float>, float > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<float>, u64   > { static constexpr bool value = false; };
@@ -68,13 +71,35 @@ namespace fill
   template<> struct allow_conversion<std::complex<float>, s16   > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<float>, u8    > { static constexpr bool value = false; };
   template<> struct allow_conversion<std::complex<float>, s8    > { static constexpr bool value = false; };
+  #if defined(ARMA_HAVE_FP16)
+  template<> struct allow_conversion<std::complex<float>, fp16  > { static constexpr bool value = false; };
+  #endif
+  
+  #if defined(ARMA_HAVE_FP16)
+  template<> struct allow_conversion<std::complex<fp16>, double> { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, float > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, u64   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, s64   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, u32   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, s32   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, u16   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, s16   > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, u8    > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, s8    > { static constexpr bool value = false; };
+  template<> struct allow_conversion<std::complex<fp16>, fp16  > { static constexpr bool value = false; };
+  #endif
   
   //
   
-  template<typename eT> inline bool isfinite_wrapper(eT                )  { return true;                                               }
-  template<>            inline bool isfinite_wrapper(float            x)  { return std::isfinite(x);                                   }
-  template<>            inline bool isfinite_wrapper(double           x)  { return std::isfinite(x);                                   }
-  template<typename  T> inline bool isfinite_wrapper(std::complex<T>& x)  { return std::isfinite(x.real()) && std::isfinite(x.imag()); }
+  template<typename eT> inline bool isfinite_wrapper(eT                     )  { return true;                                               }
+  template<>            inline bool isfinite_wrapper(float                 x)  { return std::isfinite(x);                                   }
+  template<>            inline bool isfinite_wrapper(double                x)  { return std::isfinite(x);                                   }
+  template<>            inline bool isfinite_wrapper(std::complex<float>&  x)  { return std::isfinite(x.real()) && std::isfinite(x.imag()); }
+  template<>            inline bool isfinite_wrapper(std::complex<double>& x)  { return std::isfinite(x.real()) && std::isfinite(x.imag()); }
+  #if defined(ARMA_HAVE_FP16)
+  template<>            inline bool isfinite_wrapper(fp16                  x)  { return std::isfinite(x);                                   }
+  template<>            inline bool isfinite_wrapper(std::complex<fp16>&   x)  { return std::isfinite(x.real()) && std::isfinite(x.imag()); }
+  #endif
   
   //
   

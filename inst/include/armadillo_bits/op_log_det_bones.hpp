@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,11 +21,9 @@
 
 
 
-class op_log_det
+struct op_log_det
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static bool apply_direct(typename T1::elem_type& out_val, typename T1::pod_type& out_sign, const Base<typename T1::elem_type,T1>& expr);
   
@@ -38,11 +36,9 @@ class op_log_det
 
 
 
-class op_log_det_sympd
+struct op_log_det_sympd
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static bool apply_direct(typename T1::pod_type& out_val, const Base<typename T1::elem_type,T1>& expr);
   };

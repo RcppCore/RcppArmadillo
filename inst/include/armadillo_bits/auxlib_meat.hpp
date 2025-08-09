@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -320,13 +320,7 @@ auxlib::inv_sym(Mat< std::complex<T> >& A)
   
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::inv_sym(): redirecting to auxlib::inv() due to crippled LAPACK");
-    
-    return auxlib::inv(A);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -477,13 +471,7 @@ auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
   
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::inv_sym_rcond(): redirecting to auxlib::inv_rcond() due to crippled LAPACK");
-    
-    return auxlib::inv_rcond(A, out_rcond);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -686,13 +674,7 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, T& out_rcond)
   
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_ignore(A);
-    arma_ignore(out_rcond);
-    return false;
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     arma_conform_assert_blas_size(A);
     
@@ -1393,13 +1375,7 @@ auxlib::eig_gen_balance
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::eig_gen_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
-    
-    return auxlib::eig_gen(vals, vecs, vecs_on, expr);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -1751,13 +1727,7 @@ auxlib::eig_gen_twosided_balance
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::eig_gen_twosided_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
-    
-    return auxlib::eig_gen(vals, lvecs, rvecs, expr);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -2713,42 +2683,6 @@ template<typename eT>
 inline
 bool
 auxlib::chol_band(Mat<eT>& X, const uword KD, const uword layout)
-  {
-  arma_debug_sigprint();
-  
-  return auxlib::chol_band_common(X, KD, layout);
-  }
-
-
-
-template<typename T>
-inline
-bool
-auxlib::chol_band(Mat< std::complex<T> >& X, const uword KD, const uword layout)
-  {
-  arma_debug_sigprint();
-  
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::chol_band(): redirecting to auxlib::chol() due to crippled LAPACK");
-    
-    arma_ignore(KD);
-    
-    return auxlib::chol(X, layout);
-    }
-  #else
-    {
-    return auxlib::chol_band_common(X, KD, layout);
-    }
-  #endif
-  }
-
-
-
-template<typename eT>
-inline
-bool
-auxlib::chol_band_common(Mat<eT>& X, const uword KD, const uword layout)
   {
   arma_debug_sigprint();
   
@@ -3954,9 +3888,7 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
     blas_int  lda       = blas_int(A.n_rows);
     blas_int  ldu       = blas_int(U.n_rows);
     blas_int  ldvt      = blas_int(V.n_rows);
-    blas_int  lwork1    = 3*min_mn*min_mn + (std::max)(max_mn, 4*min_mn*min_mn + 4*min_mn);  // as per LAPACK 3.2 docs
-    blas_int  lwork2    = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.8 docs; consistent with LAPACK 3.4 docs
-    blas_int  lwork_min = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.8
+    blas_int  lwork_min = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.8 and 3.12 docs; consistent with LAPACK 3.4 docs
     blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -4034,8 +3966,8 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int lda       = blas_int(A.n_rows);
     blas_int ldu       = blas_int(U.n_rows);
     blas_int ldvt      = blas_int(V.n_rows);
-    blas_int lwork_min = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2, 3.4, 3.8 docs
-    blas_int lrwork    = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
+    blas_int lwork_min = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2, 3.4, 3.8, 3.12 docs
+    blas_int lrwork    = min_mn * ((std::max)(5*min_mn+5, 2*max_mn + 2*min_mn+1));   // as per LAPACK 3.8 and 3.12 docs
     blas_int info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -4103,13 +4035,10 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, Mat<eT>& A)
     blas_int m         = blas_int(A.n_rows);
     blas_int n         = blas_int(A.n_cols);
     blas_int min_mn    = (std::min)(m,n);
-    blas_int max_mn    = (std::max)(m,n);
     blas_int lda       = blas_int(A.n_rows);
     blas_int ldu       = m;
     blas_int ldvt      = min_mn;
-    blas_int lwork1    = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn );  // as per LAPACK 3.2 docs
-    blas_int lwork2    = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.4 docs; LAPACK 3.8 requires 4*min_mn*min_mn + 7*min_mn
-    blas_int lwork_min = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
+    blas_int lwork_min = 4*min_mn*min_mn + 7*min_mn;  // as per LAPACK 3.8 and 3.12 docs
     blas_int info      = 0;
     
     if(A.is_empty())
@@ -4194,8 +4123,8 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     blas_int lda       = blas_int(A.n_rows);
     blas_int ldu       = m;
     blas_int ldvt      = min_mn;
-    blas_int lwork_min = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2 docs
-    blas_int lrwork    = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));  // LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
+    blas_int lwork_min = min_mn*min_mn + 3*min_mn;  // as per LAPACK 3.12 docs
+    blas_int lrwork    = min_mn * ((std::max)(5*min_mn+5, 2*max_mn + 2*min_mn+1));  // as per LAPACK 3.8 and 3.12 docs
     blas_int info      = 0;
     
     if(A.is_empty())
@@ -4650,13 +4579,7 @@ auxlib::solve_sym_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std
   
   if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_sym_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
-    
-    return auxlib::solve_square_fast(out, A, B_expr);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type  T;
     typedef std::complex<T>       eT;
@@ -4726,13 +4649,7 @@ auxlib::solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& 
   
   if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_sym_rcond(): redirecting to auxlib::solve_square_rcond() due to crippled LAPACK");
-    
-    return auxlib::solve_square_rcond(out, out_rcond, A, B_expr);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type eT;
     
@@ -4894,28 +4811,6 @@ auxlib::solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_sympd_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
-    
-    return auxlib::solve_square_fast(out, A, B_expr);
-    }
-  #else
-    {
-    return auxlib::solve_sympd_fast_common(out, A, B_expr);
-    }
-  #endif
-  }
-
-
-
-template<typename T1>
-inline
-bool
-auxlib::solve_sympd_fast_common(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
   out = B_expr.get_ref();
   
   const uword B_n_rows = out.n_rows;
@@ -5034,15 +4929,7 @@ auxlib::solve_sympd_rcond(Mat< std::complex<typename T1::pod_type> >& out, bool&
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_sympd_rcond(): redirecting to auxlib::solve_square_rcond() due to crippled LAPACK");
-    
-    out_sympd_state = false;
-    
-    return auxlib::solve_square_rcond(out, out_rcond, A, B_expr);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -5190,13 +5077,7 @@ auxlib::solve_sympd_refine(Mat< std::complex<typename T1::pod_type> >& out, type
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_sympd_refine(): redirecting to auxlib::solve_square_refine() due to crippled LAPACK");
-    
-    return auxlib::solve_square_refine(out, out_rcond, A, B_expr, equilibrate);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -5849,50 +5730,11 @@ auxlib::solve_trimat_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_ty
 
 
 
-//! solve a system of linear equations via LU decomposition (real band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_band_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const uword KL, const uword KU, const Base<typename T1::pod_type,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  return auxlib::solve_band_fast_common(out, A, KL, KU, B_expr);
-  }
-
-
-
-//! solve a system of linear equations via LU decomposition (complex band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_band_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const uword KL, const uword KU, const Base< std::complex<typename T1::pod_type>,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_band_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
-    
-    arma_ignore(KL);
-    arma_ignore(KU);
-    
-    return auxlib::solve_square_fast(out, A, B_expr);
-    }
-  #else
-    {
-    return auxlib::solve_band_fast_common(out, A, KL, KU, B_expr);
-    }
-  #endif
-  }
-
-
-
 //! solve a system of linear equations via LU decomposition (band matrix)
 template<typename T1>
 inline
 bool
-auxlib::solve_band_fast_common(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr)
+auxlib::solve_band_fast(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_debug_sigprint();
   
@@ -5950,50 +5792,11 @@ auxlib::solve_band_fast_common(Mat<typename T1::elem_type>& out, const Mat<typen
 
 
 
-//! solve a system of linear equations via LU decomposition (real band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_band_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::pod_type>& A, const uword KL, const uword KU, const Base<typename T1::pod_type,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  return auxlib::solve_band_rcond_common(out, out_rcond, A, KL, KU, B_expr);
-  }
-
-
-
-//! solve a system of linear equations via LU decomposition (complex band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_band_rcond(Mat< std::complex<typename T1::pod_type> >& out, typename T1::pod_type& out_rcond, Mat< std::complex<typename T1::pod_type> >& A, const uword KL, const uword KU, const Base< std::complex<typename T1::pod_type>,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_band_rcond(): redirecting to auxlib::solve_square_rcond() due to crippled LAPACK");
-    
-    arma_ignore(KL);
-    arma_ignore(KU);
-    
-    return auxlib::solve_square_rcond(out, out_rcond, A, B_expr);
-    }
-  #else
-    {
-    return auxlib::solve_band_rcond_common(out, out_rcond, A, KL, KU, B_expr);
-    }
-  #endif
-  }
-
-
-
 //! solve a system of linear equations via LU decomposition (band matrix)
 template<typename T1>
 inline
 bool
-auxlib::solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr)
+auxlib::solve_band_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const Mat<typename T1::elem_type>& A, const uword KL, const uword KU, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_debug_sigprint();
   
@@ -6174,16 +5977,7 @@ auxlib::solve_band_refine(Mat< std::complex<typename T1::pod_type> >& out, typen
   {
   arma_debug_sigprint();
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_band_refine(): redirecting to auxlib::solve_square_refine() due to crippled LAPACK");
-    
-    arma_ignore(KL);
-    arma_ignore(KU);
-    
-    return auxlib::solve_square_refine(out, out_rcond, A, B_expr, equilibrate);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
@@ -6270,47 +6064,11 @@ auxlib::solve_band_refine(Mat< std::complex<typename T1::pod_type> >& out, typen
 
 
 
-//! solve a system of linear equations via Gaussian elimination with partial pivoting (real tridiagonal band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_tridiag_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  return auxlib::solve_tridiag_fast_common(out, A, B_expr);
-  }
-
-
-
-//! solve a system of linear equations via Gaussian elimination with partial pivoting (complex tridiagonal band matrix)
-template<typename T1>
-inline
-bool
-auxlib::solve_tridiag_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const Base< std::complex<typename T1::pod_type>,T1>& B_expr)
-  {
-  arma_debug_sigprint();
-  
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::solve_tridiag_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
-    
-    return auxlib::solve_square_fast(out, A, B_expr);
-    }
-  #else
-    {
-    return auxlib::solve_tridiag_fast_common(out, A, B_expr);
-    }
-  #endif
-  }
-
-
-
 //! solve a system of linear equations via Gaussian elimination with partial pivoting (tridiagonal band matrix)
 template<typename T1>
 inline
 bool
-auxlib::solve_tridiag_fast_common(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
+auxlib::solve_tridiag_fast(Mat<typename T1::elem_type>& out, const Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_debug_sigprint();
   
@@ -6952,13 +6710,7 @@ auxlib::rcond_sym(Mat< std::complex<T> >& A)
   {
   // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
   
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::rcond_sym(): redirecting to auxlib::rcond() due to crippled LAPACK");
-    
-    return auxlib::rcond(A);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -7205,13 +6957,7 @@ inline
 T
 auxlib::lu_rcond_sympd(const Mat< std::complex<T> >& A, const T norm_val)
   {
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_ignore(A);
-    arma_ignore(norm_val);
-    return T(0);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -7287,16 +7033,7 @@ inline
 T
 auxlib::lu_rcond_band(const Mat< std::complex<T> >& AB, const uword KL, const uword KU, const podarray<blas_int>& ipiv, const T norm_val)
   {
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_ignore(AB);
-    arma_ignore(KL);
-    arma_ignore(KU);
-    arma_ignore(ipiv);
-    arma_ignore(norm_val);
-    return T(0);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -7328,26 +7065,6 @@ auxlib::lu_rcond_band(const Mat< std::complex<T> >& AB, const uword KL, const uw
     arma_ignore(ipiv);
     arma_ignore(norm_val);
     return T(0);
-    }
-  #endif
-  }
-
-
-
-template<typename T1>
-inline
-bool
-auxlib::crippled_lapack(const Base<typename T1::elem_type, T1>&)
-  {
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::crippled_lapack(): true");
-    
-    return (is_cx<typename T1::elem_type>::yes);
-    }
-  #else
-    {
-    return false;
     }
   #endif
   }

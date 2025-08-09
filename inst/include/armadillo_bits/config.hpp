@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -147,6 +147,12 @@
 //// Note that ARMA_64BIT_WORD is automatically enabled when std::size_t has 64 bits and ARMA_32BIT_WORD is not defined.
 #endif
 
+#if !defined(ARMA_FORCE_USE_FP16)
+// #define ARMA_FORCE_USE_FP16
+//// Uncomment the above line to force the use of fp16 and cx_fp16 element types even if hardware support is not detected.
+//// NOTE: C++23 is also required for fp16 and cx_fp16.
+#endif
+
 #if !defined(ARMA_OPTIMISE_BAND)
   #define ARMA_OPTIMISE_BAND
   //// Comment out the above line to disable optimised handling
@@ -214,31 +220,13 @@
   #define ARMA_DEBUG
 #endif
 
-
-#if defined(ARMA_DEFAULT_OSTREAM)
-  #pragma message ("WARNING: option ARMA_DEFAULT_OSTREAM is deprecated and will be removed;")
-  #pragma message ("WARNING: use ARMA_COUT_STREAM and ARMA_CERR_STREAM instead")
-#endif
-
-
 #if !defined(ARMA_COUT_STREAM)
-  #if defined(ARMA_DEFAULT_OSTREAM)
-    // for compatibility with earlier versions of Armadillo
-    #define ARMA_COUT_STREAM ARMA_DEFAULT_OSTREAM
-  #else
-    #define ARMA_COUT_STREAM std::cout
-  #endif
+  #define ARMA_COUT_STREAM std::cout
 #endif
 
 #if !defined(ARMA_CERR_STREAM)
-  #if defined(ARMA_DEFAULT_OSTREAM)
-    // for compatibility with earlier versions of Armadillo
-    #define ARMA_CERR_STREAM ARMA_DEFAULT_OSTREAM
-  #else
-    #define ARMA_CERR_STREAM std::cerr
-  #endif
+  #define ARMA_CERR_STREAM std::cerr
 #endif
-
 
 #if !defined(ARMA_PRINT_EXCEPTIONS)
   // #define ARMA_PRINT_EXCEPTIONS
@@ -293,19 +281,16 @@
   #undef ARMA_USE_STD_MUTEX
 #endif
 
-// for compatibility with earlier versions of Armadillo
-#if defined(ARMA_DONT_USE_CXX11_MUTEX)
-  #pragma message ("WARNING: option ARMA_DONT_USE_CXX11_MUTEX is deprecated and will be removed;")
-  #pragma message ("WARNING: use ARMA_DONT_USE_STD_MUTEX instead")
-  #undef ARMA_USE_STD_MUTEX
-#endif
-
 #if defined(ARMA_DONT_USE_OPENMP)
   #undef ARMA_USE_OPENMP
 #endif
 
 #if defined(ARMA_32BIT_WORD)
   #undef ARMA_64BIT_WORD
+#endif
+
+#if defined(ARMA_DONT_USE_FP16)
+  #undef ARMA_FORCE_USE_FP16
 #endif
 
 #if (defined(ARMA_BLAS_LONG_LONG) && defined(ARMA_USE_WRAPPER))
@@ -324,6 +309,9 @@
 #if defined(ARMA_BLAS_LONG) || defined(ARMA_BLAS_LONG_LONG)
   #undef  ARMA_BLAS_64BIT_INT
   #define ARMA_BLAS_64BIT_INT
+  
+  // #pragma message ("options ARMA_BLAS_LONG and ARMA_BLAS_LONG_LONG are deprecated;")
+  // #pragma message ("use ARMA_BLAS_64BIT_INT instead")
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
@@ -354,10 +342,6 @@
   #undef ARMA_CHECK_NONFINITE
 #endif
 
-#if defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)
-  #undef ARMA_IGNORE_DEPRECATED_MARKER
-#endif
-
 #if defined(ARMA_NO_DEBUG)
   #undef ARMA_DEBUG
   #undef ARMA_EXTRA_DEBUG
@@ -375,25 +359,18 @@
   
   #undef  ARMA_WARN_LEVEL
   #define ARMA_WARN_LEVEL 3
-  
-  #undef  ARMA_IGNORE_DEPRECATED_MARKER
 #endif
 
 #if defined(ARMA_DONT_PRINT_EXCEPTIONS)
   #undef ARMA_PRINT_EXCEPTIONS
 #endif
 
-#if defined(ARMA_NO_CRIPPLED_LAPACK)
-  #undef ARMA_CRIPPLED_LAPACK
+#if defined(ARMA_IGNORE_DEPRECATED_MARKER)
+  #pragma message ("NOTE: option ARMA_IGNORE_DEPRECATED_MARKER is not supported")
 #endif
 
-// WARNING: option ARMA_IGNORE_DEPRECATED_MARKER is deprecated and will be removed
-// WARNING: option ARMA_CRIPPLED_LAPACK          is deprecated and will be removed
-
 #if defined(ARMA_CRIPPLED_LAPACK)
-  #if (!defined(ARMA_IGNORE_DEPRECATED_MARKER))
-    #pragma message ("WARNING: option ARMA_CRIPPLED_LAPACK is deprecated and will be removed")
-  #endif
+  #pragma message ("NOTE: option ARMA_CRIPPLED_LAPACK is not supported")
 #endif
 
 

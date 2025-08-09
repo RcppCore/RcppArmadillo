@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -109,7 +109,7 @@ struct Base_trans<derived, false> { typedef Base_trans_default<derived> result; 
 
 template<typename elem_type, typename derived>
 struct Base
-  : public Base_extra<elem_type, derived, is_supported_blas_type<elem_type>::value>::result
+  : public Base_extra<elem_type, derived, is_blas_type<elem_type>::value>::result
   , public Base_eval<elem_type, derived, is_Mat<derived>::value>::result
   , public Base_trans<derived, is_cx<elem_type>::value>::result
   {

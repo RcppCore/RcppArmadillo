@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,10 +21,8 @@
 
 
 
-class syrk_helper
+struct syrk_helper
   {
-  public:
-  
   template<typename eT>
   inline
   static
@@ -61,10 +59,8 @@ class syrk_helper
 
 //! partial emulation of BLAS function syrk(), specialised for A being a vector
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class syrk_vec
+struct syrk_vec
   {
-  public:
-  
   template<typename eT, typename TA>
   arma_hot
   inline
@@ -189,10 +185,8 @@ class syrk_vec
 
 //! partial emulation of BLAS function syrk()
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class syrk_emul
+struct syrk_emul
   {
-  public:
-  
   template<typename eT, typename TA>
   arma_hot
   inline
@@ -233,7 +227,7 @@ class syrk_emul
         
         for(uword k=col_A; k < A_n_cols; ++k)
           {
-          const eT acc = op_dot::direct_dot_arma(A_n_rows, A_coldata, A.colptr(k));
+          const eT acc = op_dot::direct_dot(A_n_rows, A_coldata, A.colptr(k));
           
           if( (use_alpha == false) && (use_beta == false) )
             {
@@ -272,10 +266,8 @@ class syrk_emul
 
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class syrk
+struct syrk
   {
-  public:
-  
   template<typename eT, typename TA>
   inline
   static

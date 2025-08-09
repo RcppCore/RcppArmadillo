@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,11 +27,13 @@ norm2est_randu_filler<eT>::norm2est_randu_filler()
   {
   arma_debug_sigprint();
   
+  typedef typename promote_type<eT, float>::result eTp;
+  
   typedef typename std::mt19937_64::result_type local_seed_type;
   
   local_engine.seed(local_seed_type(123));
   
-  typedef typename std::uniform_real_distribution<eT>::param_type local_param_type;
+  typedef typename std::uniform_real_distribution<eTp>::param_type local_param_type;
   
   local_u_distr.param(local_param_type(-1.0, +1.0));
   }
@@ -57,11 +59,13 @@ norm2est_randu_filler< std::complex<T> >::norm2est_randu_filler()
   {
   arma_debug_sigprint();
   
+  typedef typename promote_type<T, float>::result Tp;
+  
   typedef typename std::mt19937_64::result_type local_seed_type;
   
   local_engine.seed(local_seed_type(123));
   
-  typedef typename std::uniform_real_distribution<T>::param_type local_param_type;
+  typedef typename std::uniform_real_distribution<Tp>::param_type local_param_type;
   
   local_u_distr.param(local_param_type(-1.0, +1.0));
   }

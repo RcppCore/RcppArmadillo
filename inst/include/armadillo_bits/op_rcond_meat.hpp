@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -89,7 +89,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && ( is_sym_expr<T1>::eval(X.get_ref()) || sym_helper::is_approx_sym(A, uword(100)) ) )
+  if( (arma_config::optimise_sym) && ( is_sym_expr<T1>::eval(X.get_ref()) || sym_helper::is_approx_sym(A, uword(100)) ) )
     {
     arma_debug_print("op_rcond::apply(): symmetric/hermitian optimisation");
     

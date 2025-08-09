@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 template<typename eT>
 struct arma_lt_comparator
   {
-  arma_inline bool operator() (const eT a, const eT b) const { return (a < b); }
+  constexpr bool operator() (const eT a, const eT b) const { return (a < b); }
   };
 
 
@@ -32,7 +32,7 @@ struct arma_lt_comparator
 template<typename eT>
 struct arma_gt_comparator
   {
-  arma_inline bool operator() (const eT a, const eT b) const { return (a > b); }
+  constexpr bool operator() (const eT a, const eT b) const { return (a > b); }
   };
 
 
@@ -40,7 +40,7 @@ struct arma_gt_comparator
 template<typename eT>
 struct arma_leq_comparator
   {
-  arma_inline bool operator() (const eT a, const eT b) const { return (a <= b); }
+  constexpr bool operator() (const eT a, const eT b) const { return (a <= b); }
   };
   
 
@@ -48,7 +48,7 @@ struct arma_leq_comparator
 template<typename eT>
 struct arma_geq_comparator
   {
-  arma_inline bool operator() (const eT a, const eT b) const { return (a >= b); }
+  constexpr bool operator() (const eT a, const eT b) const { return (a >= b); }
   };
 
 
