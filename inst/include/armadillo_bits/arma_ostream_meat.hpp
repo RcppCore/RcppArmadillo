@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,22 +86,22 @@ arma_ostream::modify_stream(std::ostream& o, const eT* data, const uword n_elem)
       ( val >= eT(+100) )
       ||
       //( (is_signed<eT>::value) && (val <= eT(-100)) ) ||
-      //( (is_non_integral<eT>::value) && (val > eT(0)) && (val <= eT(+1e-4)) ) ||
-      //( (is_non_integral<eT>::value) && (is_signed<eT>::value) && (val < eT(0)) && (val >= eT(-1e-4)) ) 
+      //( (is_real<eT>::value) && (val > eT(0)) && (val <= eT(+1e-4)) ) ||
+      //( (is_real<eT>::value) && (is_signed<eT>::value) && (val < eT(0)) && (val >= eT(-1e-4)) ) 
         (
         cond_rel< is_signed<eT>::value >::leq(val, eT(-100))
         )
       ||
         (
-        cond_rel< is_non_integral<eT>::value >::gt(val,  eT(0))
+        cond_rel< is_real<eT>::value >::gt(val,  eT(0))
         &&
-        cond_rel< is_non_integral<eT>::value >::leq(val, eT(+1e-4))
+        cond_rel< is_real<eT>::value >::leq(val, eT(+1e-4))
         )
       ||
         (
-        cond_rel< is_non_integral<eT>::value && is_signed<eT>::value >::lt(val, eT(0))
+        cond_rel< is_real<eT>::value && is_signed<eT>::value >::lt(val, eT(0))
         &&
-        cond_rel< is_non_integral<eT>::value && is_signed<eT>::value >::geq(val, eT(-1e-4))
+        cond_rel< is_real<eT>::value && is_signed<eT>::value >::geq(val, eT(-1e-4))
         )
       )
       {
@@ -213,8 +213,8 @@ arma_ostream::modify_stream(std::ostream& o, typename SpMat<eT>::const_iterator 
     if(
       val >= eT(+100) ||
       ( (is_signed<eT>::value) && (val <= eT(-100)) ) ||
-      ( (is_non_integral<eT>::value) && (val > eT(0)) && (val <= eT(+1e-4)) ) ||
-      ( (is_non_integral<eT>::value) && (is_signed<eT>::value) && (val < eT(0)) && (val >= eT(-1e-4)) )
+      ( (  is_real<eT>::value) && (val > eT(0)) && (val <= eT(+1e-4)) ) ||
+      ( (  is_real<eT>::value) && (is_signed<eT>::value) && (val < eT(0)) && (val >= eT(-1e-4)) )
       )
       {
       use_layout_C = true;
@@ -368,7 +368,9 @@ inline
 void
 arma_ostream::print_elem(std::ostream& o, const std::complex<T>& x, const bool modify)
   {
-  if( (x.real() == T(0)) && (x.imag() == T(0)) && (modify) )
+  constexpr T T_zero = T(0);
+  
+  if( (x.real() == T_zero) && (x.imag() == T_zero) && (modify) )
     {
     o << "(0,0)";
     }

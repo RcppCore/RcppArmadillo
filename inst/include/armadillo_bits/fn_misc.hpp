@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,13 +59,25 @@ linspace
     
     const uword num_m1 = num - 1;
     
-    if(is_non_integral<T>::value)
+    if(is_float<T>::value || is_double<T>::value)
       {
       const T delta = (end-start)/T(num_m1);
       
       for(uword i=0; i<num_m1; ++i)
         {
         x_mem[i] = eT(start + i*delta);
+        }
+      
+      x_mem[num_m1] = eT(end);
+      }
+    else
+    if(is_fp16<T>::value)
+      {
+      const float delta = (float(end)-float(start)) / float(num_m1);
+      
+      for(uword i=0; i<num_m1; ++i)
+        {
+        x_mem[i] = eT(float(start) + i*delta);
         }
       
       x_mem[num_m1] = eT(end);

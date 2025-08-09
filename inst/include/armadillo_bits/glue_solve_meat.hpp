@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -172,13 +172,13 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     uword KL = 0;
     uword KU = 0;
     
-    const bool is_band = arma_config::optimise_band && ( (no_band || force_sym || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32)) );
+    const bool is_band = arma_config::optimise_band && ( (no_band || force_sym) ? false : band_helper::is_band(KL, KU, A, uword(32)) );
     
     const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || force_sym || is_band           ) ? false : trimat_helper::is_triu(A);
     const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd || force_sym || is_band || is_triu) ? false : trimat_helper::is_tril(A);
     
-    const bool is_sym    = arma_config::optimise_sym && ( (refine || equilibrate || likely_sympd || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : is_sym_expr<T1>::eval(A_expr.get_ref()) );
-    const bool try_sympd = arma_config::optimise_sym && ( (          no_sympd    || is_sym       || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))) );
+    const bool is_sym    = arma_config::optimise_sym && ( (refine || equilibrate || likely_sympd || force_sym || is_band || is_triu || is_tril) ? false : is_sym_expr<T1>::eval(A_expr.get_ref()) );
+    const bool try_sympd = arma_config::optimise_sym && ( (          no_sympd    || is_sym       || force_sym || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))) );
     
     arma_debug_print("glue_solve_gen_full::apply(): internal flags:");
     arma_debug_print("is_band:   ", is_band  );

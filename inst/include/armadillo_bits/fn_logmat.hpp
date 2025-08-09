@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< (is_supported_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::no), const mtOp<std::complex<typename T1::elem_type>, T1, op_logmat> >::result
+typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::no), const mtOp<std::complex<typename T1::elem_type>, T1, op_logmat> >::result
 logmat(const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
   {
   arma_debug_sigprint();
@@ -37,7 +37,7 @@ logmat(const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< (is_supported_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::yes), const Op<T1, op_logmat_cx> >::result
+typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::yes), const Op<T1, op_logmat_cx> >::result
 logmat(const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
   {
   arma_debug_sigprint();
@@ -49,7 +49,7 @@ logmat(const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
 
 template<typename T1>
 inline
-typename enable_if2< (is_supported_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::no), bool >::result
+typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::no), bool >::result
 logmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
   {
   arma_debug_sigprint();
@@ -69,7 +69,7 @@ logmat(Mat< std::complex<typename T1::elem_type> >& Y, const Base<typename T1::e
 
 template<typename T1>
 inline
-typename enable_if2< (is_supported_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::yes), bool >::result
+typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::yes), bool >::result
 logmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X, const uword n_iters = 100u)
   {
   arma_debug_sigprint();
@@ -94,7 +94,7 @@ logmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X,
 template<typename T1>
 arma_warn_unused
 arma_inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, const Op<T1, op_logmat_sympd> >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, const Op<T1, op_logmat_sympd> >::result
 logmat_sympd(const Base<typename T1::elem_type,T1>& X)
   {
   arma_debug_sigprint();
@@ -106,7 +106,7 @@ logmat_sympd(const Base<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::elem_type>::value, bool >::result
 logmat_sympd(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X)
   {
   arma_debug_sigprint();

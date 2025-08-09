@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,10 +42,20 @@ typename arma_real_only<eT>::result
 chi2rnd(const eT df)
   {
   arma_debug_sigprint();
-  
-  op_chi2rnd_varying_df<eT> generator;
-  
-  return generator(df);
+
+  if(is_fp16<eT>::yes)
+    {
+    // std::chi_squared_distribution is undefined for types other than float, double, and long double
+    op_chi2rnd_varying_df<float> generator;
+
+    return eT(generator(df));
+    }
+  else
+    {
+    op_chi2rnd_varying_df<eT> generator;
+
+    return generator(df);
+    }
   }
 
 

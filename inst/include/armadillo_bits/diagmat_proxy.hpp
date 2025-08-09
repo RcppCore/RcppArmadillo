@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,10 +22,8 @@
 
 
 template<typename T1>
-class diagmat_proxy_default
+struct diagmat_proxy_default
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -104,10 +102,8 @@ class diagmat_proxy_default
 
 
 template<typename T1>
-class diagmat_proxy_fixed
+struct diagmat_proxy_fixed
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -169,9 +165,8 @@ struct diagmat_proxy_redirect<T1, true>  { typedef diagmat_proxy_fixed<T1>   res
 
 
 template<typename T1>
-class diagmat_proxy : public diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
+struct diagmat_proxy : public diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>::result
   {
-  public:
   inline diagmat_proxy(const T1& X)
     : diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>::result(X)
     {
@@ -181,10 +176,8 @@ class diagmat_proxy : public diagmat_proxy_redirect<T1, is_Mat_fixed<T1>::value>
 
 
 template<typename eT>
-class diagmat_proxy< Mat<eT> >
+struct diagmat_proxy< Mat<eT> >
   {
-  public:
-  
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -212,10 +205,8 @@ class diagmat_proxy< Mat<eT> >
 
 
 template<typename eT>
-class diagmat_proxy< Row<eT> >
+struct diagmat_proxy< Row<eT> >
   {
-  public:
-  
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -244,10 +235,8 @@ class diagmat_proxy< Row<eT> >
 
 
 template<typename eT>
-class diagmat_proxy< Col<eT> >
+struct diagmat_proxy< Col<eT> >
   {
-  public:
-  
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -276,10 +265,8 @@ class diagmat_proxy< Col<eT> >
 
 
 template<typename eT>
-class diagmat_proxy< subview_row<eT> >
+struct diagmat_proxy< subview_row<eT> >
   {
-  public:
-  
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -308,10 +295,8 @@ class diagmat_proxy< subview_row<eT> >
 
 
 template<typename eT>
-class diagmat_proxy< subview_col<eT> >
+struct diagmat_proxy< subview_col<eT> >
   {
-  public:
-  
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
@@ -340,10 +325,8 @@ class diagmat_proxy< subview_col<eT> >
 
 
 template<typename T1, typename T2>
-class diagmat_proxy< Glue<T1,T2,glue_times> >
+struct diagmat_proxy< Glue<T1,T2,glue_times> >
   {
-  public:
-  
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   

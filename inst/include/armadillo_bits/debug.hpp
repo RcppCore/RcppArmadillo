@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -1401,10 +1401,8 @@ inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(
 
   namespace junk
     {
-    class arma_first_debug_message
+    struct arma_first_debug_message
       {
-      public:
-      
       inline
       arma_first_debug_message()
         {
@@ -1418,7 +1416,6 @@ inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(
             << " (" << nickname << ')';
         
         out << "\n@ arma_config::wrapper          = " << arma_config::wrapper;
-        out << "\n@ arma_config::cxx14            = " << arma_config::cxx14;
         out << "\n@ arma_config::cxx17            = " << arma_config::cxx17;
         out << "\n@ arma_config::cxx20            = " << arma_config::cxx20;
         out << "\n@ arma_config::cxx23            = " << arma_config::cxx23;
@@ -1445,6 +1442,8 @@ inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(
         out << "\n@ arma_config::check_conform    = " << arma_config::check_conform;
         out << "\n@ arma_config::check_nonfinite  = " << arma_config::check_nonfinite;
         out << "\n@ arma_config::fast_math        = " << arma_config::fast_math;
+        out << "\n@ arma_config::have_fp16        = " << arma_config::have_fp16;
+        out << "\n@ arma_config::good_fp16        = " << arma_config::good_fp16;
         out << "\n@ sizeof(void*)    = " << sizeof(void*);
         out << "\n@ sizeof(int)      = " << sizeof(int);
         out << "\n@ sizeof(long)     = " << sizeof(long);

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -115,7 +115,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));
   
-  if( (is_sym_size_ok) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
+  if( (is_sym_size_ok) && (arma_config::optimise_sym) )
     {
     do_sym = is_sym_expr<T1>::eval(expr.get_ref());
     
@@ -192,7 +192,23 @@ op_pinv::apply_sym(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::re
   Col< T> eigval;
   Mat<eT> eigvec;
   
-  const bool status = ((method_id == uword(0)) || (method_id == uword(2))) ? auxlib::eig_sym_dc(eigval, eigvec, A) : auxlib::eig_sym(eigval, eigvec, A);
+  bool status = false;
+  
+  if( (method_id == uword(0)) || (method_id == uword(2)) )
+    {
+    const bool allow_dc = (sizeof(blas_int) >= std::size_t(8)) ? true : (A.n_rows <= uword(32000));
+    
+    if(allow_dc == false)
+      {
+      arma_warn(3, "pinv(): matrix size too large for divide-and-conquer algorithm; using standard algorithm instead");
+      }
+    
+    status = (allow_dc) ? auxlib::eig_sym_dc(eigval, eigvec, A) : auxlib::eig_sym(eigval, eigvec, A);
+    }
+  else
+    {
+    status = auxlib::eig_sym(eigval, eigvec, A);
+    }
   
   if(status == false)  { return false; }
   
@@ -256,7 +272,27 @@ op_pinv::apply_gen(Mat<eT>& out, Mat<eT>& A, typename get_pod_type<eT>::result t
   
   if(n_cols > n_rows)  { A = trans(A); }
   
-  const bool status = ((method_id == uword(0)) || (method_id == uword(2))) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
+  bool status = false;
+  
+  if( (method_id == uword(0)) || (method_id == uword(2)) )
+    {
+    const uword N = (std::min)(A.n_rows, A.n_cols);
+    
+    const uword N_limit = (is_cx<eT>::yes) ? uword(20000) : uword(23000);
+    
+    const bool allow_dc = (sizeof(blas_int) >= std::size_t(8)) ? true : (N <= N_limit);
+    
+    if(allow_dc == false)
+      {
+      arma_warn(3, "pinv(): matrix size too large for divide-and-conquer algorithm; using standard algorithm instead");
+      }
+    
+    status = (allow_dc) ? auxlib::svd_dc_econ(U, s, V, A) : auxlib::svd_econ(U, s, V, A, 'b');
+    }
+  else
+    {
+    auxlib::svd_econ(U, s, V, A, 'b');
+    }
   
   if(status == false)  { return false; }
   

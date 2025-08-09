@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,13 +56,24 @@ op_orth::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   arma_conform_check((tol < T(0)), "orth(): tolerance must be >= 0");
   
-  Mat<eT> A(expr.get_ref());
-  
   Mat<eT> U;
   Col< T> s;
   Mat<eT> V;
   
-  const bool status = auxlib::svd_dc(U, s, V, A);
+  Mat<eT> A(expr.get_ref());
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  const uword N_limit = (is_cx<eT>::yes) ? uword(20000) : uword(23000);
+  
+  const bool allow_dc = (sizeof(blas_int) >= std::size_t(8)) ? true : (N <= N_limit);
+  
+  if(allow_dc == false)
+    {
+    arma_warn(3, "orth(): matrix size too large for divide-and-conquer algorithm; using standard algorithm instead");
+    }
+  
+  const bool status = (allow_dc) ? auxlib::svd_dc(U, s, V, A) : auxlib::svd(U, s, V, A);
   
   V.reset();
   
@@ -132,13 +143,24 @@ op_null::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   arma_conform_check((tol < T(0)), "null(): tolerance must be >= 0");
   
-  Mat<eT> A(expr.get_ref());
-  
   Mat<eT> U;
   Col< T> s;
   Mat<eT> V;
   
-  const bool status = auxlib::svd_dc(U, s, V, A);
+  Mat<eT> A(expr.get_ref());
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  const uword N_limit = (is_cx<eT>::yes) ? uword(20000) : uword(23000);
+  
+  const bool allow_dc = (sizeof(blas_int) >= std::size_t(8)) ? true : (N <= N_limit);
+  
+  if(allow_dc == false)
+    {
+    arma_warn(3, "null(): matrix size too large for divide-and-conquer algorithm; using standard algorithm instead");
+    }
+  
+  const bool status = (allow_dc) ? auxlib::svd_dc(U, s, V, A) : auxlib::svd(U, s, V, A);
   
   U.reset();
   

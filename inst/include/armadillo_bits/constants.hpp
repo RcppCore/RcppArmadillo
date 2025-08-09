@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,10 +22,8 @@
 
 namespace priv
   {
-  class Datum_helper
+  struct Datum_helper
     {
-    public:
-    
     template<typename eT>
     static
     typename arma_real_only<eT>::result
@@ -107,10 +105,8 @@ namespace priv
 
 
 template<typename eT>
-class Datum
+struct Datum
   {
-  public:
-  
   static const eT pi;           //!< ratio of any circle's circumference to its diameter
   static const eT tau;          //!< ratio of any circle's circumference to its radius (replacement of 2*pi)
   static const eT e;            //!< base of the natural logarithm

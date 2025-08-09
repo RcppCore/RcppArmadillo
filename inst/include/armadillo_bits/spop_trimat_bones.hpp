@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,11 +21,9 @@
 
 
 
-class spop_trimat
+struct spop_trimat
   : public traits_op_default
   {
-  public:
-  
   template<typename T1>
   inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpProxy<T1>& P, const bool upper);
   
@@ -35,11 +33,9 @@ class spop_trimat
 
 
 
-class spop_trimatu_ext
+struct spop_trimatu_ext
   : public traits_op_default
   {
-  public:
-  
   template<typename eT>
   inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const uword row_offset, const uword col_offset);
   
@@ -49,11 +45,9 @@ class spop_trimatu_ext
 
 
 
-class spop_trimatl_ext
+struct spop_trimatl_ext
   : public traits_op_default
   {
-  public:
-  
   template<typename eT>
   inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const uword row_offset, const uword col_offset);
   

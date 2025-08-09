@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,7 @@
 template<typename T1>
 arma_warn_unused
 inline
-typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
+typename enable_if2< is_blas_type<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
 eig_gen
   (
   const Base<typename T1::elem_type, T1>& expr,
@@ -38,8 +38,6 @@ eig_gen
   const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_conform_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-  
-  if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_warn(1,  "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
   Col<eT> eigvals;
   Mat<eT> eigvecs;
@@ -59,7 +57,7 @@ eig_gen
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::pod_type>::value, bool >::result
 eig_gen
   (
          Col< std::complex<typename T1::pod_type> >& eigvals,
@@ -75,8 +73,6 @@ eig_gen
   const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_conform_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-  
-  if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_warn(1,  "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
   Mat<eT> eigvecs;
   
@@ -95,7 +91,7 @@ eig_gen
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::pod_type>::value, bool >::result
 eig_gen
   (
         Col< std::complex<typename T1::pod_type> >& eigvals,
@@ -111,8 +107,6 @@ eig_gen
   const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_conform_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-  
-  if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_warn(1,  "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
   const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, eigvecs, true, expr.get_ref()) : auxlib::eig_gen(eigvals, eigvecs, true, expr.get_ref());
   
@@ -130,7 +124,7 @@ eig_gen
 
 template<typename T1>
 inline
-typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
+typename enable_if2< is_blas_type<typename T1::pod_type>::value, bool >::result
 eig_gen
   (
         Col< std::complex<typename T1::pod_type> >&  eigvals,
@@ -149,8 +143,6 @@ eig_gen
   const char sig = (option != nullptr) ? option[0] : char(0);
   
   arma_conform_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-  
-  if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_warn(1,  "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
   const bool status = (sig == 'b') ? auxlib::eig_gen_twosided_balance(eigvals, leigvecs, reigvecs, expr.get_ref()) : auxlib::eig_gen_twosided(eigvals, leigvecs, reigvecs, expr.get_ref());
   

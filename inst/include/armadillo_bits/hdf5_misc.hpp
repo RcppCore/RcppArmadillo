@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -139,6 +139,24 @@ get_hdf5_type< double >()
 
 
 
+#if defined(ARMA_HAVE_FP16) && defined(H5_HAVE__FLOAT16)
+template<>
+inline
+hid_t
+get_hdf5_type< fp16 >()
+  {
+  return H5Tcopy(H5T_NATIVE_FLOAT16);
+  }
+#endif
+
+
+
+// NOTE: HDF5 has discussed adding bf16 support but it is not yet available.
+// https://github.com/HDFGroup/hdf5/issues/5317
+// https://forum.hdfgroup.org/t/hdf5-rfc-adding-support-for-16-bit-floating-point-and-complex-number-datatypes-to-hdf5/11975/29
+
+
+
 //! Utility hid_t since HOFFSET() won't work with std::complex.
 template<typename eT>
 struct hdf5_complex_t
@@ -263,6 +281,14 @@ is_supported_arma_hdf5_type(hid_t datatype)
   is_equal = ( H5Tequal(datatype, search_type) > 0 );
   H5Tclose(search_type);
   if(is_equal) { return true; }
+  
+  // check types that may or may not be supported
+  #if defined(ARMA_HAVE_FP16) && defined(H5_HAVE__FLOAT16)
+  search_type = get_hdf5_type<fp16>();
+  is_equal = ( H5Tequal(datatype, search_type) > 0 );
+  H5Tclose(search_type);
+  if(is_equal) { return true; }
+  #endif
   
   return false;
   }

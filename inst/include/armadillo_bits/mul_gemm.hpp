@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,11 +23,8 @@
 
 //! for tiny square matrices, size <= 4x4
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_emul_tinysq
+struct gemm_emul_tinysq
   {
-  public:
-  
-  
   template<typename eT, typename TA, typename TB>
   arma_cold
   inline
@@ -64,10 +61,8 @@ class gemm_emul_tinysq
 
 //! emulation of gemm(), for non-complex matrices only, as it assumes only simple transposes (ie. doesn't do hermitian transposes)
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_emul_large
+struct gemm_emul_large
   {
-  public:
-  
   template<typename eT, typename TA, typename TB>
   arma_hot
   inline
@@ -102,7 +97,7 @@ class gemm_emul_large
         
         for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
-          const eT acc = op_dot::direct_dot_arma(B_n_rows, A_rowdata, B.colptr(col_B));
+          const eT acc = op_dot::direct_dot(B_n_rows, A_rowdata, B.colptr(col_B));
           
                if( (use_alpha == false) && (use_beta == false) )  { C.at(row_A,col_B) =       acc;                          }
           else if( (use_alpha == true ) && (use_beta == false) )  { C.at(row_A,col_B) = alpha*acc;                          }
@@ -122,7 +117,7 @@ class gemm_emul_large
         
         for(uword col_B=0; col_B < B_n_cols; ++col_B)
           {
-          const eT acc = op_dot::direct_dot_arma(B_n_rows, A_coldata, B.colptr(col_B));
+          const eT acc = op_dot::direct_dot(B_n_rows, A_coldata, B.colptr(col_B));
           
                if( (use_alpha == false) && (use_beta == false) )  { C.at(col_A,col_B) =       acc;                          }
           else if( (use_alpha == true ) && (use_beta == false) )  { C.at(col_A,col_B) = alpha*acc;                          }
@@ -158,7 +153,7 @@ class gemm_emul_large
         
         for(uword col_A=0; col_A < A_n_cols; ++col_A)
           {
-          const eT acc = op_dot::direct_dot_arma(A_n_rows, B_rowdata, A.colptr(col_A));
+          const eT acc = op_dot::direct_dot(A_n_rows, B_rowdata, A.colptr(col_A));
           
                if( (use_alpha == false) && (use_beta == false) )  { C.at(col_A,row_B) =       acc;                          }
           else if( (use_alpha == true ) && (use_beta == false) )  { C.at(col_A,row_B) = alpha*acc;                          }
@@ -174,11 +169,8 @@ class gemm_emul_large
 
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm_emul
+struct gemm_emul
   {
-  public:
-  
-  
   template<typename eT, typename TA, typename TB>
   arma_hot
   inline
@@ -243,10 +235,8 @@ class gemm_emul
 //! Matrix 'C' is assumed to have been set to the correct size (ie. taking into account transposes)
 
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
-class gemm
+struct gemm
   {
-  public:
-  
   template<typename eT, typename TA, typename TB>
   inline
   static

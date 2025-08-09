@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,10 +26,8 @@
 // eg. instead of math::pi(), use datum::pi
 
 template<typename eT>
-class Math
+struct Math
   {
-  public:
-  
   arma_frown("use datum::pi instead")      static eT pi()      { return eT(Datum<eT>::pi);      }
   arma_frown("use datum::e instead")       static eT e()       { return eT(Datum<eT>::e);       }
   arma_frown("use datum::euler instead")   static eT euler()   { return eT(Datum<eT>::euler);   }
@@ -45,10 +43,8 @@ class Math
 
 
 template<typename eT>
-class Phy
+struct Phy
   {
-  public:
-  
   arma_deprecated static eT m_u()       { return eT(Datum<eT>::m_u);       }
   arma_deprecated static eT N_A()       { return eT(Datum<eT>::N_A);       }
   arma_deprecated static eT k()         { return eT(Datum<eT>::k);         }

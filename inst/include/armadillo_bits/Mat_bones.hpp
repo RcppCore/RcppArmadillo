@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -801,13 +801,14 @@ class Mat : public Base< eT, Mat<eT> >
   
   friend class Cube<eT>;
   friend class subview_cube<eT>;
-  friend class glue_join;
-  friend class op_strans;
-  friend class op_htrans;
-  friend class op_resize;
-  friend class op_mean;
-  friend class op_max;
-  friend class op_min;
+  
+  friend struct glue_join;
+  friend struct op_strans;
+  friend struct op_htrans;
+  friend struct op_resize;
+  friend struct op_mean;
+  friend struct op_max;
+  friend struct op_min;
 
   
   public:

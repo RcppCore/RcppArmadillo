@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -199,6 +199,21 @@ arma_isnan(const std::complex<T>& x)
 
 
 //
+// wrapper for pow; see also the associated FP16 specialisation
+
+
+
+template<typename eT, typename exponent_eT>
+inline
+eT
+arma_pow(eT base, exponent_eT pow)
+  {
+  return std::pow(base, pow);
+  }
+
+
+
+//
 // implementation of arma_sign()
 
 
@@ -207,7 +222,9 @@ constexpr
 typename arma_unsigned_integral_only<eT>::result
 arma_sign(const eT x)
   {
-  return (x > eT(0)) ? eT(+1) : eT(0);
+  constexpr eT eT_zero = eT(0);
+  
+  return (x > eT_zero) ? eT(+1) : eT_zero;
   }
 
 
@@ -217,7 +234,9 @@ constexpr
 typename arma_signed_integral_only<eT>::result
 arma_sign(const eT x)
   {
-  return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : eT(0) );
+  constexpr eT eT_zero = eT(0);
+  
+  return (x > eT_zero) ? eT(+1) : ( (x < eT_zero) ? eT(-1) : eT_zero );
   }
 
 
@@ -227,7 +246,9 @@ constexpr
 typename arma_real_only<eT>::result
 arma_sign(const eT x)
   {
-  return (x > eT(0)) ? eT(+1) : ( (x < eT(0)) ? eT(-1) : ((x == eT(0)) ? eT(0) : x) );
+  constexpr eT eT_zero = eT(0);
+  
+  return (x > eT_zero) ? eT(+1) : ( (x < eT_zero) ? eT(-1) : ((x == eT_zero) ? eT_zero : x) );
   }
 
 
@@ -414,6 +435,97 @@ struct arma_arg< std::complex<double> >
     return std::arg(x);
     }
   };
+
+
+
+//
+// extensions for half-precision fp16
+
+#if defined(ARMA_HAVE_FP16)
+
+template<>
+inline
+bool
+arma_isfinite(fp16 x)
+  {
+  return std::isfinite(x);
+  }
+
+
+
+template<>
+inline
+bool
+arma_isnonfinite(fp16 x)
+  {
+  return (std::isfinite(x) == false);
+  }
+
+
+
+template<>
+inline
+bool
+arma_isinf(fp16 x)
+  {
+  return std::isinf(x);
+  }
+
+
+
+template<>
+inline
+bool
+arma_isnan(fp16 x)
+  {
+  return std::isnan(x);
+  }
+
+
+
+template<typename exponent_eT>
+inline
+fp16
+arma_pow(fp16 base, exponent_eT pow)
+  {
+  return std::pow(base, fp16(pow));
+  }
+
+
+
+template<>
+inline
+fp16
+arma_hypot(const fp16 x, const fp16 y)
+  {
+  return std::hypot(x, y);
+  }
+
+
+
+template<>
+inline
+fp16
+arma_sinc(const fp16 x)
+  {
+  return arma_sinc_generic(x);
+  }
+
+
+
+template<>
+struct arma_arg<fp16>
+  {
+  static
+  inline
+  fp16
+  eval(const fp16 x)
+    {
+    return std::arg(x);
+    }
+  };
+
+#endif
 
 
 

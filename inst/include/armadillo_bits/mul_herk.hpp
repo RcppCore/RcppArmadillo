@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,10 +21,8 @@
 
 
 
-class herk_helper
+struct herk_helper
   {
-  public:
-  
   template<typename eT>
   inline
   static
@@ -84,10 +82,8 @@ class herk_helper
 
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class herk_vec
+struct herk_vec
   {
-  public:
-  
   template<typename T, typename TA>
   arma_hot
   inline
@@ -225,10 +221,8 @@ class herk_vec
 
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class herk_emul
+struct herk_emul
   {
-  public:
-  
   template<typename T, typename TA>
   arma_hot
   inline
@@ -310,10 +304,8 @@ class herk_emul
 
 
 template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
-class herk
+struct herk
   {
-  public:
-  
   template<typename T, typename TA>
   inline
   static
@@ -484,6 +476,25 @@ class herk
     {
     herk<do_trans_A, use_alpha, use_beta>::apply_blas_type(C,A,alpha,beta);
     }
+  
+  
+  
+  #if defined(ARMA_HAVE_FP16)
+  template<typename TA>
+  arma_inline
+  static
+  void
+  apply
+    (
+          Mat< std::complex<fp16> >& C,
+    const TA&                        A,
+    const fp16                       alpha = fp16(1),
+    const fp16                       beta  = fp16(0)
+    )
+    {
+    herk_emul<do_trans_A, use_alpha, use_beta>::apply(C,A,alpha,beta);
+    }
+  #endif
   
   };
 

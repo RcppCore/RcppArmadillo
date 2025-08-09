@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,6 +59,8 @@ op_mean::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
   {
   arma_debug_sigprint();
   
+  if(is_fp16<eT>::yes || is_cx_fp16<eT>::yes)  { return op_mean::apply_noalias_promote(out, X, dim); }
+  
   typedef typename get_pod_type<eT>::result T;
   
   const uword X_n_rows = X.n_rows;
@@ -108,6 +110,51 @@ op_mean::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim)
           out_mem[row] = op_mean::direct_mean_robust(old_mean, tmp.memptr(), tmp.n_elem);
           }
         }
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_mean::apply_noalias_promote(Mat<eT>& out, const Mat<eT>& X, const uword dim)
+  {
+  arma_debug_sigprint();
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  if(dim == 0)
+    {
+    out.set_size((X_n_rows > 0) ? 1 : 0, X_n_cols);
+    
+    if(X_n_rows == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    for(uword col=0; col < X_n_cols; ++col)
+      {
+      out_mem[col] = op_mean::direct_mean_promote( X.colptr(col), X_n_rows );
+      }
+    }
+  else
+  if(dim == 1)
+    {
+    out.set_size(X_n_rows, (X_n_cols > 0) ? 1 : 0);
+    
+    if(X_n_cols == 0)  { return; }
+    
+    eT* out_mem = out.memptr();
+    
+    podarray<eT> tmp;
+    
+    for(uword row=0; row < X_n_rows; ++row)
+      {
+      tmp.copy_row(X, row);
+      
+      out_mem[row] = op_mean::direct_mean_promote( tmp.memptr(), tmp.n_elem );
       }
     }
   }
@@ -265,6 +312,8 @@ op_mean::direct_mean(const eT* X_mem, const uword N)
   {
   arma_debug_sigprint();
   
+  if(is_fp16<eT>::yes || is_cx_fp16<eT>::yes)  { return op_mean::direct_mean_promote(X_mem, N); }
+  
   typedef typename get_pod_type<eT>::result T;
   
   const eT mean = arrayops::accumulate(X_mem, N) / T(N);
@@ -295,6 +344,57 @@ op_mean::direct_mean_robust(const eT old_mean, const eT* X_mem, const uword N)
     }
   
   return r_mean;
+  }
+
+
+
+template<typename eT>
+inline
+eT
+op_mean::direct_mean_promote(const eT* X_mem, const uword N)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
+  
+  typedef typename get_pod_type<acc_eT>::result acc_T;
+  
+  acc_eT acc = acc_eT(0);
+  
+  for(uword i=0; i<N; ++i)  { acc += acc_eT(X_mem[i]); }
+  
+  const acc_eT mean = acc / acc_T(N);
+  
+  if(arma_isfinite(mean) == false)  { return op_mean::direct_mean_robust_promote(eT(mean), X_mem, N); }
+  
+  return eT(mean);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+op_mean::direct_mean_robust_promote(const eT old_mean, const eT* X_mem, const uword N)
+  {
+  arma_debug_sigprint();
+  
+  // use an adapted form of the mean finding algorithm from the running_stat class
+  
+  typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
+
+  typedef typename get_pod_type<acc_eT>::result acc_T;
+  
+  if(arrayops::is_finite(X_mem, N) == false)  { return old_mean; }
+  
+  acc_eT r_mean = acc_eT(0);
+  
+  for(uword i=0; i < N; ++i)
+    {
+    r_mean = r_mean + (acc_eT(X_mem[i]) - r_mean) / acc_T(i+1);
+    }
+  
+  return eT(r_mean);
   }
 
 

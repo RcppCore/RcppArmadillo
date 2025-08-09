@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // 
-// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 // 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -464,11 +464,12 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline Mat<eT>* create_mat_ptr(const uword in_slice) const;
   inline Mat<eT>*    get_mat_ptr(const uword in_slice) const;
   
-  friend class glue_join;
-  friend class op_reshape;
-  friend class op_resize;
   friend class subview_cube<eT>;
   
+  friend struct glue_join;
+  friend struct op_reshape;
+  friend struct op_resize;
+    
   
   public:
   
