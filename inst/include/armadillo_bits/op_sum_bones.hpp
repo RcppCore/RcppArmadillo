@@ -32,10 +32,13 @@ class op_sum
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_square>, op_sum >& in);
-
+  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op< eOp<T1,eop_pow   >, op_sum >& in);
-
+  
+  template<typename T1>
+  inline static void apply_generic(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in);
+  
   template<typename eT>
   inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim);
   

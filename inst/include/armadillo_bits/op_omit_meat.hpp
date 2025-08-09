@@ -56,7 +56,7 @@ op_omit::apply(Mat<typename T1::elem_type>& out, const T1& X, functor is_omitted
   
   typedef typename T1::elem_type eT;
   
-  if(is_Mat<T1>::value || is_subview_col<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value || Proxy<T1>::use_mp)
+  if(is_Mat<T1>::value || is_subview_col<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value || (arma_config::openmp && Proxy<T1>::use_mp))
     {
     const quasi_unwrap<T1> U(X);
     
@@ -160,7 +160,7 @@ op_omit_cube::apply(Mat<typename T1::elem_type>& out, const T1& X, functor is_om
   
   typedef typename T1::elem_type eT;
   
-  if(is_Cube<T1>::value || is_Cube<typename ProxyCube<T1>::stored_type>::value || ProxyCube<T1>::use_mp)
+  if(is_Cube<T1>::value || is_Cube<typename ProxyCube<T1>::stored_type>::value || (arma_config::openmp && ProxyCube<T1>::use_mp))
     {
     const unwrap_cube<T1> U(X);
     

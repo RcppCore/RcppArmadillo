@@ -23,7 +23,7 @@
 
 #define ARMA_VERSION_MAJOR 14
 #define ARMA_VERSION_MINOR 6
-#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_PATCH 2
 #define ARMA_VERSION_NAME  "Caffe Mocha"
 
 
