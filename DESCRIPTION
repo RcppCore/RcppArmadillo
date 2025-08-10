@@ -3,6 +3,8 @@ Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 Version: 14.6.3-1
 Date: 2025-08-14
+Version: 14.90.0-2
+Date: 2025-08-10
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("Romain", "Francois", role = "aut",

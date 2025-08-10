@@ -12,3 +12,4 @@ GPATH
 GRTAGS
 GTAGS
 inst/include/armadillo_bits/config.hpp.cmake
+inst/include/current/armadillo_bits/config.hpp.cmake

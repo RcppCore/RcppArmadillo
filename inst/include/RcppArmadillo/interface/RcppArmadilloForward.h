@@ -46,16 +46,24 @@
 // installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
 
-// Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
-// minimise issies at CRAN).  Should your package display any, and you decide
-// _not_ to fix the root causes (see RcppArmadillo GitHub Issues #391 and #402
-// for details) then defining the following macro will help. You can add a
-// #define in your source code before including the RcppArmadillo header, or add
-// a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
-// Renabling globally for 14.0.0 release
-#define ARMA_IGNORE_DEPRECATED_MARKER
+#if __cplusplus >= 201402L
+    // Armadillo 15.0 (rc)
+    #include "current/armadillo"
+#else
+    // we include Armadillo 14.6.2 here -- the last version to not require C++14
+    #pragma message("Using fallback compilation with Armadillo 14.6.2 under C++11. Please consider removing the C++11 compilation standard directive.")
 
-#include "armadillo"
+    // Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
+    // minimise issies at CRAN).  Should your package display any, and you decide
+    // _not_ to fix the root causes (see RcppArmadillo GitHub Issues #391 and #402
+    // for details) then defining the following macro will help. You can add a
+    // #define in your source code before including the RcppArmadillo header, or add
+    // a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
+    // Renabling globally for Armadillo 14.6.2 release
+    #define ARMA_IGNORE_DEPRECATED_MARKER
+
+    #include "legacy/armadillo"
+#endif
 
 /* forward declarations */
 namespace Rcpp {

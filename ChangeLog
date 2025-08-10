@@ -1,11 +1,18 @@
 2025-08-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.6.3-1
+2025-08-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.90.0-2
         * inst/NEWS.Rd: Idem
         * configure.ac: Idem
         * configure: Idem
 
 	* inst/include/armadillo_bits/: Armadillo 14.6.3
+	* inst/include/current/: Armadillo 15.0.0 (pre-rc)
+	* inst/include/legacy/: Armadillo 14.6.2
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Switch
+	back to 'legacy' if compilation standard is older than C++14
 
 2025-08-09  Dirk Eddelbuettel  <edd@debian.org>
 
