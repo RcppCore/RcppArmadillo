@@ -190,8 +190,8 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat& operator/=(const spdiagview<eT>& X);
   
   
-  arma_frown("use braced initialiser list instead") inline mat_injector<Mat> operator<<(const eT val);
-  arma_frown("use braced initialiser list instead") inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
+  [[deprecated("use braced initialiser list instead")]] inline mat_injector<Mat> operator<<(const eT val);
+  [[deprecated("use braced initialiser list instead")]] inline mat_injector<Mat> operator<<(const injector_end_of_row<>& x);
   
   
   arma_inline       subview_row<eT> row(const uword row_num);
@@ -310,8 +310,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline void shed_rows(const Base<uword, T1>& indices);
   template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
   
-  arma_frown("use insert_rows(row_num, N) instead") inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
-  arma_frown("use insert_cols(col_num, N) instead") inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
+  [[deprecated("use insert_rows(row_num, N) instead")]] inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
+  [[deprecated("use insert_cols(col_num, N) instead")]] inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
   
   inline void insert_rows(const uword row_num, const uword N);
   inline void insert_cols(const uword col_num, const uword N);
@@ -485,7 +485,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline Mat&  reshape(const uword new_n_rows, const uword new_n_cols);
   inline Mat&  reshape(const SizeMat& s);
   
-  arma_frown("use reshape(n_rows, n_cols) instead") inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
+  [[deprecated("use reshape(n_rows, n_cols) instead")]] inline void reshape(const uword new_n_rows, const uword new_n_cols, const uword dim);  //!< NOTE: don't use this form: it will be removed
   
   
   template<typename functor> inline       Mat&  for_each(functor F);
@@ -541,11 +541,11 @@ class Mat : public Base< eT, Mat<eT> >
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
   
-  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
-  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
+  [[deprecated("use .index_min() instead")]] inline eT min(uword& index_of_min_val) const;
+  [[deprecated("use .index_max() instead")]] inline eT max(uword& index_of_max_val) const;
   
-  arma_frown("use .index_min() with ind2sub() instead") inline eT min(uword& row_of_min_val, uword& col_of_min_val) const;
-  arma_frown("use .index_max() with ind2sub() instead") inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
+  [[deprecated("use .index_min() with ind2sub() instead")]] inline eT min(uword& row_of_min_val, uword& col_of_min_val) const;
+  [[deprecated("use .index_max() with ind2sub() instead")]] inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
   
   
   arma_cold inline bool save(const std::string   name, const file_type type = arma_binary) const;
@@ -558,15 +558,15 @@ class Mat : public Base< eT, Mat<eT> >
   arma_cold inline bool load(const  csv_name&    spec, const file_type type =   csv_ascii);
   arma_cold inline bool load(      std::istream& is,   const file_type type = auto_detect);
   
-  arma_frown("use save() instead") inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  arma_frown("use save() instead") inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
-  arma_frown("use save() instead") inline bool quiet_save(const  csv_name&    spec, const file_type type =   csv_ascii) const;
-  arma_frown("use save() instead") inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const  csv_name&    spec, const file_type type =   csv_ascii) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  arma_frown("use load() instead") inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
-  arma_frown("use load() instead") inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
-  arma_frown("use load() instead") inline bool quiet_load(const  csv_name&    spec, const file_type type =   csv_ascii);
-  arma_frown("use load() instead") inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const  csv_name&    spec, const file_type type =   csv_ascii);
+  [[deprecated("use load() instead")]] inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // for container-like functionality

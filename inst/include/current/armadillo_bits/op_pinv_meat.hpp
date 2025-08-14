@@ -126,7 +126,18 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
     {
     arma_debug_print("op_pinv: symmetric/hermitian optimisation");
     
-    return op_pinv::apply_sym(out, A, tol, method_id);
+    const bool status = op_pinv::apply_sym(out, A, tol, method_id);
+    
+    if(status)
+      {
+      return true;
+      }
+    else
+      {
+      arma_debug_print("op_pinv: symmetric/hermitian optimisation failed");
+      
+      // fallthrough
+      }
     }
   
   return op_pinv::apply_gen(out, A, tol, method_id);

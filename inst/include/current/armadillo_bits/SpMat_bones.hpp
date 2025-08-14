@@ -399,11 +399,11 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_cold inline bool load(const csv_name&     spec, const file_type type =   csv_ascii);
   arma_cold inline bool load(      std::istream& is,   const file_type type = arma_binary);
   
-  arma_frown("use save() instead") inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  arma_frown("use save() instead") inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  arma_frown("use load() instead") inline bool quiet_load(const std::string   name, const file_type type = arma_binary);
-  arma_frown("use load() instead") inline bool quiet_load(      std::istream& is,   const file_type type = arma_binary);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const std::string   name, const file_type type = arma_binary);
+  [[deprecated("use load() instead")]] inline bool quiet_load(      std::istream& is,   const file_type type = arma_binary);
   
   
   

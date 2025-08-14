@@ -57,7 +57,20 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
     {
     arma_debug_print("op_rank::apply(): symmetric/hermitian optimisation");
     
-    return op_rank::apply_sym(out, A, tol);
+    const bool status = op_rank::apply_sym(out, A, tol);
+    
+    if( (status) && (out > uword(0)) )
+      {
+      return true;
+      }
+    else
+      {
+      arma_debug_print("op_rank::apply(): symmetric/hermitian optimisation failed");
+      
+      A = expr.get_ref();
+      
+      // fallthrough
+      }
     }
   
   return op_rank::apply_gen(out, A, tol);

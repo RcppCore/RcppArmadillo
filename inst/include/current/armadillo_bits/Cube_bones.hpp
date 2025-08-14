@@ -218,9 +218,9 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   template<typename T1> inline void shed_slices(const Base<uword, T1>& indices);
   
-  arma_deprecated inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
-  arma_deprecated inline void insert_cols(const uword row_num, const uword N, const bool set_to_zero);
-  arma_deprecated inline void insert_slices(const uword slice_num, const uword N, const bool set_to_zero);
+  [[deprecated]] inline void insert_rows(const uword row_num, const uword N, const bool set_to_zero);
+  [[deprecated]] inline void insert_cols(const uword row_num, const uword N, const bool set_to_zero);
+  [[deprecated]] inline void insert_slices(const uword slice_num, const uword N, const bool set_to_zero);
   
   inline void insert_rows(const uword row_num, const uword N);
   inline void insert_cols(const uword row_num, const uword N);
@@ -387,11 +387,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
   
-  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
-  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
+  [[deprecated("use .index_min() instead")]] inline eT min(uword& index_of_min_val) const;
+  [[deprecated("use .index_max() instead")]] inline eT max(uword& index_of_max_val) const;
   
-  arma_frown("use .index_min() with ind2sub() instead") inline eT min(uword& row_of_min_val, uword& col_of_min_val, uword& slice_of_min_val) const;
-  arma_frown("use .index_max() with ind2sub() instead") inline eT max(uword& row_of_max_val, uword& col_of_max_val, uword& slice_of_max_val) const;
+  [[deprecated("use .index_min() with ind2sub() instead")]] inline eT min(uword& row_of_min_val, uword& col_of_min_val, uword& slice_of_min_val) const;
+  [[deprecated("use .index_max() with ind2sub() instead")]] inline eT max(uword& row_of_max_val, uword& col_of_max_val, uword& slice_of_max_val) const;
   
   arma_cold inline bool save(const std::string   name, const file_type type = arma_binary) const;
   arma_cold inline bool save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
@@ -401,13 +401,13 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_cold inline bool load(const hdf5_name&    spec, const file_type type = hdf5_binary);
   arma_cold inline bool load(      std::istream& is,   const file_type type = auto_detect);
   
-  arma_deprecated inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  arma_deprecated inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
-  arma_deprecated inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
+  [[deprecated("use save() instead")]] inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
   
-  arma_deprecated inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
-  arma_deprecated inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
-  arma_deprecated inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
+  [[deprecated("use load() instead")]] inline bool quiet_load(const hdf5_name&    spec, const file_type type = hdf5_binary);
+  [[deprecated("use load() instead")]] inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
   
   
   // iterators

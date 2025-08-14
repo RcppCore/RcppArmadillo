@@ -77,7 +77,7 @@ struct SizeCube;
 
 struct arma_empty_class {};
 
-class diskio;
+struct diskio;
 
 struct op_strans;
 struct op_htrans;

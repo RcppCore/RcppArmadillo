@@ -48,7 +48,7 @@ reshape(const T1& X, const SizeMat& s)
 
 
 template<typename T1>
-arma_frown("don't use this form: it will be removed")
+[[deprecated("don't use this form: it will be removed")]]
 inline
 Mat<typename T1::elem_type>
 reshape(const Base<typename T1::elem_type,T1>& X, const uword new_n_rows, const uword new_n_cols, const uword dim)
