@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 14.6.3 (Caffe Mocha)
+    \itemize{
+      \item Fix OpenMP related crashes in \code{Cube::slice()} on Arm64 CPUs
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-08) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.2 (Caffe Mocha)
