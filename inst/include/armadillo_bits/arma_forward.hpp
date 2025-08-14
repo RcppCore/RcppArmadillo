@@ -312,7 +312,7 @@ struct state_type
     int out;
     
     #if   defined(ARMA_USE_OPENMP)
-      #pragma omp atomic read
+      #pragma omp atomic read seq_cst
       out = state;
     #elif defined(ARMA_USE_STD_MUTEX)
       out = state.load();
@@ -328,7 +328,7 @@ struct state_type
   operator= (const int in_state)
     {
     #if   defined(ARMA_USE_OPENMP)
-      #pragma omp atomic write
+      #pragma omp atomic write seq_cst
       state = in_state;
     #elif defined(ARMA_USE_STD_MUTEX)
       state.store(in_state);
