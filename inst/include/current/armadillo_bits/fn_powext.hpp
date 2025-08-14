@@ -44,7 +44,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_frown("refactor your code to use pow() in conjunction with repmat()")
+[[deprecated("refactor your code to use pow() in conjunction with repmat()")]]
 inline
 Mat<typename parent::elem_type>
 pow
@@ -78,7 +78,7 @@ pow
 
 
 template<typename eT, typename T2>
-arma_deprecated
+[[deprecated]]
 inline
 Cube<eT>
 pow
@@ -121,7 +121,7 @@ pow
 
 
 template<typename parent, unsigned int mode, typename T2>
-arma_frown("refactor your code to use pow() in conjunction with repmat()")
+[[deprecated("refactor your code to use pow() in conjunction with repmat()")]]
 inline
 typename
 enable_if2
@@ -160,7 +160,7 @@ pow
 
 
 template<typename T, typename T2>
-arma_deprecated
+[[deprecated]]
 inline
 Cube< std::complex<T> >
 pow

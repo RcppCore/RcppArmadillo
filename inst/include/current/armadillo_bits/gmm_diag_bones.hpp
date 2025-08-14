@@ -28,9 +28,9 @@ class gmm_diag
   {
   public:
   
-  arma_aligned const Mat<eT> means;
-  arma_aligned const Mat<eT> dcovs;
-  arma_aligned const Row<eT> hefts;
+  const Mat<eT> means;
+  const Mat<eT> dcovs;
+  const Row<eT> hefts;
   
   //
   //
@@ -116,10 +116,10 @@ class gmm_diag
   
   protected:
   
-  arma_aligned Mat<eT> inv_dcovs;
-  arma_aligned Row<eT> log_det_etc;
-  arma_aligned Row<eT> log_hefts;
-  arma_aligned Col<eT> mah_aux;
+  Mat<eT> inv_dcovs;
+  Row<eT> log_det_etc;
+  Row<eT> log_hefts;
+  Col<eT> mah_aux;
   
   //
   

@@ -73,8 +73,8 @@ class SpValProxy
   // Deletes the element if it is zero; NOTE: does not check if val_ptr == nullptr
   arma_inline void check_zero();
   
-  arma_aligned const uword row;
-  arma_aligned const uword col;
+  const uword row;
+  const uword col;
   
   arma_aligned eT* val_ptr;
   

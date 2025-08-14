@@ -23,8 +23,8 @@
 
 template<typename T1>
 inline
-typename T1::pod_type
-op_cond::apply(const Base<typename T1::elem_type, T1>& X)
+bool
+op_cond::apply(typename T1::pod_type& out, const Base<typename T1::elem_type, T1>& X)
   {
   arma_debug_sigprint();
   
@@ -33,31 +33,55 @@ op_cond::apply(const Base<typename T1::elem_type, T1>& X)
   
   Mat<eT> A(X.get_ref());
   
-  if(A.n_elem == 0)  { return T(0); }
+  if(A.n_elem == 0)  { out = T(0); return true; }
   
   if(is_op_diagmat<T1>::value || A.is_diagmat())
     {
     arma_debug_print("op_cond::apply(): diag optimisation");
     
-    return op_cond::apply_diag(A);
+    return op_cond::apply_diag(out, A);
     }
   
-  if(sym_helper::is_approx_sym(A))
+  bool do_sym = false;
+  
+  const bool is_sym_size_ok = (A.n_rows == A.n_cols) && (A.n_rows > (is_cx<eT>::yes ? uword(20) : uword(40)));  // for consistency with op_pinv
+  
+  if( (is_sym_size_ok) && (arma_config::optimise_sym) )
+    {
+    do_sym = is_sym_expr<T1>::eval(X.get_ref());
+    
+    if(do_sym == false)  { do_sym = sym_helper::is_approx_sym(A); }
+    }
+  
+  if(do_sym)
     {
     arma_debug_print("op_cond: symmetric/hermitian optimisation");
     
-    return op_cond::apply_sym(A);
+    const bool status = op_cond::apply_sym(out, A);
+    
+    if(status)
+      {
+      return true;
+      }
+    else
+      {
+      arma_debug_print("op_cond: symmetric/hermitian optimisation failed");
+      
+      A = X.get_ref();
+      
+      // fallthrough
+      }
     }
   
-  return op_cond::apply_gen(A);
+  return op_cond::apply_gen(out, A);
   }
 
 
 
 template<typename eT>
 inline
-typename get_pod_type<eT>::result
-op_cond::apply_diag(const Mat<eT>& A)
+bool
+op_cond::apply_diag(typename get_pod_type<eT>::result& out, const Mat<eT>& A)
   {
   arma_debug_sigprint();
   
@@ -72,28 +96,25 @@ op_cond::apply_diag(const Mat<eT>& A)
     {
     const T abs_val = std::abs(A.at(i,i));
     
-    if(arma_isnan(abs_val))
-      {
-      arma_warn(3, "cond(): failed");
-      
-      return Datum<T>::nan;
-      }
+    if(arma_isnan(abs_val))  { out = Datum<T>::nan; return false; }
     
     abs_min = (abs_val < abs_min) ? abs_val : abs_min;
     abs_max = (abs_val > abs_max) ? abs_val : abs_max;
     }
   
-  if((abs_min == T(0)) || (abs_max == T(0)))  { return Datum<T>::inf; }
+  if((abs_min == T(0)) || (abs_max == T(0)))  { out = Datum<T>::inf; return true; }
   
-  return T(abs_max / abs_min);
+  out = T(abs_max / abs_min);
+  
+  return true;
   }
 
 
 
 template<typename eT>
 inline
-typename get_pod_type<eT>::result
-op_cond::apply_sym(Mat<eT>& A)
+bool
+op_cond::apply_sym(typename get_pod_type<eT>::result& out, Mat<eT>& A)
   {
   arma_debug_sigprint();
   
@@ -103,14 +124,9 @@ op_cond::apply_sym(Mat<eT>& A)
   
   const bool status = auxlib::eig_sym(eigval, A);
   
-  if(status == false)
-    {
-    arma_warn(3, "cond(): failed");
-    
-    return Datum<T>::nan;
-    }
+  if(status == false)  { out = Datum<T>::nan; return false; }
   
-  if(eigval.n_elem == 0)  { return T(0); }
+  if(eigval.n_elem == 0)  { out = T(0); return true; }
   
   const T* eigval_mem = eigval.memptr();
   
@@ -125,17 +141,19 @@ op_cond::apply_sym(Mat<eT>& A)
     abs_max = (abs_val > abs_max) ? abs_val : abs_max;
     }
   
-  if((abs_min == T(0)) || (abs_max == T(0)))  { return Datum<T>::inf; }
+  if((abs_min == T(0)) || (abs_max == T(0)))  { out = Datum<T>::inf; return true; }
   
-  return T(abs_max / abs_min);
+  out = T(abs_max / abs_min);
+  
+  return true;
   }
 
 
 
 template<typename eT>
 inline
-typename get_pod_type<eT>::result
-op_cond::apply_gen(Mat<eT>& A)
+bool
+op_cond::apply_gen(typename get_pod_type<eT>::result& out, Mat<eT>& A)
   {
   arma_debug_sigprint();
   
@@ -145,21 +163,18 @@ op_cond::apply_gen(Mat<eT>& A)
   
   const bool status = auxlib::svd_dc(S, A);
   
-  if(status == false)
-    {
-    arma_warn(3, "cond(): failed");
-    
-    return Datum<T>::nan;
-    }
+  if(status == false)  { out = Datum<T>::nan; return false; }
   
-  if(S.n_elem == 0)  { return T(0); }
+  if(S.n_elem == 0)  { out = T(0); return true; }
   
   const T S_max = S[0];
   const T S_min = S[S.n_elem-1];
   
-  if((S_max == T(0)) || (S_min == T(0)))  { return Datum<T>::inf; }
+  if((S_max == T(0)) || (S_min == T(0)))  { out = Datum<T>::inf; return true; }
   
-  return T(S_max / S_min);
+  out = T(S_max / S_min);
+  
+  return true;
   }
 
 

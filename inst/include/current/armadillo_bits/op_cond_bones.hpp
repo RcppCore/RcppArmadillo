@@ -23,11 +23,11 @@
 struct op_cond
   : public traits_op_default
   {
-  template<typename T1> static inline typename T1::pod_type apply(const Base<typename T1::elem_type, T1>& X);
+  template<typename T1> static inline bool apply(typename T1::pod_type& out, const Base<typename T1::elem_type, T1>& X);
   
-  template<typename eT> static inline typename get_pod_type<eT>::result apply_diag(const Mat<eT>& A);
-  template<typename eT> static inline typename get_pod_type<eT>::result apply_sym (      Mat<eT>& A);
-  template<typename eT> static inline typename get_pod_type<eT>::result apply_gen (      Mat<eT>& A);
+  template<typename eT> static inline bool apply_diag(typename get_pod_type<eT>::result& out, const Mat<eT>& A);
+  template<typename eT> static inline bool apply_sym (typename get_pod_type<eT>::result& out,       Mat<eT>& A);
+  template<typename eT> static inline bool apply_gen (typename get_pod_type<eT>::result& out,       Mat<eT>& A);
   };
 
 

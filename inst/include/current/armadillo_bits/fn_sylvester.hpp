@@ -61,7 +61,7 @@ sylvester
 
 // kept for compatibility with old user code
 template<typename T1, typename T2, typename T3>
-arma_frown("use sylvester() instead")
+[[deprecated("use sylvester() instead")]]
 inline
 bool
 syl
@@ -122,7 +122,7 @@ sylvester
 
 // kept for compatibility with old user code
 template<typename T1, typename T2, typename T3>
-arma_frown("use sylvester() instead")
+[[deprecated("use sylvester() instead")]]
 inline
 Mat<typename T1::elem_type>
 syl

@@ -25,7 +25,7 @@ wall_clock::wall_clock()
   {
   arma_debug_sigprint();
   
-  chrono_time1 = std::chrono::steady_clock::now();  // warmup
+  tic_point = std::chrono::steady_clock::now();  // warmup
   }
 
 
@@ -44,9 +44,16 @@ wall_clock::tic()
   {
   arma_debug_sigprint();
   
-  valid = true;
+  if(is_frozen)
+    {
+    is_frozen = false;
+    
+    frozen_span = std::chrono::duration<double>::zero();
+    }
   
-  chrono_time1 = std::chrono::steady_clock::now();
+  is_started = true;
+  
+  tic_point = std::chrono::steady_clock::now();
   }
 
 
@@ -57,14 +64,65 @@ wall_clock::toc()
   {
   arma_debug_sigprint();
   
-  const std::chrono::steady_clock::time_point chrono_time2 = std::chrono::steady_clock::now();
+  typedef std::chrono::duration<double> duration_type;
   
-  typedef std::chrono::duration<double> duration_type;  // TODO: check this
+  const std::chrono::steady_clock::time_point toc_point = std::chrono::steady_clock::now();
   
-  const duration_type chrono_span = std::chrono::duration_cast< duration_type >(chrono_time2 - chrono_time1);
+  duration_type local_frozen_span = frozen_span;
   
-  return (valid) ? double(chrono_span.count()) : double(0);
+  if(is_frozen)
+    {
+    // treat toc_point as equivalent to thaw_point
+    
+    const duration_type chrono_span = std::chrono::duration_cast< duration_type >(toc_point - freeze_point);
+    
+    local_frozen_span += chrono_span;
+    }
+  
+  duration_type chrono_span = std::chrono::duration_cast< duration_type >(toc_point - tic_point);
+  
+  chrono_span -= local_frozen_span;
+  
+  return (is_started) ? double(chrono_span.count()) : double(0);
   }
+
+
+inline
+void
+wall_clock::freeze()
+  {
+  arma_debug_sigprint();
+  
+  if( (is_started) && (is_frozen == false) )
+    {
+    is_frozen = true;
+    
+    freeze_point = std::chrono::steady_clock::now();
+    }
+  }
+
+
+
+inline
+void
+wall_clock::unfreeze()
+  {
+  arma_debug_sigprint();
+  
+  typedef std::chrono::duration<double> duration_type;
+  
+  const std::chrono::steady_clock::time_point thaw_point = std::chrono::steady_clock::now();
+  
+  if(is_frozen)
+    {
+    is_frozen = false;
+    
+    const duration_type chrono_span = std::chrono::duration_cast< duration_type >(thaw_point - freeze_point);
+    
+    frozen_span += chrono_span;
+    }
+  }
+
 
 
 //! @}

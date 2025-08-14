@@ -105,9 +105,13 @@ spop_norm::mat_norm_2(const SpMat<eT>& X, const typename arma_fp16_real_or_cx_on
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  arma_stop_logic_error("norm(): matrix 2-norm currently not supported for fp16; try norm2est() instead");
+  typedef typename get_pod_type<eT>::result T;
   
-  return typename get_pod_type<eT>::result(0);
+  typedef typename promote_type<eT, float>::result promoted_eT;
+  
+  const SpMat<promoted_eT> XX = conv_to< SpMat<promoted_eT> >::from(X);
+  
+  return T(spop_norm::mat_norm_2(XX));
   }
 
 

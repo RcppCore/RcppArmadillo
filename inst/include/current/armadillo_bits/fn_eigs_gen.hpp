@@ -57,7 +57,7 @@ eigs_gen
 
 //! this form is deprecated; use eigs_gen(X, n_eigvals, form, opts) instead
 template<typename T1>
-arma_deprecated
+[[deprecated]]
 inline
 typename enable_if2< is_blas_real<typename T1::pod_type>::value, Col< std::complex<typename T1::pod_type> > >::result
 eigs_gen
@@ -189,7 +189,7 @@ eigs_gen
 
 //! this form is deprecated; use eigs_gen(eigval, X, n_eigvals, form, opts) instead
 template<typename T1>
-arma_deprecated
+[[deprecated]]
 inline
 typename enable_if2< is_blas_real<typename T1::pod_type>::value, bool >::result
 eigs_gen
@@ -322,7 +322,7 @@ eigs_gen
 
 //! this form is deprecated; use eigs_gen(eigval, eigvec, X, n_eigvals, form, opts) instead
 template<typename T1>
-arma_deprecated
+[[deprecated]]
 inline
 typename enable_if2< is_blas_real<typename T1::pod_type>::value, bool >::result
 eigs_gen

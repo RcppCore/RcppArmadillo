@@ -28,9 +28,9 @@ class gmm_full
   {
   public:
   
-  arma_aligned const Mat <eT> means;
-  arma_aligned const Cube<eT> fcovs;
-  arma_aligned const Row <eT> hefts;
+  const Mat <eT> means;
+  const Cube<eT> fcovs;
+  const Row <eT> hefts;
   
   //
   //
@@ -103,11 +103,11 @@ class gmm_full
   protected:
   
   
-  arma_aligned Cube<eT> inv_fcovs;
-  arma_aligned Row<eT>  log_det_etc;
-  arma_aligned Row<eT>  log_hefts;
-  arma_aligned Col<eT>  mah_aux;
-  arma_aligned Cube<eT> chol_fcovs;
+  Cube<eT> inv_fcovs;
+  Row<eT>  log_det_etc;
+  Row<eT>  log_hefts;
+  Col<eT>  mah_aux;
+  Cube<eT> chol_fcovs;
   
   //
   

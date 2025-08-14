@@ -45,7 +45,7 @@ struct fft_engine_wrapper
     {
     arma_debug_sigprint();
     
-    const bool use_fftw3 = (N_samples >= (threshold / N_exec)) && (is_cx_fp16<cx_type>::no);
+    const bool use_fftw3 = (is_cx_fp16<cx_type>::no) && (N_samples >= (threshold / N_exec));
     
     worker_kissfft = (use_fftw3 == false) ? new fft_engine_kissfft<cx_type,inverse>(N_samples) : nullptr;
     worker_fftw3   = (use_fftw3 == true ) ? new fft_engine_fftw3  <cx_type,inverse>(N_samples) : nullptr;

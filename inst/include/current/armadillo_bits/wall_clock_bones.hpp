@@ -28,15 +28,21 @@ class wall_clock
   inline  wall_clock();
   inline ~wall_clock();
   
-                   inline void   tic();  //!< start the timer
+                   inline void   tic();  //!< reset and start the timer
   arma_warn_unused inline double toc();  //!< return the number of seconds since the last call to tic()
   
+  inline void   freeze();  //!<   freeze the timer
+  inline void unfreeze();  //!< unfreeze the timer
   
   private:
   
-  std::chrono::steady_clock::time_point chrono_time1;
+  std::chrono::steady_clock::time_point    tic_point;
+  std::chrono::steady_clock::time_point freeze_point;
   
-  bool valid = false;
+  std::chrono::duration<double> frozen_span = std::chrono::duration<double>::zero();
+  
+  bool is_started = false;
+  bool is_frozen  = false;
   };
 
 
