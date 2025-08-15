@@ -615,7 +615,7 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
   
   #if defined(ARMA_USE_OPENMP)
     {
-    #pragma omp atomic read
+    #pragma omp atomic read seq_cst
     mat_ptr = mat_ptrs[in_slice];
     }
   #elif defined(ARMA_USE_STD_MUTEX)
@@ -634,12 +634,12 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
       {
       #pragma omp critical (arma_Cube_mat_ptrs)
         {
-        #pragma omp atomic read
+        #pragma omp atomic read seq_cst
         mat_ptr = mat_ptrs[in_slice];
         
         if(mat_ptr == nullptr)  { mat_ptr = create_mat_ptr(in_slice); }
         
-        #pragma omp atomic write
+        #pragma omp atomic write seq_cst
         mat_ptrs[in_slice] = mat_ptr;
         }
       }

@@ -394,16 +394,17 @@
 
 
 #if !defined(ARMA_DONT_USE_OPENMP)
-  #if (defined(_OPENMP) && (_OPENMP >= 201107))
+  #if (defined(_OPENMP) && (_OPENMP >= 201307))
     #undef  ARMA_USE_OPENMP
     #define ARMA_USE_OPENMP
   #endif
 #endif
 
 
-#if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 201107))) )
+#if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 201307))) )
   // OpenMP 3.0 required for parallelisation of loops with unsigned integers
-  // OpenMP 3.1 required for atomic read and atomic write
+  // OpenMP 3.1 required for atomic read/write
+  // OpenMP 4.0 required for seq_cst memory order clause in atomic read/write
   #undef  ARMA_USE_OPENMP
   #undef  ARMA_PRINT_OPENMP_WARNING
   #define ARMA_PRINT_OPENMP_WARNING
@@ -411,11 +412,10 @@
 
 
 #if defined(ARMA_PRINT_OPENMP_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
-  #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 3.1+ not detected")
+  #pragma message ("WARNING: use of OpenMP disabled; compiler support for OpenMP 4.0+ not detected")
   
-  #if (defined(_OPENMP) && (_OPENMP < 201107))
+  #if (defined(_OPENMP) && (_OPENMP < 201307))
     #pragma message ("NOTE: your compiler has an outdated version of OpenMP")
-    #pragma message ("NOTE: consider upgrading to a better compiler")
   #endif
 #endif
 
