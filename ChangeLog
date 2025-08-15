@@ -1,3 +1,12 @@
+2025-08-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/legacy/: Synced with Armadillo 14.6.3
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 14.90.0-4
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
 2025-08-14  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 14.6.3-1
