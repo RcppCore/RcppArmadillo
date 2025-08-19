@@ -16,6 +16,7 @@
 \section{Changes in RcppArmadillo version 14.90.0-2 (2025-08-10) (GitHub Only)}{
 \section{Changes in RcppArmadillo version 14.90.0-3 (2025-08-14) (GitHub Only)}{
 \section{Changes in RcppArmadillo version 14.90.0-4 (2025-08-15) (GitHub Only)}{
+\section{Changes in RcppArmadillo version 14.90.0-5 (2025-08-19) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 14.90.0 (Experimental)
     \itemize{
@@ -25,6 +26,8 @@
       \item Added second form of \code{cond()} to allow detection of failures
       \item Added \code{.freeze()} and \code{.unfreeze()} member functions to
       \code{wall_clock}
+      \item Extended \code{conv()} and \code{conv2()} to accept the "valid"
+      shape argument
       \item Added workarounds to \code{svd()} and \code{eig_sym()} to address
       limitations of default LAPACK that uses 32 bit integers
     }
