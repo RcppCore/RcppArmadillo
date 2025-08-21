@@ -21,19 +21,15 @@
 //! @{
 
 
+
 template<typename T1>
 arma_warn_unused
-arma_inline
-typename
-enable_if2
-  <
-  is_arma_type<T1>::value,
-  const Op<T1, op_repmat>
-  >::result
+inline
+typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_repmat> >::result
 repmat(const T1& A, const uword r, const uword c)
   {
   arma_debug_sigprint();
-
+  
   return Op<T1, op_repmat>(A, r, c);
   }
 
@@ -41,13 +37,26 @@ repmat(const T1& A, const uword r, const uword c)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_repmat>
 repmat(const SpBase<typename T1::elem_type,T1>& A, const uword r, const uword c)
   {
   arma_debug_sigprint();
-
+  
   return SpOp<T1, spop_repmat>(A.get_ref(), r, c);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_repcube>
+repcube(const BaseCube<typename T1::elem_type,T1>& A, const uword r, const uword c, const uword s)
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_repcube>(A.get_ref(), r, c, s);
   }
 
 

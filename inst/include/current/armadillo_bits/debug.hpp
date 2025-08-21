@@ -1330,6 +1330,47 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 
 
+template<typename eT>
+inline
+void
+arma_elem_type_string(std::string& out)
+  {
+       if(       is_u8<eT>::value)  { out = "u8";        }
+  else if(       is_s8<eT>::value)  { out = "s8";        }
+  else if(      is_u16<eT>::value)  { out = "u16";       }
+  else if(      is_s16<eT>::value)  { out = "s16";       }
+  else if(      is_u32<eT>::value)  { out = "u32";       }
+  else if(      is_s32<eT>::value)  { out = "s32";       }
+  else if(      is_u64<eT>::value)  { out = "u64";       }
+  else if(      is_s64<eT>::value)  { out = "s64";       }
+  else if(   is_ulng_t<eT>::value)  { out = "ulng_t";    }
+  else if(   is_slng_t<eT>::value)  { out = "slng_t";    }
+  else if(    is_float<eT>::value)  { out = "float";     }
+  else if(   is_double<eT>::value)  { out = "double";    }
+  else if( is_cx_float<eT>::value)  { out = "cx_float";  }
+  else if(is_cx_double<eT>::value)  { out = "cx_double"; }
+  else if(     is_fp16<eT>::value)  { out = "fp16";      }
+  else if(  is_cx_fp16<eT>::value)  { out = "cx_fp16";   }
+  else                              { out = "unknown";   }
+  }
+
+
+
+template<typename eT>
+arma_cold
+inline
+void
+arma_type_print(const char* header)
+  {
+  std::string elem_type_str;
+  
+  arma_elem_type_string<eT>(elem_type_str);
+  
+  get_cerr_stream() << header << ": " << elem_type_str << std::endl;
+  }
+
+
+
 //
 // macros
 
@@ -1372,6 +1413,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
   #define arma_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
   #define arma_debug_print          arma_print
+  #define arma_debug_type_print     arma_type_print
   
   // for compatibility with earlier versions of Armadillo
   #define arma_extra_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
@@ -1383,6 +1425,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_sigprint        true ? (void)0 : arma_bktprint
   #define arma_debug_sigprint_this   true ? (void)0 : arma_thisprint
   #define arma_debug_print           true ? (void)0 : arma_print
+  #define arma_debug_type_print      true ? (void)0 : arma_type_print
   
   // for compatibility with earlier versions of Armadillo
   #define arma_extra_debug_sigprint        true ? (void)0 : arma_bktprint

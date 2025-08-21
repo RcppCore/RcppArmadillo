@@ -180,6 +180,9 @@ op_norm::vec_norm_1(const Proxy<T1>& P, const typename arma_cx_only<typename T1:
     
     typedef typename get_pod_type<acc_eT>::result acc_T;
     
+    arma_debug_type_print<eT>("eT");
+    arma_debug_type_print<acc_eT>("acc_eT");
+    
     const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
     
     const uword N     = R.M.n_elem;
@@ -516,6 +519,9 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_cx_only<typename T1:
     
     typedef typename get_pod_type<acc_eT>::result acc_T;
     
+    arma_debug_type_print<eT>("eT");
+    arma_debug_type_print<acc_eT>("acc_eT");
+    
     const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
     
     const uword N     = R.M.n_elem;
@@ -691,6 +697,9 @@ op_norm::vec_norm_2_direct_robust(const Mat<eT>& X)
   arma_debug_sigprint();
   
   typedef typename promote_type<eT, float>::result acc_eT;
+  
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
   
   const uword N = X.n_elem;
   
@@ -1010,6 +1019,9 @@ op_norm::mat_norm_2(const Mat<eT>& X, const typename arma_fp16_real_or_cx_only<e
   typedef typename get_pod_type<eT>::result T;
   
   typedef typename promote_type<eT, float>::result promoted_eT;
+  
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<promoted_eT>("promoted_eT");
   
   const Mat<promoted_eT> XX = conv_to< Mat<promoted_eT> >::from(X);
   

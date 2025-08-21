@@ -21,9 +21,8 @@
 //! @{
 
 
-// TODO: deprecate shift() in favour of circshift()
 
-
+// TODO: deprecate in favour of circshift()
 template<typename T1>
 arma_warn_unused
 arma_inline
@@ -74,6 +73,7 @@ circshift
 
 
 
+// TODO: deprecate in favour of circshift()
 template<typename T1>
 arma_warn_unused
 inline
@@ -140,6 +140,7 @@ circshift
 
 
 
+// TODO: deprecate in favour of circshift()
 template<typename T1>
 arma_warn_unused
 inline
@@ -216,6 +217,7 @@ circshift
 
 
 
+// TODO: deprecate in favour of circshift()
 template<typename T1>
 arma_warn_unused
 inline

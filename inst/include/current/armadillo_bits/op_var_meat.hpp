@@ -142,6 +142,9 @@ op_var::direct_var(const eT* X, const uword n_elem, const uword norm_type)
   
   typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
   
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
+  
   if(n_elem >= 2)
     {
     const acc_eT acc1 = acc_eT( op_mean::direct_mean(X, n_elem) );
@@ -198,6 +201,9 @@ op_var::direct_var_robust(const eT* X, const uword n_elem, const uword norm_type
   
   typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
   
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
+  
   if(n_elem >= 2)
     {
     acc_eT r_mean = acc_eT(X[0]);
@@ -236,6 +242,9 @@ op_var::direct_var(const std::complex<T>* const X, const uword n_elem, const uwo
   typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
   
   typedef typename get_pod_type<acc_eT>::result acc_T;
+  
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
   
   if(n_elem >= 2)
     {
@@ -280,6 +289,9 @@ op_var::direct_var_robust(const std::complex<T>* const X, const uword n_elem, co
   typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
   
   typedef typename get_pod_type<acc_eT>::result acc_T;
+  
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
   
   if(n_elem >= 2)
     {

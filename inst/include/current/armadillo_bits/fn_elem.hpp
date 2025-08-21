@@ -1190,6 +1190,61 @@ tgamma(const BaseCube<typename T1::elem_type,T1>& A)
 
 
 
+//
+// eps
+
+template<typename T1>
+arma_warn_unused
+inline
+typename enable_if2< (is_arma_type<T1>::value && is_real_or_cx<typename T1::elem_type>::value), const mtOp<typename T1::pod_type, T1, op_eps> >::result
+eps(const T1& X)
+  {
+  arma_debug_sigprint();
+  
+  return mtOp<typename T1::pod_type, T1, op_eps>(X);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename enable_if2< (is_arma_cube_type<T1>::value && is_real_or_cx<typename T1::elem_type>::value), const mtOpCube<typename T1::pod_type, T1, op_eps> >::result
+eps(const T1& X)
+  {
+  arma_debug_sigprint();
+  
+  return mtOpCube<typename T1::pod_type, T1, op_eps>(X);
+  }
+
+
+
+template<typename eT>
+arma_warn_unused
+inline
+typename arma_real_only<eT>::result
+eps(const eT& x)
+  {
+  arma_debug_sigprint();
+  
+  return op_eps::direct_eps(x);
+  }
+
+
+
+template<typename T>
+arma_warn_unused
+inline
+typename arma_real_only<T>::result
+eps(const std::complex<T>& x)
+  {
+  arma_debug_sigprint();
+  
+  return op_eps::direct_eps(x);
+  }
+
+
+
 // the functions below are currently unused; reserved for potential future use
 
 template<typename T1> void exp_approx(const T1&) { arma_stop_logic_error("unimplemented"); }

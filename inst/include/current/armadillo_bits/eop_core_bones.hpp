@@ -87,7 +87,6 @@ struct eop_acosh             : public eop_core<eop_acosh>             , public e
 struct eop_asinh             : public eop_core<eop_asinh>             , public eop_use_mp_true  {};
 struct eop_atanh             : public eop_core<eop_atanh>             , public eop_use_mp_true  {};
 struct eop_sinc              : public eop_core<eop_sinc>              , public eop_use_mp_true  {};
-struct eop_eps               : public eop_core<eop_eps>               , public eop_use_mp_true  {};
 struct eop_abs               : public eop_core<eop_abs>               , public eop_use_mp_false {};
 struct eop_arg               : public eop_core<eop_arg>               , public eop_use_mp_false {};
 struct eop_conj              : public eop_core<eop_conj>              , public eop_use_mp_false {};

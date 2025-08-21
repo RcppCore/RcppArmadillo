@@ -163,7 +163,7 @@
   #define ARMA_OPTIMISE_SYM
   //// Comment out the above line to disable optimised handling
   //// of symmetric/hermitian matrices by various functions:
-  //// solve(), inv(), pinv(), expmat(), logmat(), sqrtmat(), rcond(), rank()
+  //// solve(), inv(), pinv(), expmat(), logmat(), sqrtmat(), powmat(), rank(), cond(), rcond() 
 #endif
 
 #if !defined(ARMA_OPTIMISE_INVEXPR)

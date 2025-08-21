@@ -359,6 +359,9 @@ op_mean::direct_mean_promote(const eT* X_mem, const uword N)
   
   typedef typename get_pod_type<acc_eT>::result acc_T;
   
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
+  
   acc_eT acc = acc_eT(0);
   
   for(uword i=0; i<N; ++i)  { acc += acc_eT(X_mem[i]); }
@@ -384,6 +387,9 @@ op_mean::direct_mean_robust_promote(const eT old_mean, const eT* X_mem, const uw
   typedef typename conditional_promote_type<is_real_or_cx<eT>::value, eT, float>::result acc_eT;
 
   typedef typename get_pod_type<acc_eT>::result acc_T;
+  
+  arma_debug_type_print<eT>("eT");
+  arma_debug_type_print<acc_eT>("acc_eT");
   
   if(arrayops::is_finite(X_mem, N) == false)  { return old_mean; }
   

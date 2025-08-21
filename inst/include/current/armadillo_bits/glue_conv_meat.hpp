@@ -45,10 +45,7 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   const eT*   h_mem =  h.memptr();
         eT*  hh_mem = hh.memptr();
   
-  for(uword i=0; i < h_n_elem; ++i)
-    {
-    hh_mem[h_n_elem_m1-i] = h_mem[i];
-    }
+  for(uword i=0; i < h_n_elem; ++i)  { hh_mem[h_n_elem_m1-i] = h_mem[i]; }
   
   
   Col<eT> xx( (x_n_elem + 2*h_n_elem_m1), arma_zeros_indicator() );  // zero padded version of x
@@ -229,6 +226,26 @@ glue_conv::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv>& 
       out.zeros( arma::size(A) );
       }
     }
+  else
+  if(mode == 2)  // valid convolution
+    {
+    Mat<eT> tmp;
+    
+    glue_conv::apply(tmp, A, B, A_is_col);
+    
+    const uword out_len = (A.n_elem >= B.n_elem) ? uword(A.n_elem - B.n_elem + 1) : uword(0);
+    
+    const SizeMat out_size = (A_is_col) ? SizeMat(out_len, 1) : SizeMat(1, out_len);
+    
+    if( (out_len > 0) && (tmp.is_empty() == false) && (A.is_empty() == false) && (B.is_empty() == false) )
+      {
+      out = (A_is_col) ? tmp(B.n_elem - 1, 0, out_size) : tmp(0, B.n_elem - 1, out_size);
+      }
+    else
+      {
+      out.zeros( out_size );
+      }
+    }
   }
 
 
@@ -376,6 +393,27 @@ glue_conv2::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_conv2>
     else
       {
       out.zeros( arma::size(A) );
+      }
+    }
+  else
+  if(mode == 2)  // valid convolution
+    {
+    Mat<eT> tmp;
+    
+    glue_conv2::apply(tmp, A, B);
+    
+    const uword out_n_rows = (A.n_rows >= B.n_rows) ? uword(A.n_rows - B.n_rows + 1) : uword(0);
+    const uword out_n_cols = (A.n_cols >= B.n_cols) ? uword(A.n_cols - B.n_cols + 1) : uword(0);
+    
+    const SizeMat out_size = SizeMat(out_n_rows, out_n_cols);
+    
+    if( (out_n_rows > 0) && (out_n_cols > 0) && (tmp.is_empty() == false) && (A.is_empty() == false) && (B.is_empty() == false) )
+      {
+      out = tmp(B.n_rows - 1, B.n_cols - 1, out_size);
+      }
+    else
+      {
+      out.zeros( out_size );
       }
     }
   }

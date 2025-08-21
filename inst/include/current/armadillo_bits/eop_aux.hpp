@@ -136,55 +136,6 @@ struct eop_aux
   
   template<typename T1, typename T2> arma_inline static typename   arma_integral_only<T1>::result pow (const T1 base, const T2 exponent) { return T1( std::pow( double(base), double(exponent) ) ); }
   template<typename T1, typename T2> arma_inline static typename arma_real_or_cx_only<T1>::result pow (const T1 base, const T2 exponent) { return T1( std::pow(        base,         exponent  ) ); }
-  
-  
-  template<typename eT>
-  arma_inline
-  static
-  typename arma_integral_only<eT>::result
-  direct_eps(const eT)
-    {
-    return eT(0);
-    }
-  
-  
-  template<typename eT>
-  inline
-  static
-  typename arma_real_only<eT>::result
-  direct_eps(const eT x)
-    {
-    //arma_debug_sigprint();
-    
-    // according to IEEE Standard for Floating-Point Arithmetic (IEEE 754)
-    // the mantissa length for double is 53 bits = std::numeric_limits<double>::digits
-    // the mantissa length for float  is 24 bits = std::numeric_limits<float >::digits
-    
-    //return std::pow( std::numeric_limits<eT>::radix, (std::floor(std::log10(std::abs(x))/std::log10(std::numeric_limits<eT>::radix))-(std::numeric_limits<eT>::digits-1)) );
-    
-    const eT radix_eT     = eT(std::numeric_limits<eT>::radix);
-    const eT digits_m1_eT = eT(std::numeric_limits<eT>::digits - 1);
-    
-    // return std::pow( radix_eT, eT(std::floor(std::log10(std::abs(x))/std::log10(radix_eT)) - digits_m1_eT) );
-    return eop_aux::pow( radix_eT, eT(std::floor(std::log10(std::abs(x))/std::log10(radix_eT)) - digits_m1_eT) );
-    }
-  
-  
-  template<typename T>
-  inline
-  static
-  typename arma_real_only<T>::result
-  direct_eps(const std::complex<T>& x)
-    {
-    //arma_debug_sigprint();
-    
-    //return std::pow( std::numeric_limits<T>::radix, (std::floor(std::log10(std::abs(x))/std::log10(std::numeric_limits<T>::radix))-(std::numeric_limits<T>::digits-1)) );
-    
-    const T radix_T     = T(std::numeric_limits<T>::radix);
-    const T digits_m1_T = T(std::numeric_limits<T>::digits - 1);
-    
-    return std::pow( radix_T, T(std::floor(std::log10(std::abs(x))/std::log10(radix_T)) - digits_m1_T) );
-    }
   };
 
 

@@ -32,4 +32,13 @@ struct op_repmat
 
 
 
+struct op_repcube
+  {
+  template<typename eT> inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword copies_per_row, const uword copies_per_col, const uword copies_per_slice);
+  
+  template<typename T1> inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_repcube>& in);
+  };
+
+
+
 //! @}

@@ -34,12 +34,7 @@ struct mp_gate
       {
       const bool length_ok = (is_cx<eT>::yes || use_smaller_thresh) ? (n_elem >= (arma_config::mp_threshold/uword(2))) : (n_elem >= arma_config::mp_threshold);
       
-      if(length_ok)
-        {
-        if(omp_in_parallel())  { return false; }
-        }
-      
-      return length_ok;
+      return (length_ok) ? (bool(omp_in_parallel()) == false) : false;
       }
     #else
       {

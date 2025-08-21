@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-//
+// 
 // Copyright 2008-2016 Conrad Sanderson (https://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
-//
+// 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 // https://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,10 @@
 
 
 
-#define ARMA_VERSION_MAJOR 14
-#define ARMA_VERSION_MINOR 6
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Caffe Mocha"
+#define ARMA_VERSION_MAJOR 15
+#define ARMA_VERSION_MINOR 0
+#define ARMA_VERSION_PATCH 0
+#define ARMA_VERSION_NAME  "Medium Roast"
 
 
 
@@ -33,16 +33,16 @@ struct arma_version
   static constexpr unsigned int major = ARMA_VERSION_MAJOR;
   static constexpr unsigned int minor = ARMA_VERSION_MINOR;
   static constexpr unsigned int patch = ARMA_VERSION_PATCH;
-
+  
   static
   inline
   std::string
   as_string()
     {
     const char* nickname = ARMA_VERSION_NAME;
-
+    
     std::ostringstream ss;
-
+    
     ss << arma_version::major
        << '.'
        << arma_version::minor
@@ -51,7 +51,7 @@ struct arma_version
        << " ("
        << nickname
        << ')';
-
+    
     return ss.str();
     }
   };
