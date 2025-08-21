@@ -3,39 +3,27 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14)}{
+\section{Changes in RcppArmadillo version 15.0.0-1 (2025-08-21)}{
   \itemize{
-    \item Upgraded to Armadillo release 14.6.3 (Caffe Mocha)
-    \itemize{
-      \item Fix OpenMP related crashes in \code{Cube::slice()} on Arm64 CPUs
-    }
-  }
-}
-
-\section{Changes in RcppArmadillo version 14.6.2-1 (2025-08-08) (GitHub Only)}{
-\section{Changes in RcppArmadillo version 14.90.0-2 (2025-08-10) (GitHub Only)}{
-\section{Changes in RcppArmadillo version 14.90.0-3 (2025-08-14) (GitHub Only)}{
-\section{Changes in RcppArmadillo version 14.90.0-4 (2025-08-15) (GitHub Only)}{
-\section{Changes in RcppArmadillo version 14.90.0-5 (2025-08-19) (GitHub Only)}{
-  \itemize{
-    \item Upgraded to Armadillo release 14.90.0 (Experimental)
+    \item Upgraded to Armadillo release 15.0.0-1 (Medium Roast)
     \itemize{
       \item C++14 is now the minimum required C++ standard
       \item Aded preliminary support for matrices with half-precision fp16
       element type
       \item Added second form of \code{cond()} to allow detection of failures
+      \item Added \code{repcube()}
       \item Added \code{.freeze()} and \code{.unfreeze()} member functions to
       \code{wall_clock}
       \item Extended \code{conv()} and \code{conv2()} to accept the "valid"
       shape argument
-      \item Added workarounds to \code{svd()} and \code{eig_sym()} to address
-      limitations of default LAPACK that uses 32 bit integers
     }
     \item Also include Armadillo 14.6.3 as fallback for C++11 compilations
+    \item This new 'dual' setup had been rigorously tested with five interim
+    pre-releases of which several received full reverse-dependency checks
   }
 }
 
-\section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14) (GitHub Only)}{
+\section{Changes in RcppArmadillo version 14.6.3-1 (2025-08-14)}{
   \itemize{
     \item Upgraded to Armadillo release 14.6.3 (Caffe Mocha)
     \itemize{
