@@ -62,47 +62,53 @@ op_dot::direct_dot_generic(const uword n_elem, const eT* const A, const eT* cons
 
 
 
-//! generic version for non-complex values with forced optimisation under GCC
-template<typename eT>
-#if defined(ARMA_REAL_GCC) && !defined(ARMA_DONT_FORCE_OPTIMISE_DOT)
-__attribute__((optimize("O3", "fast-math")))
-#endif
-inline
-typename arma_not_cx<eT>::result
-op_dot::direct_dot_generic_force_optimise(const uword n_elem, const eT* const A, const eT* const B)
-  {
-  arma_debug_sigprint();
-  
-  #if defined(__FAST_MATH__)
-    {
-    eT val = eT(0);
-    
-    for(uword i=0; i < n_elem; ++i)  { val += (A[i] * B[i]); }
-    
-    return val;
-    }
-  #else
-    {
-    eT val1 = eT(0);
-    eT val2 = eT(0);
-    
-    uword i, j;
-    
-    for(i=0, j=1; j < n_elem; i+=2, j+=2)
-      {
-      val1 += (A[i] * B[i]);
-      val2 += (A[j] * B[j]);
-      }
-    
-    if(i < n_elem)
-      {
-      val1 += (A[i] * B[i]);
-      }
-    
-    return (val1 + val2);
-    }
-  #endif
-  }
+// //! generic version for non-complex values with forced SIMD optimisation under OpenMP
+// template<typename eT>
+// inline
+// typename arma_not_cx<eT>::result
+// op_dot::direct_dot_generic_force_optimise(const uword n_elem, const eT* const A, const eT* const B)
+//   {
+//   arma_debug_sigprint();
+//   
+//   #if defined(ARMA_USE_OPENMP)
+//     {
+//     eT val = eT(0);
+//     
+//     #pragma omp simd
+//     for(uword i=0; i < n_elem; ++i)  { val += (A[i] * B[i]); }
+//     
+//     return val;
+//     }
+//   #elif defined(__FAST_MATH__)
+//     {
+//     eT val = eT(0);
+//     
+//     for(uword i=0; i < n_elem; ++i)  { val += (A[i] * B[i]); }
+//     
+//     return val;
+//     }
+//   #else
+//     {
+//     eT val1 = eT(0);
+//     eT val2 = eT(0);
+//     
+//     uword i, j;
+//     
+//     for(i=0, j=1; j < n_elem; i+=2, j+=2)
+//       {
+//       val1 += (A[i] * B[i]);
+//       val2 += (A[j] * B[j]);
+//       }
+//     
+//     if(i < n_elem)
+//       {
+//       val1 += (A[i] * B[i]);
+//       }
+//     
+//     return (val1 + val2);
+//     }
+//   #endif
+//   }
 
 
 
@@ -209,7 +215,9 @@ op_dot::direct_dot(const uword n_elem, const eT* const A, const eT* const B)
   {
   arma_debug_sigprint();
   
-  return (n_elem <= 32u) ? op_dot::direct_dot_generic(n_elem, A, B) : op_dot::direct_dot_generic_force_optimise(n_elem, A, B);
+  // return (n_elem <= 32u) ? op_dot::direct_dot_generic(n_elem, A, B) : op_dot::direct_dot_generic_force_optimise(n_elem, A, B);
+  
+  return op_dot::direct_dot_generic(n_elem, A, B);
   }
 
 

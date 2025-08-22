@@ -30,10 +30,10 @@ struct op_dot
   typename arma_not_cx<eT>::result
   direct_dot_generic(const uword n_elem, const eT* const A, const eT* const B);
   
-  template<typename eT>
-  arma_hot inline static
-  typename arma_not_cx<eT>::result
-  direct_dot_generic_force_optimise(const uword n_elem, const eT* const A, const eT* const B);
+  // template<typename eT>
+  // arma_hot inline static
+  // typename arma_not_cx<eT>::result
+  // direct_dot_generic_force_optimise(const uword n_elem, const eT* const A, const eT* const B);
   
   template<typename eT>
   arma_hot inline static
