@@ -34,4 +34,6 @@ jobs:
 
       - name: Coverage
         if: ${{ matrix.os == 'ubuntu-latest' }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: ./run.sh coverage
