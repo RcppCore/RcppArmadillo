@@ -1,3 +1,8 @@
+2025-08-23  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Update package count, note C++14 compilation default for
+	Armadillo 15.0.0 and included fallback used wjem C++11 is detected
+
 2025-08-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.0.1-1

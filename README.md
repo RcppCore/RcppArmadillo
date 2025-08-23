@@ -66,7 +66,14 @@ the switch saves about 15% of total compilation time.
 
 The package is mature yet under active development with releases to [CRAN][cran] about once every
 other month, and widely-used by other CRAN packages as can be seen from the [CRAN package page][cran
-pkg].  As of April 2024, there are 1135 CRAN packages using RcppArmadillo.
+pkg].  As of August 2025, there are 1266 CRAN packages using RcppArmadillo.
+
+As of Armadillo 15.0.0, the minimum compilation standard is C++14. However, as several hundred CRAN
+packages still impose C++11 as their compilation standard, the RcppArmadillo package also includes
+the final version allowing C++11, namely Armadillo 14.6.3, as a fallback used when C++11 compilation
+is detected. Conversion to and compilation under C++14 or later is encouraged. R [defaults to
+C++17](https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Portable-C-and-C_002b_002b-code-1)
+since version 4.3.0.
 
 ### Documentation
 
