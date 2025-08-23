@@ -13,8 +13,10 @@ coverage:
 comment: false
 
 ignore:
-  - "inst/include/armadillo"
-  - "inst/include/armadillo_bits"
+  - "inst/include/current/armadillo"
+  - "inst/include/current/armadillo_bits"
+  - "inst/include/legacy/armadillo"
+  - "inst/include/legacy/armadillo_bits"
 
 codecov:
  token: 5adfec2d-d501-49a4-a4c7-15fa7d8665b2

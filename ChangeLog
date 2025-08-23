@@ -8,6 +8,7 @@
 
 	* .github/workflows/ci.yaml (jobs): Reactivate coverage
 	* .codecov.yml (codecov): Add token, also set as environment variable
+	* .codecov.yml (ignore): Adjust to 15.0.1 and 14.6.3 inclusion
 
 2025-08-22  Dirk Eddelbuettel  <edd@debian.org>
 
