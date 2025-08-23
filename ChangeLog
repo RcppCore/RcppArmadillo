@@ -1,7 +1,13 @@
 2025-08-23  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Description): Rewritten and updated, add mention of
+	included version 14.6.3 as a fallback when C++11 is used
+
 	* README.md: Update package count, note C++14 compilation default for
 	Armadillo 15.0.0 and included fallback used wjem C++11 is detected
+
+	* .github/workflows/ci.yaml (jobs): Reactivate coverage
+	* .codecov.yml (codecov): Add token, also set as environment variable
 
 2025-08-22  Dirk Eddelbuettel  <edd@debian.org>
 

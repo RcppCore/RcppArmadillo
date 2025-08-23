@@ -2,7 +2,7 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 Version: 15.0.1-1
-Date: 2025-08-22
+Date: 2025-08-23
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("Romain", "Francois", role = "aut",
@@ -12,18 +12,30 @@ Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd
              person("Binxiang", "Ni", role = "aut"),
              person("Conrad", "Sanderson", role = "aut",
                     comment = c(ORCID = "0000-0002-0049-4501")))
-Description: 'Armadillo' is a templated C++ linear algebra library (by Conrad
- Sanderson) that aims towards a good balance between speed and ease of
- use. Integer, floating point and complex numbers are supported, as
- well as a subset of trigonometric and statistics functions. Various
- matrix decompositions are provided through optional integration with
- LAPACK and ATLAS libraries.  The 'RcppArmadillo' package includes the
- header files from the templated 'Armadillo' library. Thus users do
- not need to install 'Armadillo' itself in order to use
- 'RcppArmadillo'. From release 7.800.0 on, 'Armadillo' is licensed
- under Apache License 2; previous releases were under licensed as MPL
- 2.0 from version 3.800.0 onwards and LGPL-3 prior to that;
- 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed
+Description: 'Armadillo' is a templated C++ linear algebra library aiming towards
+ a good balance between speed and ease of use. It provides high-level syntax and
+ functionality deliberately similar to Matlab. It is useful for algorithm development
+ directly in C++, or quick conversion of research code into production environments.
+ It provides efficient classes for vectors, matrices and cubes where dense and sparse
+ matrices are supported. Integer, floating point and complex numbers are supported.
+ A sophisticated expression evaluator (based on template meta-programming) automatically
+ combines several operations to increase speed and efficiency. Dynamic evaluation
+ automatically chooses optimal code paths based on detected matrix structures.
+ Matrix decompositions (eigen, SVD, Cholesky, etc) are provided through integration
+ with LAPACK, or one of its high performance drop-in replacements (eg. MKL or OpenBLAS).
+ It can automatically use OpenMP multi-threading (parallelisation) to speed up
+ computationally expensive operations.
+ .
+ The 'RcppArmadillo' package includes the header files from the templated 'Armadillo'
+ library so users do not need to install 'Armadillo' itself in order to use
+ 'RcppArmadillo'.
+ .
+ Starting from release 15.0.0, the minimum compilation standard is C++14 so Armadillo
+ version 14.6.3 is also included as a fallback when C++11 is used.
+ .
+ Since release 7.800.0, 'Armadillo' is licensed under Apache License 2; previous
+ releases were under licensed as MPL 2.0 from version 3.800.0 onwards and LGPL-3
+ prior to that; 'RcppArmadillo' (the 'Rcpp' bindings/bridge to Armadillo) is licensed
  under the GNU GPL version 2 or later, as is the rest of 'Rcpp'.
 License: GPL (>= 2)
 LazyLoad: yes
