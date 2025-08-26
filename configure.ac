@@ -92,7 +92,7 @@ if test x"${openmp_already_works}" = x"no"; then
                  ## we know this one is bad
                  can_use_openmp="no"
             ;;
-            5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|10.*|11.*|12.*)
+            5.4*|5.5*|5.6*|5.7*|5.8*|5.9*|6.*|7.*|8.*|9.*|1?.*)
                  AC_MSG_RESULT([yes, with OpenMP as version ${gxx_version}])
                  ## we know this one is good, yay
                  can_use_openmp="yes"
