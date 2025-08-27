@@ -1,9 +1,8 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
-//
-// fixprob.h: helper function for Rcpp/Armadillo random number draws, including sample().  
+
+// fixprob.h: helper function for Rcpp/Armadillo random number draws, including sample().
 // Copyright (C)  2012 - 2014  Christian Gunning
 // Copyright (C)  2013  Romain Francois
+// Copyright (C)  2025  Dirk Eddelbuettel
 //
 // This file is part of RcppArmadillo.
 //
@@ -25,17 +24,17 @@
 #include <RcppArmadillo.h>
 namespace Rcpp{
     namespace RcppArmadillo{
-    
+
         void FixProb(arma::vec &prob, const int size, const bool replace) {
-            // prob is modified in-place.  
+            // prob is modified in-place.
             double sum = 0.0;
             int ii, nPos = 0;
             int nn = prob.size();
             for (ii = 0; ii < nn; ii++) {
                 // pop stack
                 double prob_value = prob(ii);
-              
-                if (!arma::is_finite(prob_value)) //does this work??
+
+                if (!std::isfinite(prob_value)) //does this work??
                     throw std::range_error( "NAs not allowed in probability" ) ;
                 if (prob_value < 0.0)
                     throw std::range_error( "Negative probabilities not allowed" ) ;

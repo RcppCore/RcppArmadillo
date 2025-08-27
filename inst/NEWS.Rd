@@ -3,13 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.0.1-1 (2025-08-22)}{
+\section{Changes in RcppArmadillo version 15.0.1-1 (2025-08-27)}{
   \itemize{
     \item Upgraded to Armadillo release 15.0.1-1 (Medium Roast)
     \itemize{
       \item Workaround for GCC compiler bug involving misoptimisation of
       complex number multiplication
     }
+    \item Update DESCRIPTION and README.md
   }
 }
 
