@@ -1,8 +1,9 @@
-//
+
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2023  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2019 - 2023  Conrad Sanderson
+// Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2015 - 2025  Dirk Eddelbuettel
+// Copyright (C)  2019 - 2025  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -46,12 +47,19 @@
 // installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
 
-#if __cplusplus >= 201402L
-    // Armadillo 15.0 (rc)
+// See version/arma.h header for the (user and/or compilation) drive selection of these defines
+#if defined(ARMA_SELECTED_CURRENT_VERSION)
+
+    // we include Armadillo 15.0.1 here
+    //#pragma message("Using compilation with current Armadillo version.")
+
+    // Armadillo 15.0.1 or later
     #include "current/armadillo"
-#else
-    // we include Armadillo 14.6.2 here -- the last version to not require C++14
-    #pragma message("Using fallback compilation with Armadillo 14.6.2 under C++11. Please consider removing the C++11 compilation standard directive.")
+
+#elif defined(ARMA_SELECTED_LEGACY_VERSION)
+
+    // we include Armadillo 14.6.3 here
+    //#pragma message("Using fallback compilation with Armadillo 14.6.3.")
 
     // Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
     // minimise issies at CRAN).  Should your package display any, and you decide
@@ -59,10 +67,16 @@
     // for details) then defining the following macro will help. You can add a
     // #define in your source code before including the RcppArmadillo header, or add
     // a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
-    // Renabling globally for Armadillo 14.6.2 release
+    //
+    // Renabling globally again for Armadillo 14.6.* as too many packages trigger this
     #define ARMA_IGNORE_DEPRECATED_MARKER
 
     #include "legacy/armadillo"
+
+#else
+
+    #error "Neither 'current' nor 'legacy' version selected. Ensure you use proper entry point headers."
+
 #endif
 
 /* forward declarations */

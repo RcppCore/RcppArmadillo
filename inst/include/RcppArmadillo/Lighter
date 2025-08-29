@@ -30,6 +30,9 @@
 // as standard 'one-dimension' objects -- as opposed to the matrix form we imposed
 #define RCPP_ARMADILLO_RETURN_ANYVEC_AS_VECTOR
 
+// Deal with Armadillo 14.6.3 (fallback) versus 15.0.* (or later, preference) selection
+#include <RcppArmadillo/version/arma.h>
+
 // Set up actual #include <armadillo> after first #include <RcppArmadilloConfig> and more config
 #include <RcppArmadillo/interface/RcppArmadilloForward.h>
 

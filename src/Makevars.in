@@ -1,5 +1,5 @@
 ## -*- mode: makefile; -*-
 
-PKG_CPPFLAGS = -I../inst/include
+PKG_CPPFLAGS = -I../inst/include -DARMA_USE_CURRENT
 PKG_CXXFLAGS = @OPENMP_FLAG@
 PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)

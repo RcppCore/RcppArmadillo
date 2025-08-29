@@ -1,9 +1,21 @@
-2025-08-28  Dirk Eddelbuettel  <edd@debian.org>
+2025-08-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.0.1-1 (unreleased)
         * inst/NEWS.Rd: Idem
         * configure.ac: Idem
         * configure: Idem
+
+	* inst/include/RcppArmadillo/version/arma.h: Add version check logic
+	driven by user-select #define and compilation standard
+	* inst/include/RcppArmadillo.h: Ensure new header is included
+	* inst/include/RcppArmadillo/Light: Ditto
+	* inst/include/RcppArmadillo/Lighter: Ditto
+	* inst/include/RcppArmadillo/Lightest: Ditto
+	* inst/include/RcppArmadillo/RcppArmadillo: Ditto
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Pick
+	'current' or 'legacy' based on selection made
+	* src/Makevars.in: Select current version via #define
+	* src/Makevars.win: Ditto
 
 2025-08-27  Dirk Eddelbuettel  <edd@debian.org>
 

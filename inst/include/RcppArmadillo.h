@@ -25,6 +25,9 @@
     #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
 #endif
 
+// Deal with Armadillo 14.6.3 (fallback) versus 15.0.* (or later, preference) selection
+#include <RcppArmadillo/version/arma.h>
+
 // Set up actual #include <armadillo> after first #include <RcppArmadilloConfig> and more config
 #include <RcppArmadillo/interface/RcppArmadilloForward.h>
 
