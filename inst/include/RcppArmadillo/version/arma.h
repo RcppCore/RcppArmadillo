@@ -23,8 +23,12 @@
 
 
 // Purpose: By explicitly defining or undefining a variable the 'defined(...) that
-// is in RcppArmadilloForward.h works as expected
-
+// is in RcppArmadilloForward.h works as expected allowing us to selectively include
+// either a 'legacy' Armadillo (i.e. 14.6.3. the last version to a) allow C++11 and
+// b) permit suppression of deprecation warnings) or a 'current' Armadillo (i.e. as
+// of this writing 15.0.1, or any later version)
+//
+// See https://github.com/RcppCore/RcppArmadillo/issues/475 for more details
 
 // Sanity check: Cannot select both current and legacy but only one
 #if defined(ARMA_USE_CURRENT) && defined(ARMA_USE_LEGACY)
@@ -59,12 +63,12 @@
     // Show messages, adjusted for compilation standard (as we also want to move on from C++11)
     // We plan to 'at some point' flip to for C++14
     #if __cplusplus < 201402L
-        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT and also removing C++11 compilation directive")
+        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT and also removing C++11 compilation directive. See GitHub issue #475 for more.")
         // Define selector used in RcppArmadilloForward.h
         #define ARMA_SELECTED_LEGACY_VERSION
         #undef ARMA_SELECTED_CURRENT_VERSION
     #else
-        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT")
+        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT. See GitHub issue #475 for more.")
         // Define selector used in RcppArmadilloForward.h
         // It is our intention to select current here after transition instead of legacy
         #define ARMA_SELECTED_LEGACY_VERSION
