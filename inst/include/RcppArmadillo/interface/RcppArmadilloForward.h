@@ -50,15 +50,21 @@
 // See version/arma.h header for the (user and/or compilation) drive selection of these defines
 #if defined(ARMA_SELECTED_CURRENT_VERSION)
 
-    // we include Armadillo 15.0.1 here
+    // we include Armadillo 15.0.1 here -- but do it quietly
     //#pragma message("Using compilation with current Armadillo version.")
 
     // Armadillo 15.0.1 or later
     #include "current/armadillo"
 
-#elif defined(ARMA_SELECTED_LEGACY_VERSION)
+#else
 
-    // we include Armadillo 14.6.3 here
+    // we use a catch-all else branch to provide for packages including this file directly
+    // needless to say, we recommend one of the official entry-point headers
+    #if !defined(ARMA_SELECTED_LEGACY_VERSION)
+        #pragma message("Neither 'current' nor 'legacy' version selected. Ensure you use proper entry point headers.")
+    #endif
+
+    // we include Armadillo 14.6.3 here -- but do it quietly
     //#pragma message("Using fallback compilation with Armadillo 14.6.3.")
 
     // Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
@@ -72,10 +78,6 @@
     #define ARMA_IGNORE_DEPRECATED_MARKER
 
     #include "legacy/armadillo"
-
-#else
-
-    #error "Neither 'current' nor 'legacy' version selected. Ensure you use proper entry point headers."
 
 #endif
 
