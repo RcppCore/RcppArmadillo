@@ -3,14 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.0.1-1 (2025-08-27) (unreleased)}{
+\section{Changes in RcppArmadillo version 15.0.1-1 (2025-09-01)}{
   \itemize{
     \item Upgraded to Armadillo release 15.0.1-1 (Medium Roast)
     \itemize{
       \item Workaround for GCC compiler bug involving misoptimisation of
       complex number multiplication
     }
-    \item Update DESCRIPTION and README.md
+    \item This version contains both 'legacy' and 'current' version of
+    Armadillo (see also below). Package authors should set a '#define' to
+    select the 'current' version, or select the 'legacy' version (also chosen
+    as default) if they must. See 'GitHub issue #475' for more details.
+    \item Updated DESCRIPTION and README.md
   }
 }
 
@@ -28,7 +32,7 @@
       \item Extended \code{conv()} and \code{conv2()} to accept the "valid"
       shape argument
     }
-    \item Also include Armadillo 14.6.3 as fallback for C++11 compilations
+    \item Also includes Armadillo 14.6.3 as fallback for C++11 compilations
     \item This new 'dual' setup had been rigorously tested with five interim
     pre-releases of which several received full reverse-dependency checks
   }

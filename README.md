@@ -73,7 +73,8 @@ packages still impose C++11 as their compilation standard, the RcppArmadillo pac
 the final version allowing C++11, namely Armadillo 14.6.3, as a fallback used when C++11 compilation
 is detected. Conversion to and compilation under C++14 or later is encouraged. R [defaults to
 C++17](https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Portable-C-and-C_002b_002b-code-1)
-since version 4.3.0.
+since version 4.3.0. See [GitHub issue #475](https://github.com/RcppCore/RcppArmadillo/issues/475)
+for more about choosing between 'legacy' Armadillo 14.6.3 or 'current' Armadillo 15.0.1 or later.
 
 ### Documentation
 

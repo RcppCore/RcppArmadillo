@@ -2,7 +2,7 @@ Package: RcppArmadillo
 Type: Package
 Title: 'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 Version: 15.0.1-1
-Date: 2025-08-27
+Date: 2025-09-01
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("Romain", "Francois", role = "aut",
@@ -28,9 +28,11 @@ Description: 'Armadillo' is a templated C++ linear algebra library aiming toward
  .
  The 'RcppArmadillo' package includes the header files from the 'Armadillo' library;
  users do not need to install 'Armadillo' itself in order to use 'RcppArmadillo'.
- .
  Starting from release 15.0.0, the minimum compilation standard is C++14 so 'Armadillo'
  version 14.6.3 is included as a fallback when an R package forces the C++11 standard.
+ Package authors should set a '#define' to select the 'current' version, or select the
+ 'legacy' version (also chosen as default) if they must. See 'GitHub issue #475' for
+ details.
  .
  Since release 7.800.0, 'Armadillo' is licensed under Apache License 2; previous
  releases were under licensed as MPL 2.0 from version 3.800.0 onwards and LGPL-3
