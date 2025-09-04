@@ -612,7 +612,6 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 OPENMP_FLAG
 ARMA_HAVE_OPENMP
-ARMA_LAPACK
 CXXCPP
 OBJEXT
 EXEEXT
@@ -3394,14 +3393,13 @@ if test x"${hasRlapack}" = x""; then
     ## We are using a full Lapack and can use zgbsv -- so #undef remains
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: system LAPACK found" >&5
 printf "%s\n" "system LAPACK found" >&6; }
-    arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
+    ## arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
 else
     ## We are using R's subset of Lapack and CANNOT use zgbsv etc, so we mark it
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: R-supplied partial LAPACK found" >&5
 printf "%s\n" "R-supplied partial LAPACK found" >&6; }
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: Some complex-valued LAPACK functions may not be available" >&5
-printf "%s\n" "$as_me: WARNING: Some complex-valued LAPACK functions may not be available" >&2;}
-    arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
+    ## AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
+    ## arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
 fi
 
 ## Default the OpenMP flag to the empty string.
@@ -3436,8 +3434,7 @@ fi
 
 
 ## now use all these
-ARMA_LAPACK="${arma_lapack}"
-
+## AC_SUBST([ARMA_LAPACK],["${arma_lapack}"])
 ARMA_HAVE_OPENMP="${arma_have_openmp}"
 
 OPENMP_FLAG="${openmp_flag}"

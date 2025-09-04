@@ -167,12 +167,12 @@ hasRlapack=$(echo ${lapack} | grep lRlapack)
 if test x"${hasRlapack}" = x""; then
     ## We are using a full Lapack and can use zgbsv -- so #undef remains
     AC_MSG_RESULT([system LAPACK found])
-    arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
+    ## arma_lapack="#undef ARMA_CRIPPLED_LAPACK"
 else
     ## We are using R's subset of Lapack and CANNOT use zgbsv etc, so we mark it
     AC_MSG_RESULT([R-supplied partial LAPACK found])
-    AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
-    arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
+    ## AC_MSG_WARN([Some complex-valued LAPACK functions may not be available])
+    ## arma_lapack="#define ARMA_CRIPPLED_LAPACK 1"
 fi
 
 ## Default the OpenMP flag to the empty string.
@@ -204,7 +204,7 @@ fi
 
 
 ## now use all these
-AC_SUBST([ARMA_LAPACK],["${arma_lapack}"])
+## AC_SUBST([ARMA_LAPACK],["${arma_lapack}"])
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
 AC_CONFIG_FILES([inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h src/Makevars])
