@@ -203,6 +203,74 @@ struct gemv_emul_helper
 
 
 
+#if defined(ARMA_USE_OPENMP)
+//! Partial emulation of BLAS gemv().
+//! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
+//! parallelised version
+template<const bool do_trans_A=false, const bool use_alpha=false, const bool use_beta=false>
+struct gemv_emul_mp
+  {
+  template<typename eT, typename TA>
+  arma_hot
+  inline
+  static
+  void
+  apply( eT* y, const TA& A, const eT* x, const eT alpha = eT(1), const eT beta = eT(0) )
+    {
+    arma_debug_sigprint();
+    
+    const int n_threads = mp_thread_limit::get();
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    if(do_trans_A == false)
+      {
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword row=0; row < A_n_rows; ++row)
+        {
+        const eT acc = gemv_emul_helper::dot_row_col(A, x, row, A_n_cols);
+        
+             if( (use_alpha == false) && (use_beta == false) )  { y[row] =       acc;               }
+        else if( (use_alpha == true ) && (use_beta == false) )  { y[row] = alpha*acc;               }
+        else if( (use_alpha == false) && (use_beta == true ) )  { y[row] =       acc + beta*y[row]; }
+        else if( (use_alpha == true ) && (use_beta == true ) )  { y[row] = alpha*acc + beta*y[row]; }
+        }
+      }
+    else
+    if(do_trans_A == true)
+      {
+      if(is_cx<eT>::no)
+        {
+        #pragma omp parallel for schedule(static) num_threads(n_threads)
+        for(uword col=0; col < A_n_cols; ++col)
+          {
+          // col is interpreted as row when storing the results in 'y'
+          
+          const eT acc = op_dot::direct_dot(A_n_rows, A.colptr(col), x);
+          
+               if( (use_alpha == false) && (use_beta == false) )  { y[col] =       acc;               }
+          else if( (use_alpha == true ) && (use_beta == false) )  { y[col] = alpha*acc;               }
+          else if( (use_alpha == false) && (use_beta == true ) )  { y[col] =       acc + beta*y[col]; }
+          else if( (use_alpha == true ) && (use_beta == true ) )  { y[col] = alpha*acc + beta*y[col]; }
+          }
+        }
+      else
+        {
+        Mat<eT> AA;
+        
+        op_htrans::apply_mat_noalias(AA, A);
+        
+        gemv_emul_mp<false, use_alpha, use_beta>::apply(y, AA, x, alpha, beta);
+        }
+      }
+    }
+  
+  };
+#endif
+
+
+
 //! \brief
 //! Partial emulation of BLAS gemv().
 //! 'y' is assumed to have been set to the correct size (ie. taking into account the transpose)
@@ -221,6 +289,21 @@ struct gemv_emul
     
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
+    
+    #if defined(ARMA_USE_OPENMP)
+      {
+      // TODO: replace with more sophisticated threshold mechanism
+      
+      constexpr uword threshold = uword(200);
+      
+      if( (A_n_rows >= threshold) && (A_n_cols >= threshold) && (mp_thread_limit::in_parallel() == false) )
+        {
+        gemv_emul_mp<do_trans_A, use_alpha, use_beta>::apply(y, A, x, alpha, beta);
+        
+        return;
+        }
+      }
+    #endif
     
     if(do_trans_A == false)
       {

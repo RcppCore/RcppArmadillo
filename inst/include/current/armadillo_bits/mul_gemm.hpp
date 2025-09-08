@@ -59,6 +59,156 @@ struct gemm_emul_tinysq
 
 
 
+struct gemm_emul_large_mp_helper
+  {
+  template<typename eT>
+  arma_hot
+  inline
+  static
+  void
+  copy_row(eT* out_mem, const Mat<eT>& in, const uword row)
+    {
+    const uword n_rows = in.n_rows;
+    const uword n_cols = in.n_cols;
+    
+    const eT* in_mem_row = in.memptr() + row;
+    
+    for(uword i=0; i < n_cols; ++i)
+      {
+      out_mem[i] = (*in_mem_row);
+      
+      in_mem_row += n_rows;
+      }
+    }
+  };
+
+
+
+#if defined(ARMA_USE_OPENMP)
+//! emulation of gemm(), for non-complex matrices only, as it assumes only simple transposes (ie. doesn't do hermitian transposes)
+//! parallelised version
+template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
+struct gemm_emul_large_mp
+  {
+  template<typename eT, typename TA, typename TB>
+  arma_hot
+  inline
+  static
+  void
+  apply
+    (
+          Mat<eT>& C,
+    const TA&      A,
+    const TB&      B,
+    const eT       alpha = eT(1),
+    const eT       beta  = eT(0)
+    )
+    {
+    arma_debug_sigprint();
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    const uword B_n_rows = B.n_rows;
+    const uword B_n_cols = B.n_cols;
+    
+    if( (do_trans_A == false) && (do_trans_B == false) )
+      {
+      const uword n_threads = uword(mp_thread_limit::get());
+      
+      podarray<eT> tmp(A_n_cols * n_threads, arma_nozeros_indicator());
+      
+      eT* tmp_mem = tmp.memptr();
+      
+      #pragma omp parallel for schedule(static) num_threads(int(n_threads))
+      for(uword row_A=0; row_A < A_n_rows; ++row_A)
+        {
+        const uword thread_id = uword(omp_get_thread_num());
+        
+        eT* A_rowdata = tmp_mem + (A_n_cols * thread_id);
+        
+        gemm_emul_large_mp_helper::copy_row(A_rowdata, A, row_A);
+        
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
+          {
+          const eT acc = op_dot::direct_dot(B_n_rows, A_rowdata, B.colptr(col_B));
+          
+               if( (use_alpha == false) && (use_beta == false) )  { C.at(row_A,col_B) =       acc;                          }
+          else if( (use_alpha == true ) && (use_beta == false) )  { C.at(row_A,col_B) = alpha*acc;                          }
+          else if( (use_alpha == false) && (use_beta == true ) )  { C.at(row_A,col_B) =       acc + beta*C.at(row_A,col_B); }
+          else if( (use_alpha == true ) && (use_beta == true ) )  { C.at(row_A,col_B) = alpha*acc + beta*C.at(row_A,col_B); }
+          }
+        }
+      }
+    else
+    if( (do_trans_A == true) && (do_trans_B == false) )
+      {
+      const int n_threads = mp_thread_limit::get();
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword col_A=0; col_A < A_n_cols; ++col_A)
+        {
+        // col_A is interpreted as row_A when storing the results in matrix C
+        
+        const eT* A_coldata = A.colptr(col_A);
+        
+        for(uword col_B=0; col_B < B_n_cols; ++col_B)
+          {
+          const eT acc = op_dot::direct_dot(B_n_rows, A_coldata, B.colptr(col_B));
+          
+               if( (use_alpha == false) && (use_beta == false) )  { C.at(col_A,col_B) =       acc;                          }
+          else if( (use_alpha == true ) && (use_beta == false) )  { C.at(col_A,col_B) = alpha*acc;                          }
+          else if( (use_alpha == false) && (use_beta == true ) )  { C.at(col_A,col_B) =       acc + beta*C.at(col_A,col_B); }
+          else if( (use_alpha == true ) && (use_beta == true ) )  { C.at(col_A,col_B) = alpha*acc + beta*C.at(col_A,col_B); }
+          }
+        }
+      }
+    else
+    if( (do_trans_A == false) && (do_trans_B == true) )
+      {
+      Mat<eT> BB;
+      op_strans::apply_mat_noalias(BB, B);
+      
+      gemm_emul_large_mp<false, false, use_alpha, use_beta>::apply(C, A, BB, alpha, beta);
+      }
+    else
+    if( (do_trans_A == true) && (do_trans_B == true) )
+      {
+      // using trans(A)*trans(B) = trans(B*A) equivalency; assuming no hermitian transpose
+      
+      const uword n_threads = uword(mp_thread_limit::get());
+      
+      podarray<eT> tmp(B_n_cols * n_threads, arma_nozeros_indicator());
+      
+      eT* tmp_mem = tmp.memptr();
+      
+      #pragma omp parallel for schedule(static) num_threads(int(n_threads))
+      for(uword row_B=0; row_B < B_n_rows; ++row_B)
+        {
+        const uword thread_id = uword(omp_get_thread_num());
+        
+        eT* B_rowdata = tmp_mem + (B_n_cols * thread_id);
+        
+        gemm_emul_large_mp_helper::copy_row(B_rowdata, B, row_B);
+        
+        for(uword col_A=0; col_A < A_n_cols; ++col_A)
+          {
+          const eT acc = op_dot::direct_dot(A_n_rows, B_rowdata, A.colptr(col_A));
+          
+               if( (use_alpha == false) && (use_beta == false) )  { C.at(col_A,row_B) =       acc;                          }
+          else if( (use_alpha == true ) && (use_beta == false) )  { C.at(col_A,row_B) = alpha*acc;                          }
+          else if( (use_alpha == false) && (use_beta == true ) )  { C.at(col_A,row_B) =       acc + beta*C.at(col_A,row_B); }
+          else if( (use_alpha == true ) && (use_beta == true ) )  { C.at(col_A,row_B) = alpha*acc + beta*C.at(col_A,row_B); }
+          }
+        }
+      }
+    }
+  
+  };
+#endif
+
+
+
 //! emulation of gemm(), for non-complex matrices only, as it assumes only simple transposes (ie. doesn't do hermitian transposes)
 template<const bool do_trans_A=false, const bool do_trans_B=false, const bool use_alpha=false, const bool use_beta=false>
 struct gemm_emul_large
@@ -78,12 +228,27 @@ struct gemm_emul_large
     )
     {
     arma_debug_sigprint();
-
+    
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
     
     const uword B_n_rows = B.n_rows;
     const uword B_n_cols = B.n_cols;
+    
+    #if defined(ARMA_USE_OPENMP)
+      {
+      // TODO: replace with more sophisticated threshold mechanism
+      
+      constexpr uword threshold = uword(30);
+      
+      if( (A_n_rows >= threshold) && (A_n_cols >= threshold) && (B_n_rows >= threshold) && (B_n_cols >= threshold) && (mp_thread_limit::in_parallel() == false) )
+        {
+        gemm_emul_large_mp<do_trans_A, do_trans_B, use_alpha, use_beta>::apply(C,A,B,alpha,beta);
+        
+        return;
+        }
+      }
+    #endif
     
     if( (do_trans_A == false) && (do_trans_B == false) )
       {

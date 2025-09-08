@@ -1,3 +1,7 @@
+2025-09-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/current/: Armadillo 15.0.2
+
 2025-09-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo: Add full copyright header
@@ -6,7 +10,6 @@
 
 	* inst/include/armadillo: Moved back up from legacy/ to restore path
 	* inst/include/armadillo_bits/: Idem
-
 
 2025-09-01  Dirk Eddelbuettel  <edd@debian.org>
 

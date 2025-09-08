@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.0.2-1 (2025-09-08)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.0.2-1 (Medium Roast)
+    \itemize{
+      \item Optionally use OpenMP parallelisation for fp16 matrix multiplication
+      \item Faster vectorisation of cube tubes
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.0.1-1 (2025-09-01)}{
   \itemize{
     \item Upgraded to Armadillo release 15.0.1-1 (Medium Roast)

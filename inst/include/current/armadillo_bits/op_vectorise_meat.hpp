@@ -365,14 +365,30 @@ op_vectorise_cube_col::apply_subview(Mat<eT>& out, const subview_cube<eT>& sv)
   
   out.set_size(sv.n_elem, 1);
   
+  if(sv.n_elem == 0)  { return; }
+  
   eT* out_mem = out.memptr();
   
-  for(uword s=0; s < sv_ns; ++s)
-  for(uword c=0; c < sv_nc; ++c)
+  if( (sv_nr == 1) && (sv_nc == 1) && (sv.aux_slice1 == 0) )
     {
-    arrayops::copy(out_mem, sv.slice_colptr(s,c), sv_nr);
+    const uword sv_m_n_elem_slice = sv.m.n_elem_slice;
     
-    out_mem += sv_nr;
+    const eT* sv_m_ptr = &( sv.m.at(sv.aux_row1, sv.aux_col1, 0) );
+    
+    for(uword s=0; s < sv_ns; ++s)
+      {
+      out_mem[s] = (*sv_m_ptr);  sv_m_ptr += sv_m_n_elem_slice;
+      }
+    }
+  else
+    {
+    for(uword s=0; s < sv_ns; ++s)
+    for(uword c=0; c < sv_nc; ++c)
+      {
+      arrayops::copy(out_mem, sv.slice_colptr(s,c), sv_nr);
+      
+      out_mem += sv_nr;
+      }
     }
   }
 
