@@ -10,6 +10,11 @@
       \item Optionally use OpenMP parallelisation for fp16 matrix multiplication
       \item Faster vectorisation of cube tubes
     }
+    \item Provide a top-level include file \code{armadillo} as fallback
+    (\ghpr{480})
+    \item Retire the no-longer-needed check for insufficient LAPACK as R
+    now should supply a sufficient libRlapack (when used) (\ghpr{483})
+    \item Two potential narrowing warnings are avoided via cast
   }
 }
 
