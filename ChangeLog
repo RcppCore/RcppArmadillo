@@ -1,3 +1,8 @@
+2025-09-10  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/skeleton/Makevars (PKG_CXXFLAGS): Remove outdated comments
+	* inst/skeleton/Makevars.win (PKG_CXXFLAGS): Idem
+
 2025-09-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.0.2-1
