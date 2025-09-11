@@ -1,3 +1,7 @@
+2025-09-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Link to ldlasb2 repo and its 'benchmarks' writeup
+
 2025-09-10  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/skeleton/Makevars (PKG_CXXFLAGS): Remove outdated comments
