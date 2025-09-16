@@ -1,3 +1,9 @@
+2025-09-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp: Refresh documentation for seed setting function
+	* man/armadillo_set_seed.Rd: Regenerated, also for *_random() variant
+	* man/armadillo_version.Rd: Regenerated
+
 2025-09-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Link to ldlasb2 repo and its 'benchmarks' writeup
