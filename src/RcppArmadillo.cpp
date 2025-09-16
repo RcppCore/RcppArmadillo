@@ -1,7 +1,7 @@
 
 // RcppArmadillo.cpp: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2024  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010 - 2025  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -49,45 +49,29 @@ Rcpp::IntegerVector armadillo_version(bool single) {
 
 // Per request of Gábor Csárdi in https://github.com/RcppCore/RcppArmadillo/issues/11
 //
-//' Set the Armadillo Random Number Generator to a random value
-//'
-//' @details
-//' Depending on whether RcppArmadillo was compiled for the C++98 standard
-//' (currently the default) or for C++11 (optional), two different RNGs may be used.
-//' This function resets either. For C++98, the R programming language's RNG is used.
-//' For C++11, the RNG included in the \code{<random>} library is used only when
-//'  \code{#define ARMA_USE_CXX11_RNG} is placed before \code{#include <RcppArmadillo.h>}.
-//'  Otherwise, the R programming language's RNG will be used.
-//' @return The function is invoked for its side effect and has no return value.
-//' @note This has been found to not work as espected in \pkg{RStudio}
-//' as its code also uses the system RNG library. You may have to either
-//' not run within \pkg{RStudio} or change your code to use a different RNG such
-//' as the one from R.
-//' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.
+//' @rdname armadillo_set_seed
 // [[Rcpp::export]]
 void armadillo_set_seed_random() {
     arma::arma_rng::set_seed_random();  			// set the seed to a random value
 }
 
-//' Set the Armadillo Random Number Generator to the given value
+//' @title Set the Armadillo Random Number Generator to given or random value
 //'
 //' @param val The seed used to initialize Armadillo's random number generator.
 //' @details
-//' Depending on whether RcppArmadillo was compiled for the C++98 standard
-//' (currently the default) or for C++11 (optional), two different RNGs may be used.
-//' This function resets either. For C++98, the R programming language's RNG is used.
-//' For C++11, the RNG included in the \code{<random>} library is used only when
-//'  \code{#define ARMA_USE_CXX11_RNG} is placed before \code{#include <RcppArmadillo.h>}.
-//'  Otherwise, the R programming language's RNG will be used.
+//' Armadillo can switch between two random number generator implementations depending
+//' on the compilation standard used. Under normal circumstances RcppArmadillo will connect
+//' Armadillo to the R random number generator which also implies that \code{set.seed()}
+//' should be used from R. To use this function, one also needs to undefine \code{ARMA_RNG_ALT}
+//' so that the Armadillo generators are used.
 //' @return The function is invoked for its side effect and has no return value.
-//' @note This has been found to not work as espected in \pkg{RStudio}
+//' @note This has been found to not work as expected in \pkg{RStudio}
 //' as its code also uses the system RNG library. You may have to either
 //' not run within \pkg{RStudio} or change your code to use a different RNG such
 //' as the one from R.
 //' @seealso The R documentation on its RNGs all of which are accessible via \pkg{Rcpp}.
 // [[Rcpp::export]]
 void armadillo_set_seed(unsigned int val) {
-    //Rcpp::Rcout << "Setting value " << val << std::endl;
     arma::arma_rng::set_seed(val);  			    // set the seed to given value
 }
 
