@@ -109,7 +109,7 @@ glue_hist::apply_noalias(Mat<uword>& out, const Mat<eT>& X, const Mat<eT>& C, co
         {
         const eT val = X_mem[i];
         
-        if(is_finite(val))
+        if(arma_isfinite(val))
           {
           eT    opt_dist  = (val >= center_0) ? (val - center_0) : (center_0 - val);
           uword opt_index = 0;
