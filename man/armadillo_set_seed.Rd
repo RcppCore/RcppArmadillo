@@ -15,6 +15,9 @@ armadillo_set_seed(val)
 \value{
 The function is invoked for its side effect and has no return value.
 }
+\description{
+Setter functions for the internal Armadillo random number generator
+}
 \details{
 Armadillo can switch between two random number generator implementations depending
 on the compilation standard used. Under normal circumstances RcppArmadillo will connect

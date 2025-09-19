@@ -67,13 +67,15 @@
         // Define selector used in RcppArmadilloForward.h
         #define ARMA_SELECTED_LEGACY_VERSION
         #undef ARMA_SELECTED_CURRENT_VERSION
-    #else
-        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT. See GitHub issue #475 for more.")
-        // Define selector used in RcppArmadilloForward.h
-        // It is our intention to select current here after transition instead of legacy
-        #define ARMA_SELECTED_LEGACY_VERSION
-        #undef ARMA_SELECTED_CURRENT_VERSION
     #endif
+    // -- no longer automatically fall back to legacy version (unless in C++11 mode)
+    // #else
+    //     #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT. See GitHub issue #475 for more.")
+    //     // Define selector used in RcppArmadilloForward.h
+    //     // It is our intention to select current here after transition instead of legacy
+    //     #define ARMA_SELECTED_LEGACY_VERSION
+    //     #undef ARMA_SELECTED_CURRENT_VERSION
+    // #endif
 #endif
 
 

@@ -20,7 +20,7 @@ armadillo_set_seed_random <- function() {
 }
 
 #' @title Set the Armadillo Random Number Generator to given or random value
-#'
+#' @description Setter functions for the internal Armadillo random number generator
 #' @param val The seed used to initialize Armadillo's random number generator.
 #' @details
 #' Armadillo can switch between two random number generator implementations depending

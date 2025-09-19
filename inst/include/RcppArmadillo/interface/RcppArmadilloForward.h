@@ -48,7 +48,7 @@
 #define ARMA_DONT_USE_WRAPPER
 
 // See version/arma.h header for the (user and/or compilation) drive selection of these defines
-#if defined(ARMA_SELECTED_CURRENT_VERSION)
+#if defined(ARMA_SELECTED_CURRENT_VERSION) || (__cplusplus >= 201402L)
 
     // we include Armadillo 15.0.1 here -- but do it quietly
     //#pragma message("Using compilation with current Armadillo version.")

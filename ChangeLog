@@ -1,3 +1,18 @@
+2025-09-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.0.2-2
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+2025-09-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Under
+	C++14 or newer, default to Armadillo 15.0.2 per discussion with CRAN
+	* inst/include/RcppArmadillo/version/arma.h: Idem
+
+	* inst/include/current/: Sync with upstream Armadillo repo
+
 2025-09-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp: Refresh documentation for seed setting function

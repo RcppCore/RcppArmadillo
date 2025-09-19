@@ -3,6 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.0.2-2 (2025-09-18)}{
+  \itemize{
+    \item Minor update to skeleton \code{Makevars},\code{Makevars.win}
+    \item Update README.md to mention ldlasb2 repository
+    \item Minor documentation update (\ghpr{487})
+    \item Synchronized with Armadillo upstream (\ghpr{488})
+    \item Refine Armadillo version selection in coordination with CRAN
+    maintainers to support transition towards Armadillo 15.0.*
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.0.2-1 (2025-09-08)}{
   \itemize{
     \item Upgraded to Armadillo release 15.0.2-1 (Medium Roast)
