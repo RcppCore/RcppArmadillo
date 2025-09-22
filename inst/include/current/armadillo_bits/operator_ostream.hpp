@@ -28,7 +28,7 @@ operator<< (std::ostream& o, const Base<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1> tmp(X.get_ref());
+  const quasi_unwrap<T1> tmp(X.get_ref());
   
   arma_ostream::print(o, tmp.M, true);
   
