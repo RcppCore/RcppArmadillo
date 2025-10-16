@@ -35,7 +35,7 @@ range(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_range> >::result
 range(const T1& X)
   {
@@ -48,7 +48,7 @@ range(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_range> >::result
 range(const T1& X, const uword dim)
   {

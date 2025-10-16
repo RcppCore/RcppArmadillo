@@ -48,6 +48,26 @@ class distr_param
     }
   
   
+  inline explicit distr_param(const int a)
+    : state   (1)
+    , a_int   (a)
+    , b_int   (0)
+    , a_double(double(a))
+    , b_double(double(0))
+    {
+    }
+  
+  
+  inline explicit distr_param(const double a)
+    : state   (2)
+    , a_int   (int(a))
+    , b_int   (int(0))
+    , a_double(a)
+    , b_double(0)
+    {
+    }
+  
+  
   inline explicit distr_param(const int a, const int b)
     : state   (1)
     , a_int   (a)

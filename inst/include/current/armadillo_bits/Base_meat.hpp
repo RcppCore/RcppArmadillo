@@ -667,7 +667,7 @@ Base<elem_type,derived>::is_finite() const
   
   if(arma_config::fast_math_warn)  { arma_warn(1, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+  if( (quasi_unwrap<derived>::has_orig_mem) || (is_Mat<typename Proxy<derived>::stored_type>::value) )
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
@@ -715,7 +715,7 @@ Base<elem_type,derived>::has_inf() const
   
   if(arma_config::fast_math_warn)  { arma_warn(1, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
-  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+  if( (quasi_unwrap<derived>::has_orig_mem) || (is_Mat<typename Proxy<derived>::stored_type>::value) )
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
@@ -763,7 +763,7 @@ Base<elem_type,derived>::has_nan() const
   
   if(arma_config::fast_math_warn)  { arma_warn(1, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
-  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+  if( (quasi_unwrap<derived>::has_orig_mem) || (is_Mat<typename Proxy<derived>::stored_type>::value) )
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
@@ -811,7 +811,7 @@ Base<elem_type,derived>::has_nonfinite() const
   
   if(arma_config::fast_math_warn)  { arma_warn(1, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+  if( (quasi_unwrap<derived>::has_orig_mem) || (is_Mat<typename Proxy<derived>::stored_type>::value) )
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     

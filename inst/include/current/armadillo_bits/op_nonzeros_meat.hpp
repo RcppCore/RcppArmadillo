@@ -100,4 +100,20 @@ op_nonzeros::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& 
 
 
 
+template<typename T1>
+inline
+void
+op_nonzeros::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Proxy<T1> P(X.m);
+  
+  if(P.get_n_elem() == 0)  { out.set_size(0,1); return; }
+  
+  op_nonzeros::apply_noalias(out, P);
+  }
+
+
+
 //! @}

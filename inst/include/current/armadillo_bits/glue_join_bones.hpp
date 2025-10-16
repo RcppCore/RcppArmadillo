@@ -36,7 +36,10 @@ struct glue_join_cols
   inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_cols>& X);
   
   template<typename T1, typename T2>
-  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B);
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_cols>& X);
+  
+  template<typename eT>
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
   
   template<typename eT, typename T1, typename T2, typename T3>
   inline static void apply(Mat<eT>& out, const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C);
@@ -61,7 +64,10 @@ struct glue_join_rows
   inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_rows>& X);
   
   template<typename T1, typename T2>
-  inline static void apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B);
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_rows>& X);
+  
+  template<typename eT>
+  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
   
   template<typename eT, typename T1, typename T2, typename T3>
   inline static void apply(Mat<eT>& out, const Base<eT,T1>& A, const Base<eT,T2>& B, const Base<eT,T3>& C);

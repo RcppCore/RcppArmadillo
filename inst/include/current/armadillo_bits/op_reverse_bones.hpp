@@ -26,6 +26,9 @@ struct op_reverse
   {
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_reverse>& in);
   };
 
 
@@ -35,6 +38,9 @@ struct op_reverse_vec
   {
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_vec>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_reverse_vec>& in);
   };
 
 

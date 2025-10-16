@@ -36,33 +36,57 @@ op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
   
   if(is_Mat<T1>::value)
     {
-    // allow detection of in-place operation
-    
     const unwrap<T1> U(in.m);
     
-    if(dim == 0)  { op_flipud::apply_direct(out, U.M); }
-    if(dim == 1)  { op_fliplr::apply_direct(out, U.M); }
+    if(&out == &(U.M))
+      {
+      if(dim == 0)  { op_flipud::apply_mat_inplace(out); return; }
+      if(dim == 1)  { op_fliplr::apply_mat_inplace(out); return; }
+      }
+    
+    // fallthrough if operation is not in-place
+    }
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    if(dim == 0)  { op_flipud::apply_mat_noalias(tmp, U.M); }
+    if(dim == 1)  { op_fliplr::apply_mat_noalias(tmp, U.M); }
+    
+    out.steal_mem(tmp);
     }
   else
     {
-    const Proxy<T1> P(in.m);
-    
-    if(P.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      if(dim == 0)  { op_flipud::apply_proxy_noalias(tmp, P); }
-      if(dim == 1)  { op_fliplr::apply_proxy_noalias(tmp, P); }
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      if(dim == 0)  { op_flipud::apply_proxy_noalias(out, P); }
-      if(dim == 1)  { op_fliplr::apply_proxy_noalias(out, P); }
-      }
+    if(dim == 0)  { op_flipud::apply_mat_noalias(out, U.M); }
+    if(dim == 1)  { op_fliplr::apply_mat_noalias(out, U.M); }
     }
   }
+
+
+
+template<typename T1>
+inline
+void
+op_reverse::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 1), "reverse(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(dim == 0)  { op_flipud::apply_mat_noalias(out, U.M); }
+  if(dim == 1)  { op_fliplr::apply_mat_noalias(out, U.M); }
+  }
+
+
+
+//
 
 
 
@@ -77,49 +101,73 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
   
   if(is_Mat<T1>::value)
     {
-    // allow detection of in-place operation
-    
     const unwrap<T1> U(in.m);
+    
+    if(&out == &(U.M))
+      {
+      if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))
+        {
+        op_fliplr::apply_mat_inplace(out);
+        }
+      else
+        {
+        op_flipud::apply_mat_inplace(out);
+        }
+      
+      return;
+      }
+    
+    // fallthrough if operation is not in-place
+    }
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
     
     if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))
       {
-      op_fliplr::apply_direct(out, U.M);
+      op_fliplr::apply_mat_noalias(tmp, U.M);
       }
     else
       {
-      op_flipud::apply_direct(out, U.M);
+      op_flipud::apply_mat_noalias(tmp, U.M);
       }
+    
+    out.steal_mem(tmp);
     }
   else
     {
-    const Proxy<T1> P(in.m);
-    
-    if(P.is_alias(out))
+    if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))
       {
-      Mat<eT> tmp;
-      
-      if((T1::is_xvec) ? bool(P.get_n_rows() == 1) : bool(T1::is_row))
-        {
-        op_fliplr::apply_proxy_noalias(tmp, P);
-        }
-      else
-        {
-        op_flipud::apply_proxy_noalias(tmp, P);
-        }
-      
-      out.steal_mem(tmp);
+      op_fliplr::apply_mat_noalias(out, U.M);
       }
     else
       {
-      if((T1::is_xvec) ? bool(P.get_n_rows() == 1) : bool(T1::is_row))
-        {
-        op_fliplr::apply_proxy_noalias(out, P);
-        }
-      else
-        {
-        op_flipud::apply_proxy_noalias(out, P);
-        }
+      op_flipud::apply_mat_noalias(out, U.M);
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_reverse_vec::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_reverse_vec>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if((T1::is_xvec) ? bool(U.M.is_rowvec()) : bool(T1::is_row))
+    {
+    op_fliplr::apply_mat_noalias(out, U.M);
+    }
+  else
+    {
+    op_flipud::apply_mat_noalias(out, U.M);
     }
   }
 

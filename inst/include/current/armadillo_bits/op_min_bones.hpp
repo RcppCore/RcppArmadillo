@@ -29,6 +29,9 @@ struct op_min
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_min>& in);
   
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_min>& in);
+  
   template<typename eT>
   inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk = nullptr);
   

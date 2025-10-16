@@ -72,6 +72,10 @@ template<typename eT, typename T1> class subview_cube_slices;
 template<typename eT, typename T1> class SpSubview_col_list;
 
 
+template<typename eT> class   Mat_noalias;
+template<typename eT> class SpMat_noalias;
+
+
 struct SizeMat;
 struct SizeCube;
 

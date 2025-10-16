@@ -116,6 +116,7 @@ struct arma_rng
   template<typename eT> struct randu;
   template<typename eT> struct randn;
   template<typename eT> struct randg;
+  template<typename eT> struct rande;
   };
 
 
@@ -1022,6 +1023,47 @@ struct arma_rng::randg
       local_engine.seed( local_seed_type(arma_rng::randi<local_seed_type>()) );
       
       for(uword i=0; i<N; ++i)  { mem[i] = eT(local_g_distr(local_engine)); }
+      }
+    #endif
+    }
+  };
+
+
+
+//
+
+
+
+template<typename eT>
+struct arma_rng::rande
+  {
+  inline
+  static
+  void
+  fill(eT* mem, const uword N, const double lambda)
+    {
+    #if defined(ARMA_USE_CXX11_RNG)
+      {
+      std::exponential_distribution<double> local_e_distr(lambda);
+      
+      std::mt19937_64& producer = arma_rng::get_producer();
+      
+      arma_rng::lock_producer();
+      
+      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_e_distr(producer)); }
+      
+      arma_rng::unlock_producer();
+      }
+    #else
+      {
+      typedef typename std::mt19937_64::result_type local_seed_type;
+      
+      std::mt19937_64                       local_engine;
+      std::exponential_distribution<double> local_e_distr(lambda);
+      
+      local_engine.seed( local_seed_type(arma_rng::randi<local_seed_type>()) );
+      
+      for(uword i=0; i<N; ++i)  { mem[i] = eT(local_e_distr(local_engine)); }
       }
     #endif
     }

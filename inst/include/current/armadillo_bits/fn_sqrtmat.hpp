@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::no), const mtOp<std::complex<typename T1::elem_type>, T1, op_sqrtmat> >::result
 sqrtmat(const Base<typename T1::elem_type,T1>& X)
   {
@@ -36,7 +36,7 @@ sqrtmat(const Base<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< (is_blas_type<typename T1::elem_type>::value && is_cx<typename T1::elem_type>::yes), const Op<T1, op_sqrtmat_cx> >::result
 sqrtmat(const Base<typename T1::elem_type,T1>& X)
   {
@@ -91,7 +91,7 @@ sqrtmat(Mat<typename T1::elem_type>& Y, const Base<typename T1::elem_type,T1>& X
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_blas_type<typename T1::elem_type>::value, const Op<T1, op_sqrtmat_sympd> >::result
 sqrtmat_sympd(const Base<typename T1::elem_type,T1>& X)
   {

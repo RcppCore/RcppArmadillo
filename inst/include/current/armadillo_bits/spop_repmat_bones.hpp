@@ -27,6 +27,9 @@ struct spop_repmat
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_repmat>& X);
   
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_repmat>& X);
+  
   template<typename eT>
   inline static void apply_noalias(SpMat<eT>& out, const uword A_n_rows, const uword A_n_cols, const SpMat<eT>& B);
   };

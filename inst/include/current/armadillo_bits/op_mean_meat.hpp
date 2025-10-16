@@ -52,6 +52,24 @@ op_mean::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
 
 
 
+template<typename T1>
+inline
+void
+op_mean::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_mean>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 1), "mean(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_mean::apply_noalias(out, U.M, dim);
+  }
+
+
+
 template<typename eT>
 inline
 void

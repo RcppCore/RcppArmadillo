@@ -121,6 +121,23 @@ op_repmat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
 
 
 
+template<typename T1>
+inline
+void
+op_repmat::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_repmat>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword copies_per_row = in.aux_uword_a;
+  const uword copies_per_col = in.aux_uword_b;
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_repmat::apply_noalias(out, U.M, copies_per_row, copies_per_col);
+  }
+
+
+
 //
 
 

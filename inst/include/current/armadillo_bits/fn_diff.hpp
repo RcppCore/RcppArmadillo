@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -45,7 +45,7 @@ diff
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -67,7 +67,7 @@ diff
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <

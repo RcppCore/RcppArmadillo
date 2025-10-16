@@ -114,11 +114,25 @@ op_accu_mat::apply(const T1& X)
   {
   arma_debug_sigprint();
   
-  if( (is_Mat<T1>::value) || (is_subview_col<T1>::value) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
+  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
     {
     const quasi_unwrap<T1> U(X);
     
     return arrayops::accumulate(U.M.memptr(), U.M.n_elem);
+    }
+  
+  if(is_subview_row<T1>::value)
+    {
+    typedef typename T1::elem_type eT;
+    
+    const subview_row<eT>& sv = reinterpret_cast< const subview_row<eT>& >(X);
+    
+    if(sv.m.n_rows == 1)
+      {
+      const eT* sv_mem = &(sv.m.at(sv.aux_col1));
+      
+      return arrayops::accumulate(sv_mem, sv.n_elem);
+      }
     }
   
   const Proxy<T1> P(X);
@@ -920,6 +934,46 @@ op_accu_cube::apply(const CubeToMatOp<T1, op_omit_cube>& in)
   
   if(omit_mode == 1)  { acc = op_accu_cube::apply_omit_helper(P, is_omitted_1); }
   if(omit_mode == 2)  { acc = op_accu_cube::apply_omit_helper(P, is_omitted_2); }
+  
+  return acc;
+  }
+
+
+
+template<typename eT>
+inline
+eT
+op_accu_cube::apply(const subview_cube<eT>& sv)
+  {
+  arma_debug_sigprint();  
+  
+  if(sv.n_elem == 0)  { return eT(0); }
+  
+  const uword sv_nr = sv.n_rows;
+  const uword sv_nc = sv.n_cols;
+  const uword sv_ns = sv.n_slices;
+  
+  eT acc = eT(0);
+  
+  if( (sv_nr == 1)  && (sv_nc == 1) && (sv.aux_slice1 == 0) )
+    {
+    const uword sv_m_n_elem_slice = sv.m.n_elem_slice;
+    
+    const eT* sv_m_ptr = &( sv.m.at(sv.aux_row1, sv.aux_col1, 0) );
+    
+    for(uword s=0; s < sv_ns; ++s)
+      {
+      acc += (*sv_m_ptr);  sv_m_ptr += sv_m_n_elem_slice;
+      }
+    }
+  else
+    {
+    for(uword s=0; s < sv_ns; ++s)
+    for(uword c=0; c < sv_nc; ++c)
+      {
+      acc += arrayops::accumulate(sv.slice_colptr(s,c), sv_nr);
+      }
+    }
   
   return acc;
   }

@@ -49,6 +49,21 @@ spglue_join_cols::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,s
 
 
 
+template<typename T1, typename T2>
+inline
+void
+spglue_join_cols::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_join_cols>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  spglue_join_cols::apply_noalias(out, UA.M, UB.M);
+  }
+
+
+
 template<typename eT>
 inline
 void
@@ -177,6 +192,10 @@ spglue_join_cols::apply(SpMat<eT>& out, const SpBase<eT,T1>& A_expr, const SpBas
 
 
 
+//
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -201,6 +220,21 @@ spglue_join_rows::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,s
     {
     spglue_join_rows::apply_noalias(out, UA.M, UB.M);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+spglue_join_rows::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_join_rows>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  spglue_join_rows::apply_noalias(out, UA.M, UB.M);
   }
 
 

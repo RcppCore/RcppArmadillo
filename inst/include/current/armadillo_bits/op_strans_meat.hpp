@@ -434,7 +434,42 @@ op_strans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
 template<typename T1>
 inline
 void
+op_strans::apply_direct(Mat_noalias<typename T1::elem_type>& out, const T1& X)
+  {
+  arma_debug_sigprint();
+  
+  if((is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<T1>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+    {
+    const quasi_unwrap<T1> U(X);
+    
+    op_strans::apply_mat_noalias(out, U.M);
+    }
+  else
+    {
+    const Proxy<T1> P(X);
+    
+    op_strans::apply_proxy(out, P);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
 op_strans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in)
+  {
+  arma_debug_sigprint();
+  
+  op_strans::apply_direct(out, in.m);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_strans::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_strans>& in)
   {
   arma_debug_sigprint();
   

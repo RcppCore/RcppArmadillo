@@ -49,6 +49,21 @@ spglue_kron::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue
 
 
 
+template<typename T1, typename T2>
+inline
+void
+spglue_kron::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_kron>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  spglue_kron::apply_noalias(out, UA.M, UB.M);
+  }
+
+
+
 template<typename eT>
 inline
 void

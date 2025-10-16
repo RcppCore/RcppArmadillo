@@ -80,7 +80,7 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
       }
     }
   else
-  if((is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
     {
     const quasi_unwrap<T1> U(expr);
     
@@ -113,6 +113,52 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
       {
       op_vectorise_col::apply_proxy(out, P);
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_col::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_vectorise_col>& in)
+  {
+  arma_debug_sigprint();
+  
+  op_vectorise_col::apply_direct(out, in.m);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_vectorise_col::apply_direct(Mat_noalias<typename T1::elem_type>& out, const T1& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(is_subview<T1>::value)
+    {
+    const subview<eT>& sv = reinterpret_cast< const subview<eT>& >(expr);
+    
+    op_vectorise_col::apply_subview(out, sv);
+    }
+  else
+  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
+    {
+    const quasi_unwrap<T1> U(expr);
+    
+    out.set_size(U.M.n_elem, 1);
+    
+    arrayops::copy(out.memptr(), U.M.memptr(), U.M.n_elem);
+    }
+  else
+    {
+    const Proxy<T1> P(expr);
+    
+    op_vectorise_col::apply_proxy(out, P);
     }
   }
 

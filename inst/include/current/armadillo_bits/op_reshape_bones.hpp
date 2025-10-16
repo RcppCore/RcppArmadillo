@@ -27,6 +27,8 @@ struct op_reshape
   {
   template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in);
   
+  template<typename T1> inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_reshape>& in);
+  
   template<typename eT> inline static void apply_mat_inplace(Mat<eT>& A, const uword new_n_rows, const uword new_n_cols);
   
   template<typename eT> inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const uword new_n_rows, const uword new_n_cols);

@@ -32,27 +32,78 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
   
   if(is_Mat<T1>::value)
     {
-    // allow detection of in-place operation
-    
     const unwrap<T1> U(in.m);
     
-    op_flipud::apply_direct(out, U.M);
+    if(&out == &(U.M))  { op_flipud::apply_mat_inplace(out); return; }
+    
+    // fallthrough if operation is not inplace
+    }
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_flipud::apply_mat_noalias(tmp, U.M);
+    
+    out.steal_mem(tmp);
     }
   else
     {
-    const Proxy<T1> P(in.m);
+    op_flipud::apply_mat_noalias(out, U.M);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_flipud::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_flipud::apply_mat_noalias(out, U.M);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_flipud::apply_mat_inplace(Mat<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  const uword X_n_rows_m1 = X_n_rows - 1;
+  
+  const uword N = X_n_rows / 2;
+  
+  if(X_n_cols == 1)
+    {
+    eT* X_mem = X.memptr();
     
-    if(P.is_alias(out))
+    for(uword row=0; row < N; ++row)
       {
-      Mat<eT> tmp;
-      
-      op_flipud::apply_proxy_noalias(tmp, P);
-      
-      out.steal_mem(tmp);
+      std::swap(X_mem[X_n_rows_m1 - row], X_mem[row]);
       }
-    else
+    }
+  else
+    {
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      op_flipud::apply_proxy_noalias(out, P);
+      eT* X_colmem = X.colptr(col);
+      
+      for(uword row=0; row < N; ++row)
+        {
+        std::swap(X_colmem[X_n_rows_m1 - row], X_colmem[row]);
+        }
       }
     }
   }
@@ -62,7 +113,7 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
 template<typename eT>
 inline
 void
-op_flipud::apply_direct(Mat<eT>& out, const Mat<eT>& X)
+op_flipud::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& X)
   {
   arma_debug_sigprint();
   
@@ -71,111 +122,28 @@ op_flipud::apply_direct(Mat<eT>& out, const Mat<eT>& X)
   
   const uword X_n_rows_m1 = X_n_rows - 1;
   
-  if(&out != &X)
+  out.set_size(X_n_rows, X_n_cols);
+  
+  if(X_n_cols == 1)
     {
-    out.set_size(X_n_rows, X_n_cols);
+    const eT*   X_mem =   X.memptr();
+          eT* out_mem = out.memptr();
     
-    if(X_n_cols == 1)
+    for(uword row=0; row < X_n_rows; ++row)
       {
-      const eT*   X_mem =   X.memptr();
-            eT* out_mem = out.memptr();
-      
-      for(uword row=0; row < X_n_rows; ++row)
-        {
-        out_mem[X_n_rows_m1 - row] = X_mem[row];
-        }
-      }
-    else
-      {
-      for(uword col=0; col < X_n_cols; ++col)
-        {
-        const eT*   X_colmem =   X.colptr(col);
-              eT* out_colmem = out.colptr(col);
-        
-        for(uword row=0; row < X_n_rows; ++row)
-          {
-          out_colmem[X_n_rows_m1 - row] = X_colmem[row];
-          }
-        }
-      }
-    }
-  else  // in-place operation
-    {
-    const uword N = X_n_rows / 2;
-    
-    if(X_n_cols == 1)
-      {
-      eT* out_mem = out.memptr();
-      
-      for(uword row=0; row < N; ++row)
-        {
-        std::swap(out_mem[X_n_rows_m1 - row], out_mem[row]);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < X_n_cols; ++col)
-        {
-        eT* out_colmem = out.colptr(col);
-        
-        for(uword row=0; row < N; ++row)
-          {
-          std::swap(out_colmem[X_n_rows_m1 - row], out_colmem[row]);
-          }
-        }
-      }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_flipud::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  typedef typename Proxy<T1>::stored_type P_stored_type;
-  
-  if(is_Mat<P_stored_type>::value)
-    {
-    const unwrap<P_stored_type> U(P.Q);
-    
-    op_flipud::apply_direct(out, U.M);
-    
-    return;
-    }
-  
-  const uword P_n_rows = P.get_n_rows();
-  const uword P_n_cols = P.get_n_cols();
-  
-  const uword P_n_rows_m1 = P_n_rows - 1;
-  
-  out.set_size(P_n_rows, P_n_cols);
-  
-  if( ((T1::is_col) || (P_n_cols == 1)) && (Proxy<T1>::use_at == false) )
-    {
-    eT* out_mem = out.memptr();
-    
-    const typename Proxy<T1>::ea_type P_ea = P.get_ea();
-    
-    for(uword row=0; row < P_n_rows; ++row)
-      {
-      out_mem[P_n_rows_m1 - row] = P_ea[row];
+      out_mem[X_n_rows_m1 - row] = X_mem[row];
       }
     }
   else
     {
-    for(uword col=0; col < P_n_cols; ++col)
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      eT* out_colmem = out.colptr(col);
+      const eT*   X_colmem =   X.colptr(col);
+            eT* out_colmem = out.colptr(col);
       
-      for(uword row=0; row < P_n_rows; ++row)
+      for(uword row=0; row < X_n_rows; ++row)
         {
-        out_colmem[P_n_rows_m1 - row] = P.at(row, col);
+        out_colmem[X_n_rows_m1 - row] = X_colmem[row];
         }
       }
     }
@@ -198,27 +166,73 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
   
   if(is_Mat<T1>::value)
     {
-    // allow detection of in-place operation
-    
     const unwrap<T1> U(in.m);
     
-    op_fliplr::apply_direct(out, U.M);
+    if(&out == &(U.M))  { op_fliplr::apply_mat_inplace(out); return; }
+    
+    // fallthrough if operation is not inplace
+    }
+    
+  const quasi_unwrap<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_fliplr::apply_mat_noalias(tmp, U.M);
+    
+    out.steal_mem(tmp);
     }
   else
     {
-    const Proxy<T1> P(in.m);
+    op_fliplr::apply_mat_noalias(out, U.M);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_fliplr::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_fliplr::apply_mat_noalias(out, U.M);
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_fliplr::apply_mat_inplace(Mat<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  const uword X_n_rows = X.n_rows;
+  const uword X_n_cols = X.n_cols;
+  
+  const uword X_n_cols_m1 = X_n_cols - 1;
+  
+  const uword N = X_n_cols / 2;
+  
+  if(X_n_rows == 1)
+    {
+    eT* X_mem = X.memptr();
     
-    if(P.is_alias(out))
+    for(uword col=0; col < N; ++col)
       {
-      Mat<eT> tmp;
-      
-      op_fliplr::apply_proxy_noalias(tmp, P);
-      
-      out.steal_mem(tmp);
+      std::swap(X_mem[X_n_cols_m1 - col], X_mem[col]);
       }
-    else
+    }
+  else
+    {
+    for(uword col=0; col < N; ++col)
       {
-      op_fliplr::apply_proxy_noalias(out, P);
+      X.swap_cols(X_n_cols_m1 - col, col);
       }
     }
   }
@@ -228,7 +242,7 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
 template<typename eT>
 inline
 void
-op_fliplr::apply_direct(Mat<eT>& out, const Mat<eT>& X)
+op_fliplr::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& X)
   {
   arma_debug_sigprint();
   
@@ -237,101 +251,23 @@ op_fliplr::apply_direct(Mat<eT>& out, const Mat<eT>& X)
   
   const uword X_n_cols_m1 = X_n_cols - 1;
   
-  if(&out != &X)
+  out.set_size(X_n_rows, X_n_cols);
+  
+  if(X_n_rows == 1)
     {
-    out.set_size(X_n_rows, X_n_cols);
+    const eT*   X_mem =   X.memptr();
+          eT* out_mem = out.memptr();
     
-    if(X_n_rows == 1)
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      const eT*   X_mem =   X.memptr();
-            eT* out_mem = out.memptr();
-      
-      for(uword col=0; col < X_n_cols; ++col)
-        {
-        out_mem[X_n_cols_m1 - col] = X_mem[col];
-        }
-      }
-    else
-      {
-      for(uword col=0; col < X_n_cols; ++col)
-        {
-        out.col(X_n_cols_m1 - col) = X.col(col);
-        }
-      }
-    }
-  else  // in-place operation
-    {
-    const uword N = X_n_cols / 2;
-    
-    if(X_n_rows == 1)
-      {
-      eT* out_mem = out.memptr();
-      
-      for(uword col=0; col < N; ++col)
-        {
-        std::swap(out_mem[X_n_cols_m1 - col], out_mem[col]);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < N; ++col)
-        {
-        out.swap_cols(X_n_cols_m1 - col, col);
-        }
-      }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_fliplr::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  typedef typename Proxy<T1>::stored_type P_stored_type;
-  
-  if(is_Mat<P_stored_type>::value)
-    {
-    const unwrap<P_stored_type> U(P.Q);
-    
-    op_fliplr::apply_direct(out, U.M);
-    
-    return;
-    }
-  
-  const uword P_n_rows = P.get_n_rows();
-  const uword P_n_cols = P.get_n_cols();
-  
-  const uword P_n_cols_m1 = P_n_cols - 1;
-  
-  out.set_size(P_n_rows, P_n_cols);
-  
-  if( ((T1::is_row) || (P_n_rows == 1)) && (Proxy<T1>::use_at == false) )
-    {
-    eT* out_mem = out.memptr();
-    
-    const typename Proxy<T1>::ea_type P_ea = P.get_ea();
-    
-    for(uword col=0; col < P_n_cols; ++col)
-      {
-      out_mem[P_n_cols_m1 - col] = P_ea[col];
+      out_mem[X_n_cols_m1 - col] = X_mem[col];
       }
     }
   else
     {
-    for(uword col=0; col < P_n_cols; ++col)
+    for(uword col=0; col < X_n_cols; ++col)
       {
-      eT* out_colmem = out.colptr(P_n_cols_m1 - col);
-      
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        out_colmem[row] = P.at(row,col);
-        }
+      out.col(X_n_cols_m1 - col) = X.col(col);
       }
     }
   }

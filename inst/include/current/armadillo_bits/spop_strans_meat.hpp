@@ -149,4 +149,33 @@ spop_strans::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans
 
 
 
+template<typename T1>
+inline
+void
+spop_strans::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_strans>& in)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> U(in.m);
+  
+  spop_strans::apply_noalias(out, U.M);
+  }
+
+
+
+//! for transpose of non-complex matrices, redirected from spop_htrans::apply()
+template<typename T1>
+inline
+void
+spop_strans::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> U(in.m);
+  
+  spop_strans::apply_noalias(out, U.M);
+  }
+
+
+
 //! @}

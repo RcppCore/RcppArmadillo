@@ -35,7 +35,7 @@ median(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_median> >::result
 median(const T1& X)
   {
@@ -48,7 +48,7 @@ median(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_median> >::result
 median(const T1& X, const uword dim)
   {
@@ -61,7 +61,7 @@ median(const T1& X, const uword dim)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 median(const T& x)
   {

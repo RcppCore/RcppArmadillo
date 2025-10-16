@@ -581,6 +581,7 @@ namespace arma
   #include "armadillo_bits/fn_inplace_trans.hpp"
   #include "armadillo_bits/fn_randi.hpp"
   #include "armadillo_bits/fn_randg.hpp"
+  #include "armadillo_bits/fn_rande.hpp"
   #include "armadillo_bits/fn_cond_rcond.hpp"
   #include "armadillo_bits/fn_normalise.hpp"
   #include "armadillo_bits/fn_clamp.hpp"

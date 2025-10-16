@@ -404,7 +404,7 @@ op_all::apply(Mat<uword>& out, const mtOp<uword, T1, op_all>& X)
   
   const uword dim = X.aux_uword_a;
   
-  if( (is_Mat<T1>::value) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
+  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
     {
     const quasi_unwrap<T1> U(X.m);
     

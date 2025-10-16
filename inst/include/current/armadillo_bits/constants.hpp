@@ -26,6 +26,7 @@ namespace priv
     {
     template<typename eT>
     static
+    constexpr
     typename arma_real_only<eT>::result
     nan(typename arma_real_only<eT>::result* junk = nullptr)
       {
@@ -37,6 +38,7 @@ namespace priv
     
     template<typename eT>
     static
+    constexpr
     typename arma_cx_only<eT>::result
     nan(typename arma_cx_only<eT>::result* junk = nullptr)
       {
@@ -50,6 +52,7 @@ namespace priv
     
     template<typename eT>
     static
+    constexpr
     typename arma_integral_only<eT>::result
     nan(typename arma_integral_only<eT>::result* junk = nullptr)
       {
@@ -61,6 +64,7 @@ namespace priv
     
     template<typename eT>
     static
+    constexpr
     typename arma_real_only<eT>::result
     inf(typename arma_real_only<eT>::result* junk = nullptr)
       {
@@ -72,6 +76,7 @@ namespace priv
     
     template<typename eT>
     static
+    constexpr
     typename arma_cx_only<eT>::result
     inf(typename arma_cx_only<eT>::result* junk = nullptr)
       {
@@ -85,6 +90,7 @@ namespace priv
     
     template<typename eT>
     static
+    constexpr
     typename arma_integral_only<eT>::result
     inf(typename arma_integral_only<eT>::result* junk = nullptr)
       {

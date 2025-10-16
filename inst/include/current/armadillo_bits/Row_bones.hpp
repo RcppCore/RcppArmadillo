@@ -85,6 +85,8 @@ class Row : public Mat<eT>
   template<typename T1, typename T2>
   inline explicit Row(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
+  inline explicit Row(const subview<eT>& X, const bool use_colmem);  // only to be used by the quasi_unwrap class
+  
   template<typename T1> inline            Row(const BaseCube<eT,T1>& X);
   template<typename T1> inline Row& operator=(const BaseCube<eT,T1>& X);
   
@@ -142,7 +144,7 @@ class Row : public Mat<eT>
   template<typename T1> inline void shed_cols(const Base<uword, T1>& indices);
   
   [[deprecated]] inline void insert_cols(const uword col_num, const uword N, const bool set_to_zero);
-                  inline void insert_cols(const uword col_num, const uword N);
+                 inline void insert_cols(const uword col_num, const uword N);
   
   template<typename T1> inline void insert_cols(const uword col_num, const Base<eT,T1>& X);
   
@@ -152,6 +154,11 @@ class Row : public Mat<eT>
   
   arma_warn_unused arma_inline       eT& at(const uword in_row, const uword in_col);
   arma_warn_unused arma_inline const eT& at(const uword in_row, const uword in_col) const;
+  
+  
+  inline constexpr bool is_vec()    const { return true;  }
+  inline constexpr bool is_rowvec() const { return true;  }
+  inline constexpr bool is_colvec() const { return false; }
   
   
   typedef       eT*       row_iterator;

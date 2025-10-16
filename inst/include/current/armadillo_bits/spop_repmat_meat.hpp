@@ -48,6 +48,20 @@ spop_repmat::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_repmat
 
 
 
+template<typename T1>
+inline
+void
+spop_repmat::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_repmat>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> U(X.m);
+  
+  spop_repmat::apply_noalias(out, X.aux_uword_a, X.aux_uword_b, U.M);
+  }
+
+
+
 template<typename eT>
 inline
 void

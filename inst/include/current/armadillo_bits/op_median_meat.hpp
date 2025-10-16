@@ -53,6 +53,25 @@ op_median::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_median>& expr)
 
 
 
+template<typename T1>
+inline
+void
+op_median::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_median>& expr)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(expr.m);
+  
+  const uword dim = expr.aux_uword_a;
+  
+  arma_conform_check( U.M.internal_has_nan(), "median(): detected NaN"                   );
+  arma_conform_check( (dim > 1),              "median(): parameter 'dim' must be 0 or 1" );
+  
+  op_median::apply_noalias(out, U.M, dim);
+  }
+
+
+
 template<typename eT>
 inline
 void

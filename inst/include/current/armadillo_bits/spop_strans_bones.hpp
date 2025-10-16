@@ -40,6 +40,12 @@ struct spop_strans
   
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in);
+  
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_strans>& in);
+  
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in);
   };
 
 

@@ -21,8 +21,6 @@
 
 
 
-//! \brief
-//! both input matrices have the same element type
 template<typename eT>
 inline
 void
@@ -50,9 +48,6 @@ glue_kron::direct_kron(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
 
 
 
-//! \brief
-//! different types of input matrices
-//! A -> complex, B -> basic element type
 template<typename T>
 inline
 void
@@ -84,9 +79,6 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat< std::complex<T> >
 
 
 
-//! \brief
-//! different types of input matrices
-//! A -> basic element type, B -> complex
 template<typename T>
 inline
 void
@@ -114,8 +106,6 @@ glue_kron::direct_kron(Mat< std::complex<T> >& out, const Mat<T>& A, const Mat< 
 
 
 
-//! \brief
-//! apply Kronecker product for two objects with same element type
 template<typename T1, typename T2>
 inline
 void
@@ -140,6 +130,21 @@ glue_kron::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_kron>& 
     {
     glue_kron::direct_kron(out, UA.M, UB.M); 
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_kron::apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_kron>& X)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
+  
+  glue_kron::direct_kron(out, UA.M, UB.M); 
   }
 
 

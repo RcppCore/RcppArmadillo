@@ -58,4 +58,41 @@ spop_htrans::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans
 
 
 
+template<typename T1>
+inline
+void
+spop_htrans::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  spop_strans::apply(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_htrans::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type  eT;
+  
+  spop_strans::apply(out, in);
+  
+  const uword N = out.n_nonzero;
+  
+  for(uword i=0; i<N; ++i)
+    {
+    eT& val = access::rw(out.values[i]);
+    
+    val = eop_aux::conj(val);
+    }
+  }
+
+
+
 //! @}

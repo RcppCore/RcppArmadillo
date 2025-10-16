@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const mtOp<uword,T1,op_sort_index>
 sort_index
   (
@@ -70,7 +70,7 @@ sort_index
 // DO NOT USE: kept only for compatibility with old user code
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const mtOp<uword,T1,op_sort_index>
 stable_sort_index
   (

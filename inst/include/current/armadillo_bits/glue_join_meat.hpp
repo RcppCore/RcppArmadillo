@@ -21,44 +21,38 @@
 
 
 
-template<typename T1, typename T2>
+template<typename eT>
 inline
 void
-glue_join_cols::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B)
+glue_join_cols::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_debug_sigprint();
   
-  const uword A_n_rows = A.get_n_rows();
-  const uword A_n_cols = A.get_n_cols();
-  
-  const uword B_n_rows = B.get_n_rows();
-  const uword B_n_cols = B.get_n_cols();
-  
   arma_conform_check
     (
-    ( (A_n_cols != B_n_cols) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
+    ( (A.n_cols != B.n_cols) && ( (A.n_rows > 0) || (A.n_cols > 0) ) && ( (B.n_rows > 0) || (B.n_cols > 0) ) ),
     "join_cols() / join_vert(): number of columns must be the same"
     );
   
-  out.set_size( A_n_rows + B_n_rows, (std::max)(A_n_cols, B_n_cols) );
+  out.set_size( A.n_rows + B.n_rows, (std::max)(A.n_cols, B.n_cols) );
   
   if( out.n_elem > 0 )
     {
-    if(A.get_n_elem() > 0)
+    if(A.n_elem> 0)
       { 
-      out.submat(0,        0,   A_n_rows-1, out.n_cols-1) = A.Q;
+      out.submat(0,        0,   A.n_rows-1, out.n_cols-1) = A;
       }
     
-    if(B.get_n_elem() > 0)
+    if(B.n_elem > 0)
       {
-      out.submat(A_n_rows, 0, out.n_rows-1, out.n_cols-1) = B.Q;
+      out.submat(A.n_rows, 0, out.n_rows-1, out.n_cols-1) = B;
       }
     }
   }
-  
-  
-  
-  
+
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -68,21 +62,36 @@ glue_join_cols::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_jo
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1> A(X.A);
-  const Proxy<T2> B(X.B);
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
   
-  if( (A.is_alias(out) == false) && (B.is_alias(out) == false) )
+  if( (UA.is_alias(out) == false) && (UB.is_alias(out) == false) )
     {
-    glue_join_cols::apply_noalias(out, A, B);
+    glue_join_cols::apply_noalias(out, UA.M, UB.M);
     }
   else
     {
     Mat<eT> tmp;
     
-    glue_join_cols::apply_noalias(tmp, A, B);
+    glue_join_cols::apply_noalias(tmp, UA.M, UB.M);
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_join_cols::apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_cols>& X)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
+  
+  glue_join_cols::apply_noalias(out, UA.M, UB.M);
   }
 
 
@@ -178,44 +187,42 @@ glue_join_cols::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
 
 
 
-template<typename T1, typename T2>
+//
+
+
+
+template<typename eT>
 inline
 void
-glue_join_rows::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& A, const Proxy<T2>& B)
+glue_join_rows::apply_noalias(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   {
   arma_debug_sigprint();
   
-  const uword A_n_rows = A.get_n_rows();
-  const uword A_n_cols = A.get_n_cols();
-  
-  const uword B_n_rows = B.get_n_rows();
-  const uword B_n_cols = B.get_n_cols();
-  
   arma_conform_check
     (
-    ( (A_n_rows != B_n_rows) && ( (A_n_rows > 0) || (A_n_cols > 0) ) && ( (B_n_rows > 0) || (B_n_cols > 0) ) ),
+    ( (A.n_rows != B.n_rows) && ( (A.n_rows > 0) || (A.n_cols > 0) ) && ( (B.n_rows > 0) || (B.n_cols > 0) ) ),
     "join_rows() / join_horiz(): number of rows must be the same"
     );
   
-  out.set_size( (std::max)(A_n_rows, B_n_rows), A_n_cols + B_n_cols );
+  out.set_size( (std::max)(A.n_rows, B.n_rows), A.n_cols + B.n_cols );
   
   if( out.n_elem > 0 )
     {
-    if(A.get_n_elem() > 0)
+    if(A.n_elem > 0)
       {
-      out.submat(0, 0,        out.n_rows-1,   A_n_cols-1) = A.Q;
+      out.submat(0, 0,        out.n_rows-1,   A.n_cols-1) = A;
       }
     
-    if(B.get_n_elem() > 0)
+    if(B.n_elem > 0)
       {
-      out.submat(0, A_n_cols, out.n_rows-1, out.n_cols-1) = B.Q;
+      out.submat(0, A.n_cols, out.n_rows-1, out.n_cols-1) = B;
       }
     }
   }
-  
-  
-  
-  
+
+
+
+
 template<typename T1, typename T2>
 inline
 void
@@ -225,21 +232,36 @@ glue_join_rows::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_jo
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1> A(X.A);
-  const Proxy<T2> B(X.B);
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
   
-  if( (A.is_alias(out) == false) && (B.is_alias(out) == false) )
+  if( (UA.is_alias(out) == false) && (UB.is_alias(out) == false) )
     {
-    glue_join_rows::apply_noalias(out, A, B);
+    glue_join_rows::apply_noalias(out, UA.M, UB.M);
     }
   else
     {
     Mat<eT> tmp;
     
-    glue_join_rows::apply_noalias(tmp, A, B);
+    glue_join_rows::apply_noalias(tmp, UA.M, UB.M);
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_join_rows::apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_join_rows>& X)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
+  
+  glue_join_rows::apply_noalias(out, UA.M, UB.M);
   }
 
 
@@ -332,6 +354,10 @@ glue_join_rows::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   
   if(D.n_elem > 0)  { col_end_p1 += D.n_cols; out.cols(col_start, col_end_p1 - 1) = D; }
   }
+
+
+
+//
 
 
 

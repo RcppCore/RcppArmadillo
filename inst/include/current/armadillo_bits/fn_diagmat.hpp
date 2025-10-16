@@ -23,7 +23,7 @@
 //! interpret a matrix or a vector as a diagonal matrix (ie. off-diagonal entries are zero)
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -42,7 +42,7 @@ diagmat(const T1& X)
 //! create a matrix with the k-th diagonal set to the given vector
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <

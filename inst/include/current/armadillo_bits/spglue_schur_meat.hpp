@@ -51,6 +51,21 @@ spglue_schur::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglu
 
 
 
+template<typename T1, typename T2>
+inline
+void
+spglue_schur::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_schur>& X)
+  {
+  arma_debug_sigprint();
+  
+  const SpProxy<T1> pa(X.A);
+  const SpProxy<T2> pb(X.B);
+  
+  spglue_schur::apply_noalias(out, pa, pb);
+  }
+
+
+
 template<typename eT, typename T1, typename T2>
 inline
 void

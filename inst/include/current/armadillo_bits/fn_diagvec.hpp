@@ -23,7 +23,7 @@
 //! extract main diagonal from matrix
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const Op<T1, op_diagvec>
 diagvec(const Base<typename T1::elem_type,T1>& X)
   {
@@ -37,7 +37,7 @@ diagvec(const Base<typename T1::elem_type,T1>& X)
 //! extract arbitrary diagonal from matrix
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const Op<T1, op_diagvec2>
 diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
   {
@@ -50,7 +50,7 @@ diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const mtSpReduceOp<typename T1::elem_type, T1, op_sp_diagvec>
 diagvec(const SpBase<typename T1::elem_type,T1>& X, const sword diag_id = 0)
   {

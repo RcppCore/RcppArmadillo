@@ -199,6 +199,31 @@ glue_quantile::apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2:
 template<typename T1, typename T2>
 inline
 void
+glue_quantile::apply(Mat_noalias<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>& expr)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = expr.aux_uword;
+  
+  arma_conform_check( (dim > 1), "quantile(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> UA(expr.A);
+  const quasi_unwrap<T2> UB(expr.B);
+  
+  arma_conform_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
+  
+  glue_quantile::apply_noalias(out, UA.M, UB.M, dim);
+  }
+
+
+
+//
+
+
+
+template<typename T1, typename T2>
+inline
+void
 glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr)
   {
   arma_debug_sigprint();
@@ -224,6 +249,25 @@ glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<type
     {
     glue_quantile::apply_noalias(out, UA.M, UB.M, dim);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_quantile_default::apply(Mat_noalias<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> UA(expr.A);
+  const quasi_unwrap<T2> UB(expr.B);
+  
+  const uword dim = (T1::is_xvec) ? uword(UA.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
+  
+  arma_conform_check((UA.M.internal_has_nan() || UB.M.internal_has_nan()), "quantile(): detected NaN");
+  
+  glue_quantile::apply_noalias(out, UA.M, UB.M, dim);
   }
 
 

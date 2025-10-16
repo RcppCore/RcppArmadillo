@@ -40,7 +40,15 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
     {
     const unwrap<T1> U(in.m);
     
-    op_clamp::apply_direct(out, U.M, min_val, max_val);
+    // detect in-place operation
+    if(&out == &(U.M))
+      {
+      arrayops::clamp(out.memptr(), out.n_elem, min_val, max_val);
+      }
+    else
+      {
+      op_clamp::apply_mat_noalias(out, U.M, min_val, max_val);
+      }
     }
   else
     {
@@ -63,34 +71,55 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
 
 
 
-template<typename eT>
+template<typename T1>
 inline
 void
-op_clamp::apply_direct(Mat<eT>& out, const Mat<eT>& X, const eT min_val, const eT max_val)
+op_clamp::apply(Mat_noalias<typename T1::elem_type>& out, const mtOp<typename T1::elem_type, T1, op_clamp>& in)
   {
   arma_debug_sigprint();
   
-  if(&out != &X)
+  typedef typename T1::elem_type eT;
+  
+  const eT min_val = in.aux;
+  const eT max_val = in.aux_out_eT;
+  
+  arma_conform_check( (min_val > max_val), "clamp(): min_val must be less than max_val" );
+  
+  if((quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
     {
-    out.set_size(X.n_rows, X.n_cols);
+    const quasi_unwrap<T1> U(in.m);
     
-    const uword N = out.n_elem;
-    
-    const eT*   X_mem =   X.memptr();
-          eT* out_mem = out.memptr();
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT val = X_mem[i];
-      
-      out_mem[i] = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
-      }
+    op_clamp::apply_mat_noalias(out, U.M, min_val, max_val);
     }
   else
     {
-    arma_debug_print("op_clamp::apply_direct(): inplace operation");
+    const Proxy<T1> P(in.m);
     
-    arrayops::clamp(out.memptr(), out.n_elem, min_val, max_val);
+    op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_clamp::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& X, const eT min_val, const eT max_val)
+  {
+  arma_debug_sigprint();
+  
+  out.set_size(X.n_rows, X.n_cols);
+  
+  const uword N = out.n_elem;
+  
+  const eT*   X_mem =   X.memptr();
+        eT* out_mem = out.memptr();
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const eT val = X_mem[i];
+    
+    out_mem[i] = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
     }
   }
 

@@ -17,15 +17,14 @@
 
 
 
-//! \addtogroup fn_shift
+//! \addtogroup fn_circshift
 //! @{
 
 
 
-// TODO: deprecate in favour of circshift()
 template<typename T1>
-arma_warn_unused
-arma_inline
+// [[deprecated("use circshift() instead")]]
+inline
 typename
 enable_if2
   <
@@ -50,7 +49,7 @@ shift
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -73,9 +72,8 @@ circshift
 
 
 
-// TODO: deprecate in favour of circshift()
 template<typename T1>
-arma_warn_unused
+// [[deprecated("use circshift() instead")]]
 inline
 typename
 enable_if2
@@ -140,9 +138,8 @@ circshift
 
 
 
-// TODO: deprecate in favour of circshift()
 template<typename T1>
-arma_warn_unused
+// [[deprecated("use circshift() instead")]]
 inline
 typename
 enable_if2
@@ -217,9 +214,8 @@ circshift
 
 
 
-// TODO: deprecate in favour of circshift()
 template<typename T1>
-arma_warn_unused
+// [[deprecated("use circshift() instead")]]
 inline
 SpMat<typename T1::elem_type>
 shift

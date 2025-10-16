@@ -20,13 +20,6 @@
 //! @{
 
 
-//! \brief
-//! Delayed product of elements of a matrix along a specified dimension (either rows or columns).
-//! The result is stored in a dense matrix that has either one column or one row.
-//! For dim = 0, find the sum of each column (ie. traverse across rows)
-//! For dim = 1, find the sum of each row (ie. traverse across columns)
-//! The default is dim = 0.
-//! NOTE: this function works differently than in Matlab/Octave.
 
 template<typename T1>
 arma_warn_unused
@@ -43,7 +36,7 @@ prod(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_prod> >::result
 prod(const T1& X)
   {
@@ -56,7 +49,7 @@ prod(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_prod> >::result
 prod(const T1& X, const uword dim)
   {
@@ -69,7 +62,7 @@ prod(const T1& X, const uword dim)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 prod(const T& x)
   {
