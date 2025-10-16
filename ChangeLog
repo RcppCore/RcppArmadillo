@@ -1,3 +1,12 @@
+2025-10-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.1.99-1
+        * inst/NEWS.Rd: Idem
+        * configure.ac: Idem
+        * configure: Idem
+
+	* inst/include/current/: Sync with Armadillo 15.2-rc1
+
 2025-09-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/current/: Sync with Armadillo 15.0.3
