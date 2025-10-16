@@ -212,7 +212,6 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
   typedef typename T1::elem_type eT;
   
   const quasi_unwrap<T1> U(in.m);
-  const Mat<eT>&     X = U.M;
   
   const uword sort_mode = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
@@ -224,14 +223,34 @@ op_sort::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
     {
     Mat<eT> tmp;
     
-    op_sort::apply_noalias(tmp, X, sort_mode, dim);
+    op_sort::apply_noalias(tmp, U.M, sort_mode, dim);
     
     out.steal_mem(tmp);
     }
   else
     {
-    op_sort::apply_noalias(out, X, sort_mode, dim);
+    op_sort::apply_noalias(out, U.M, sort_mode, dim);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sort::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_sort>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  const uword sort_mode = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
+  
+  arma_conform_check( (sort_mode > 1), "sort(): parameter 'sort_mode' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "sort(): parameter 'dim' must be 0 or 1"       );
+  
+  op_sort::apply_noalias(out, U.M, sort_mode, dim);
   }
 
 

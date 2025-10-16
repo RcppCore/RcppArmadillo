@@ -29,6 +29,9 @@ struct op_cumprod
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_cumprod>& in);
   };
 
 
@@ -38,6 +41,9 @@ struct op_cumprod_vec
   {
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cumprod_vec>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_cumprod_vec>& in);
   };
 
 

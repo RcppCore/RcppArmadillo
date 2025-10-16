@@ -83,6 +83,38 @@ spglue_times::apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spo
 
 
 
+template<typename T1, typename T2>
+inline
+void
+spglue_times::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(X.A);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  spglue_times::apply_noalias(out, UA.M, UB.M);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+spglue_times::apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(X.A.m);
+  const unwrap_spmat<T2> UB(X.B);
+  
+  spglue_times::apply_noalias(out, UA.M, UB.M);
+  
+  out *= X.A.aux;
+  }
+
+
+
 template<typename eT>
 inline
 void

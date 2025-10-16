@@ -22,7 +22,7 @@
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -40,7 +40,7 @@ quantile(const T1& X, const Base<typename T2::elem_type,T2>& P)
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <

@@ -35,7 +35,7 @@ min(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_min> >::result
 min(const T1& X)
   {
@@ -48,7 +48,7 @@ min(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_min> >::result
 min(const T1& X, const uword dim)
   {
@@ -61,7 +61,7 @@ min(const T1& X, const uword dim)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 min(const T& x)
   {
@@ -73,7 +73,7 @@ min(const T& x)
 //! element-wise minimum
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -95,7 +95,7 @@ min
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const OpCube<T1, op_min>
 min
   (
@@ -112,7 +112,7 @@ min
 
 template<typename T1, typename T2>
 arma_warn_unused
-arma_inline
+inline
 const GlueCube<T1, T2, glue_min>
 min
   (

@@ -40,7 +40,7 @@ struct depth_lhs< glue_type, Glue<T1,T2,glue_type> >
 
 
 
-template<bool do_inv_detect>
+template<bool do_inv_detect, bool check_alias>
 struct glue_times_redirect2_helper
   {
   template<typename T1, typename T2>
@@ -48,8 +48,8 @@ struct glue_times_redirect2_helper
   };
 
 
-template<>
-struct glue_times_redirect2_helper<true>
+template<bool check_alias>
+struct glue_times_redirect2_helper<true, check_alias>
   {
   template<typename T1, typename T2>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
@@ -57,7 +57,7 @@ struct glue_times_redirect2_helper<true>
 
 
 
-template<bool do_inv_detect>
+template<bool do_inv_detect, bool check_alias>
 struct glue_times_redirect3_helper
   {
   template<typename T1, typename T2, typename T3>
@@ -65,8 +65,8 @@ struct glue_times_redirect3_helper
   };
 
 
-template<>
-struct glue_times_redirect3_helper<true>
+template<bool check_alias>
+struct glue_times_redirect3_helper<true, check_alias>
   {
   template<typename T1, typename T2, typename T3>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
@@ -74,7 +74,7 @@ struct glue_times_redirect3_helper<true>
 
 
 
-template<uword N>
+template<uword N, bool check_alias>
 struct glue_times_redirect
   {
   template<typename T1, typename T2>
@@ -82,24 +82,24 @@ struct glue_times_redirect
   };
 
 
-template<>
-struct glue_times_redirect<2>
+template<bool check_alias>
+struct glue_times_redirect<2, check_alias>
   {
   template<typename T1, typename T2>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
   };
 
 
-template<>
-struct glue_times_redirect<3>
+template<bool check_alias>
+struct glue_times_redirect<3, check_alias>
   {
   template<typename T1, typename T2, typename T3>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>,T3,glue_times>& X);
   };
 
 
-template<>
-struct glue_times_redirect<4>
+template<bool check_alias>
+struct glue_times_redirect<4, check_alias>
   {
   template<typename T1, typename T2, typename T3, typename T4>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X);
@@ -120,6 +120,9 @@ struct glue_times
   
   template<typename T1, typename T2>
   arma_hot inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
+  
+  template<typename T1, typename T2>
+  arma_hot inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X);
   
   
   template<typename T1>

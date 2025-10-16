@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_blas_real<typename T1::pod_type>::value, const Op<T1, op_orth> >::result
 orth(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0)
   {
@@ -62,7 +62,7 @@ orth(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type, T1>& X
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_blas_real<typename T1::pod_type>::value, const Op<T1, op_null> >::result
 null(const Base<typename T1::elem_type, T1>& X, const typename T1::pod_type tol = 0.0)
   {

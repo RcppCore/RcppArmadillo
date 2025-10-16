@@ -21,11 +21,11 @@
 
 
 
-template<bool do_inv_detect>
+template<bool do_inv_detect, bool check_alias>
 template<typename T1, typename T2>
 inline
 void
-glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+glue_times_redirect2_helper<do_inv_detect, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -55,7 +55,7 @@ glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
     return;
     }
   
-  const bool alias = U1.is_alias(out) || U2.is_alias(out);
+  const bool alias = (check_alias) && (U1.is_alias(out) || U2.is_alias(out));
   
   if(alias == false)
     {
@@ -87,10 +87,11 @@ glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
 
 
 
+template<bool check_alias>
 template<typename T1, typename T2>
 inline
 void
-glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+glue_times_redirect2_helper<true, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -148,14 +149,27 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
       if(is_cx<eT>::yes)  { arma_warn(1, "inv_sympd(): given matrix is not hermitian"); }
       }
     
-    const unwrap_check<T2> B_tmp(X.B, out);
-    const Mat<eT>& B = B_tmp.M;
+    const quasi_unwrap<T2> UB(X.B);
+    const Mat<eT>& B     = UB.M;
     
     arma_conform_assert_mul_size(A, B, "matrix multiplication");
     
     const bool is_sym = (strip_inv<T1>::do_inv_spd) ? false : ( arma_config::optimise_sym && (is_sym_expr<T1>::eval(X.A) || sym_helper::is_approx_sym(A, uword(100))) );
     
-    const bool status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, B) : ( (is_sym) ? auxlib::solve_sym_fast(out, A, B) : auxlib::solve_square_fast(out, A, B) );
+    bool status = false;
+    
+    if( (check_alias) && UB.is_alias(out) )
+      {
+      Mat<eT> tmp;
+      
+      status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(tmp, A, B) : ( (is_sym) ? auxlib::solve_sym_fast(tmp, A, B) : auxlib::solve_square_fast(tmp, A, B) );
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      status = (strip_inv<T1>::do_inv_spd) ? auxlib::solve_sympd_fast(out, A, B) : ( (is_sym) ? auxlib::solve_sym_fast(out, A, B) : auxlib::solve_square_fast(out, A, B) );
+      }
     
     if(status == false)
       {
@@ -202,16 +216,16 @@ glue_times_redirect2_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     return;
     }
   
-  glue_times_redirect2_helper<false>::apply(out, X);
+  glue_times_redirect2_helper<false, check_alias>::apply(out, X);
   }
 
 
 
-template<bool do_inv_detect>
+template<bool do_inv_detect, bool check_alias>
 template<typename T1, typename T2, typename T3>
 inline
 void
-glue_times_redirect3_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
+glue_times_redirect3_helper<do_inv_detect, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -231,7 +245,7 @@ glue_times_redirect3_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
   constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times || partial_unwrap<T3>::do_times;
   const     eT       alpha = use_alpha ? (U1.get_val() * U2.get_val() * U3.get_val()) : eT(0);
   
-  const bool alias = U1.is_alias(out) || U2.is_alias(out) || U3.is_alias(out);
+  const bool alias = (check_alias) && (U1.is_alias(out) || U2.is_alias(out) || U3.is_alias(out));
   
   if(alias == false)
     {
@@ -265,10 +279,11 @@ glue_times_redirect3_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
 
 
 
+template<bool check_alias>
 template<typename T1, typename T2, typename T3>
 inline
 void
-glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
+glue_times_redirect3_helper<true, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -371,7 +386,7 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     constexpr bool use_alpha = partial_unwrap<T1>::do_times;
     const     eT       alpha = use_alpha ? U1.get_val() : eT(0);
     
-    if(U1.is_alias(out))
+    if( (check_alias) && U1.is_alias(out) )
       {
       Mat<eT> tmp;
       
@@ -388,16 +403,16 @@ glue_times_redirect3_helper<true>::apply(Mat<typename T1::elem_type>& out, const
     }
   
   
-  glue_times_redirect3_helper<false>::apply(out, X);
+  glue_times_redirect3_helper<false, check_alias>::apply(out, X);
   }
 
 
 
-template<uword N>
+template<uword N, bool check_alias>
 template<typename T1, typename T2>
 inline
 void
-glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+glue_times_redirect<N, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -412,7 +427,7 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
   constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
   const     eT       alpha = use_alpha ? (U1.get_val() * U2.get_val()) : eT(0);
   
-  const bool alias = U1.is_alias(out) || U2.is_alias(out);
+  const bool alias = (check_alias) && (U1.is_alias(out) || U2.is_alias(out));
   
   if(alias == false)
     {
@@ -444,38 +459,41 @@ glue_times_redirect<N>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2
 
 
 
+template<bool check_alias>
 template<typename T1, typename T2>
 inline
 void
-glue_times_redirect<2>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+glue_times_redirect<2, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
   {
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  glue_times_redirect2_helper< is_blas_type<eT>::value >::apply(out, X);
+  glue_times_redirect2_helper< is_blas_type<eT>::value, check_alias >::apply(out, X);
   }
 
 
 
+template<bool check_alias>
 template<typename T1, typename T2, typename T3>
 inline
 void
-glue_times_redirect<3>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
+glue_times_redirect<3, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue<T1,T2,glue_times>, T3, glue_times>& X)
   {
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
-  glue_times_redirect3_helper< is_blas_type<eT>::value >::apply(out, X);
+  glue_times_redirect3_helper< is_blas_type<eT>::value, check_alias >::apply(out, X);
   }
 
 
 
+template<bool check_alias>
 template<typename T1, typename T2, typename T3, typename T4>
 inline
 void
-glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X)
+glue_times_redirect<4, check_alias>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue< Glue<T1,T2,glue_times>, T3, glue_times>, T4, glue_times>& X)
   {
   arma_debug_sigprint();
   
@@ -497,7 +515,7 @@ glue_times_redirect<4>::apply(Mat<typename T1::elem_type>& out, const Glue< Glue
   constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times || partial_unwrap<T3>::do_times || partial_unwrap<T4>::do_times;
   const     eT       alpha = use_alpha ? (U1.get_val() * U2.get_val() * U3.get_val() * U4.get_val()) : eT(0);
   
-  const bool alias = U1.is_alias(out) || U2.is_alias(out) || U3.is_alias(out) || U4.is_alias(out);
+  const bool alias = (check_alias) && (U1.is_alias(out) || U2.is_alias(out) || U3.is_alias(out) || U4.is_alias(out));
   
   if(alias == false)
     {
@@ -544,7 +562,23 @@ glue_times::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>
   
   arma_debug_print(arma_str::format("glue_times::apply(): N_mat: %u") % N_mat);
   
-  glue_times_redirect<N_mat>::apply(out, X);
+  glue_times_redirect<N_mat, true>::apply(out, X);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_times::apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X)
+  {
+  arma_debug_sigprint();
+  
+  constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
+  
+  arma_debug_print(arma_str::format("glue_times::apply(): N_mat: %u") % N_mat);
+  
+  glue_times_redirect<N_mat, false>::apply(out, X);
   }
 
 

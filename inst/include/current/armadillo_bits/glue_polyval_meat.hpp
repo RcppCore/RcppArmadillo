@@ -55,27 +55,41 @@ glue_polyval::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_poly
   const quasi_unwrap<T1> UP(expr.A);
   const quasi_unwrap<T2> UX(expr.B);
   
-  const Mat<eT>& P = UP.M;
-  const Mat<eT>& X = UX.M;
+  arma_conform_check( ((UP.M.is_vec() == false) && (UP.M.is_empty() == false)), "polyval(): argument P must be a vector" );
   
-  arma_conform_check( ((P.is_vec() == false) && (P.is_empty() == false)), "polyval(): argument P must be a vector" );
-  
-  if(P.is_empty() || X.is_empty())
-    {
-    out.zeros(X.n_rows, X.n_cols);
-    return;
-    }
+  if(UP.M.is_empty() || UX.M.is_empty())  { out.zeros(UX.M.n_rows, UX.M.n_cols); return; }
   
   if(UP.is_alias(out) || UX.is_alias(out))
     {
     Mat<eT> tmp;
-    glue_polyval::apply_noalias(tmp, P, X);
+    
+    glue_polyval::apply_noalias(tmp, UP.M, UX.M);
+    
     out.steal_mem(tmp);
     }
   else
     {
-    glue_polyval::apply_noalias(out, P, X);
+    glue_polyval::apply_noalias(out, UP.M, UX.M);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_polyval::apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_polyval>& expr)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> UP(expr.A);
+  const quasi_unwrap<T2> UX(expr.B);
+  
+  arma_conform_check( ((UP.M.is_vec() == false) && (UP.M.is_empty() == false)), "polyval(): argument P must be a vector" );
+  
+  if(UP.M.is_empty() || UX.M.is_empty())  { out.zeros(UX.M.n_rows, UX.M.n_cols); return; }
+  
+  glue_polyval::apply_noalias(out, UP.M, UX.M);
   }
 
 

@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.1.99-1 (2025-10-16) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.0 (RC1 right now)
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.0.2-2 (2025-09-18)}{
   \itemize{
     \item Minor update to skeleton \code{Makevars},\code{Makevars.win}

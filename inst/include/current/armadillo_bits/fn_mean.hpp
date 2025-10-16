@@ -36,7 +36,7 @@ mean(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_mean> >::result
 mean(const T1& X)
   {
@@ -49,7 +49,7 @@ mean(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_mean> >::result
 mean(const T1& X, const uword dim)
   {
@@ -62,7 +62,7 @@ mean(const T1& X, const uword dim)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 mean(const T& x)
   {
@@ -73,7 +73,7 @@ mean(const T& x)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const OpCube<T1, op_mean>
 mean
   (

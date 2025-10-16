@@ -70,7 +70,7 @@ det(typename T1::elem_type& out_val, const Base<typename T1::elem_type,T1>& X)
 
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename arma_scalar_only<T>::result
 det(const T& x)
   {

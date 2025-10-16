@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -41,7 +41,7 @@ repelem(const T1& A, const uword r, const uword c)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_repelem>
 repelem(const SpBase<typename T1::elem_type,T1>& A, const uword r, const uword c)
   {

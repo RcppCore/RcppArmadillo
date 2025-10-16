@@ -741,6 +741,10 @@ class SpMat_aux
 
 
 
+template<typename eT> class SpMat_noalias : public SpMat<eT> {};
+
+
+
 #define ARMA_HAS_SPMAT
 
 

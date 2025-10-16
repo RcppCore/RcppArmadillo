@@ -27,6 +27,9 @@ struct op_stddev
   template<typename T1>
   inline static void apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_stddev>& in);
   
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_stddev>& in);
+  
   template<typename in_eT>
   inline static void apply_noalias(Mat<typename get_pod_type<in_eT>::result>& out, const Mat<in_eT>& X, const uword norm_type, const uword dim);
   

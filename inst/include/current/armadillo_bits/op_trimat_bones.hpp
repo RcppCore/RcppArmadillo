@@ -34,6 +34,9 @@ struct op_trimat
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_trimat>& in);
   
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_trimat>& in);
+  
   template<typename eT>
   inline static void apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const bool upper);
   

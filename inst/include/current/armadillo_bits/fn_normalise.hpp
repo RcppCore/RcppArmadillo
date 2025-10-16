@@ -95,7 +95,7 @@ normalise
 //! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <

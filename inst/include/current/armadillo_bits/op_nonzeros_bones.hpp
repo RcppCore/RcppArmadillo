@@ -32,6 +32,9 @@ struct op_nonzeros
   
   template<typename T1>
   static inline void apply(Mat<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& X);
+  
+  template<typename T1>
+  static inline void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_nonzeros>& X);
   };
 
 

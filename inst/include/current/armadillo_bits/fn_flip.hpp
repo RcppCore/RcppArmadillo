@@ -23,7 +23,7 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_flipud> >::result
 flipud(const T1& X)
   {
@@ -36,7 +36,7 @@ flipud(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_fliplr> >::result
 fliplr(const T1& X)
   {
@@ -49,7 +49,7 @@ fliplr(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_flipud>
 flipud(const SpBase<typename T1::elem_type,T1>& X)
   {
@@ -62,7 +62,7 @@ flipud(const SpBase<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_fliplr>
 fliplr(const SpBase<typename T1::elem_type,T1>& X)
   {

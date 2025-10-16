@@ -32,6 +32,9 @@ struct glue_quantile
   
   template<typename T1, typename T2>
   inline static void apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>& expr);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat_noalias<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile>& expr);
   };
 
 
@@ -48,6 +51,9 @@ struct glue_quantile_default
   
   template<typename T1, typename T2>
   inline static void apply(Mat<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat_noalias<typename T2::elem_type>& out, const mtGlue<typename T2::elem_type,T1,T2,glue_quantile_default>& expr);
   };
 
 

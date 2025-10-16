@@ -120,7 +120,7 @@ op_sum::apply_generic(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
   
   arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
   
-  if((is_Mat<T1>::value) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+  if((quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
     {
     const quasi_unwrap<T1> U(in.m);
     
@@ -153,6 +153,106 @@ op_sum::apply_generic(Mat<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
       {
       op_sum::apply_proxy_noalias(out, P, dim);
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
+  {
+  arma_debug_sigprint();
+  
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply(Mat_noalias<typename T1::elem_type>& out, const Op< eOp<T1,eop_square>, op_sum >& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef eOp<T1,eop_square> inner_expr_type;
+  
+  typedef typename inner_expr_type::proxy_type::stored_type inner_expr_P_stored_type;
+  
+  if(is_Mat<inner_expr_P_stored_type>::value)
+    {
+    const uword dim = in.aux_uword_a;
+    
+    arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+    
+    const quasi_unwrap<inner_expr_P_stored_type> U(in.m.P.Q);
+    
+    op_sum::apply_mat_square_noalias(out, U.M, dim);
+    
+    return;
+    }
+  
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply(Mat_noalias<typename T1::elem_type>& out, const Op< eOp<T1,eop_pow>, op_sum >& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(arma_config::optimise_powexpr && (in.m.aux == eT(2)))
+    {
+    typedef Op< eOp<T1,eop_square>, op_sum > modified_whole_expr_type;
+    
+    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
+    
+    return;
+    }
+  
+  if(arma_config::optimise_powexpr && (in.m.aux == eT(0.5)) && is_real_or_cx<eT>::value)
+    {
+    typedef Op< eOp<T1,eop_sqrt>, op_sum > modified_whole_expr_type;
+    
+    op_sum::apply(out, reinterpret_cast<const modified_whole_expr_type& >(in) );
+    
+    return;
+    }
+  
+  op_sum::apply_generic(out, in);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sum::apply_generic(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_sum>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+  
+  if((quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
+    {
+    const quasi_unwrap<T1> U(in.m);
+    
+    op_sum::apply_mat_noalias(out, U.M, dim);
+    }
+  else
+    {
+    const Proxy<T1> P(in.m);
+    
+    op_sum::apply_proxy_noalias(out, P, dim);
     }
   }
 

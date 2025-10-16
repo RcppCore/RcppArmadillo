@@ -54,6 +54,26 @@ op_var::apply(Mat<typename T1::pod_type>& out, const mtOp<typename T1::pod_type,
 
 
 
+template<typename T1>
+inline
+void
+op_var::apply(Mat_noalias<typename T1::pod_type>& out, const mtOp<typename T1::pod_type, T1, op_var>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword norm_type = in.aux_uword_a;
+  const uword dim       = in.aux_uword_b;
+  
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_var::apply_noalias(out, U.M, norm_type, dim);
+  }
+
+
+
 template<typename in_eT>
 inline
 void

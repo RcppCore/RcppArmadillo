@@ -483,7 +483,7 @@ Col<eT>::operator=(Col<eT>&& X)
 //   if(X.n_cols != 1)  { const Mat<eT>& XX = X; Mat<eT>::operator=(XX); return *this; }
 //   
 //   (*this).steal_mem(X, true);
-//   
+//    
 //   return *this;
 //   }
 
@@ -521,11 +521,9 @@ template<typename eT>
 template<typename T1>
 inline
 Col<eT>::Col(const Base<eT,T1>& X)
-  : Mat<eT>(arma_vec_indicator(), 1)
+  : Mat<eT>(X.get_ref(), arma_vec_indicator(), 1)
   {
-  arma_debug_sigprint();
-  
-  Mat<eT>::operator=(X.get_ref());
+  arma_debug_sigprint_this(this);
   }
 
 
@@ -549,11 +547,9 @@ template<typename eT>
 template<typename T1>
 inline
 Col<eT>::Col(const SpBase<eT,T1>& X)
-  : Mat<eT>(arma_vec_indicator(), 1)
+  : Mat<eT>(X.get_ref(), arma_vec_indicator(), 1)
   {
   arma_debug_sigprint_this(this);
-  
-  Mat<eT>::operator=(X.get_ref());
   }
 
 
@@ -607,12 +603,9 @@ Col<eT>::Col
   const Base<typename Col<eT>::pod_type, T1>& A,
   const Base<typename Col<eT>::pod_type, T2>& B
   )
+  : Mat<eT>(A.get_ref(), B.get_ref(), arma_vec_indicator(), 1)
   {
-  arma_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
-  
-  Mat<eT>::init(A,B);
+  arma_debug_sigprint_this(this);
   }
 
 
@@ -621,12 +614,9 @@ template<typename eT>
 template<typename T1>
 inline
 Col<eT>::Col(const BaseCube<eT,T1>& X)
+  : Mat<eT>(X.get_ref(), arma_vec_indicator(), 1)
   {
-  arma_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
-  
-  Mat<eT>::operator=(X);
+  arma_debug_sigprint_this(this);
   }
 
 
@@ -649,12 +639,9 @@ Col<eT>::operator=(const BaseCube<eT,T1>& X)
 template<typename eT>
 inline
 Col<eT>::Col(const subview_cube<eT>& X)
+  : Mat<eT>(X, arma_vec_indicator(), 1)
   {
-  arma_debug_sigprint();
-  
-  access::rw(Mat<eT>::vec_state) = 1;
-  
-  Mat<eT>::operator=(X);
+  arma_debug_sigprint_this(this);
   }
 
 

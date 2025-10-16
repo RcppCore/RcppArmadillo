@@ -65,7 +65,13 @@ struct op_strans
   inline static void apply_direct(Mat<typename T1::elem_type>& out, const T1& X);
   
   template<typename T1>
+  inline static void apply_direct(Mat_noalias<typename T1::elem_type>& out, const T1& X);
+  
+  template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_strans>& in);
   };
 
 

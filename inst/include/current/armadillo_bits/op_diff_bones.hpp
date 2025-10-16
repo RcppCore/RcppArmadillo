@@ -29,6 +29,9 @@ struct op_diff
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_diff>& in);
   };
 
 
@@ -38,6 +41,9 @@ struct op_diff_vec
   {
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diff_vec>& in);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_diff_vec>& in);
   };
 
 

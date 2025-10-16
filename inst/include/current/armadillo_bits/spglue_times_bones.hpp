@@ -37,6 +37,12 @@ struct spglue_times
   template<typename T1, typename T2>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X);
   
+  template<typename T1, typename T2>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpGlue<SpOp<T1,spop_scalar_times>,T2,spglue_times>& X);
+  
   template<typename eT>
   inline static void apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y);
   };

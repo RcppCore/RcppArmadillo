@@ -37,6 +37,12 @@ struct spop_htrans
   
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
+  
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
+  
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1,spop_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   };
 
 

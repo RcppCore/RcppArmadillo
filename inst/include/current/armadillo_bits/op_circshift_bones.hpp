@@ -26,6 +26,8 @@ struct op_circshift_vec
   : public traits_op_passthru
   {
   template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_circshift_vec>& in);
+  
+  template<typename T1> inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_circshift_vec>& in);
   };
 
 

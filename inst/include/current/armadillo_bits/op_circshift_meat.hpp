@@ -54,6 +54,29 @@ op_circshift_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_circshi
 
 
 
+template<typename T1>
+inline
+void
+op_circshift_vec::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_circshift_vec>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  const uword len = in.aux_uword_a;
+  const uword neg = in.aux_uword_b;
+  
+  const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
+  
+  op_circshift::apply_noalias(out, U.M, len, neg, dim);
+  }
+
+
+
+//
+
+
+
 template<typename eT>
 inline
 void

@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 15
-#define ARMA_VERSION_MINOR 0
-#define ARMA_VERSION_PATCH 3
-#define ARMA_VERSION_NAME  "Medium Roast"
+#define ARMA_VERSION_MINOR 1
+#define ARMA_VERSION_PATCH 91
+#define ARMA_VERSION_NAME  "15.2-RC1"
 
 
 

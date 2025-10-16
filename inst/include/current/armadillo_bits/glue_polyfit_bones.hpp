@@ -36,7 +36,11 @@ struct glue_polyfit
   
   template<typename T1, typename T2> inline static bool apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X_expr, const Base<typename T1::elem_type, T2>& Y_expr, const uword N);
   
+  template<typename T1, typename T2> inline static bool apply_direct(Mat_noalias<typename T1::elem_type>& out, const Base<typename T1::elem_type,T1>& X_expr, const Base<typename T1::elem_type, T2>& Y_expr, const uword N);
+  
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_polyfit>& expr);
+  
+  template<typename T1, typename T2> inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Glue<T1,T2,glue_polyfit>& expr);
   };
 
 

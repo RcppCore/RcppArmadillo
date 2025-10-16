@@ -31,23 +31,41 @@ op_max::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_max>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
+  
   arma_conform_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
   
   const quasi_unwrap<T1> U(in.m);
-  const Mat<eT>& X = U.M;
   
   if(U.is_alias(out) == false)
     {
-    op_max::apply_noalias(out, X, dim);
+    op_max::apply_noalias(out, U.M, dim);
     }
   else
     {
     Mat<eT> tmp;
     
-    op_max::apply_noalias(tmp, X, dim);
+    op_max::apply_noalias(tmp, U.M, dim);
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_max::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_max>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_max::apply_noalias(out, U.M, dim);
   }
 
 

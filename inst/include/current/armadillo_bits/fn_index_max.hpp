@@ -35,7 +35,7 @@ index_max(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const mtOp<uword, T1, op_index_max> >::result
 index_max(const T1& X)
   {
@@ -48,7 +48,7 @@ index_max(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_arma_type<T1>::value, const mtOp<uword, T1, op_index_max> >::result
 index_max(const T1& X, const uword dim)
   {
@@ -61,7 +61,7 @@ index_max(const T1& X, const uword dim)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const mtOpCube<uword, T1, op_index_max>
 index_max
   (

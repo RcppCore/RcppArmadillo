@@ -41,7 +41,7 @@ any(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -59,7 +59,7 @@ any(const T1& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
@@ -78,7 +78,7 @@ any(const T1& X, const uword dim)
 //! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
 template<typename T>
 arma_warn_unused
-arma_inline
+inline
 typename
 enable_if2
   <
