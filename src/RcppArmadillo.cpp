@@ -27,7 +27,9 @@
 //' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
 //' @return Depending on the value of \code{single}, either a single number describing
 //' the Armadillo version or a named vector with three elements \code{major}, \code{minor}
-//' and \code{patch}.
+//' and \code{patch}. The function \code{armadillo_version_typed} returns an S3 object
+//' of classes \sQuote{package_version} and \sQuote{numeric_version} which offer comparison
+//' and formatting operators.
 //' @seealso Armadillo header file \code{arma_version.hpp}.
 // [[Rcpp::export]]
 Rcpp::IntegerVector armadillo_version(bool single) {
@@ -45,6 +47,18 @@ Rcpp::IntegerVector armadillo_version(bool single) {
                                            Rcpp::Named("minor") = minor,
                                            Rcpp::Named("patch") = patch);
     }
+}
+
+//' @rdname armadillo_version
+// [[Rcpp::export]]
+Rcpp::List armadillo_version_typed() {
+    // create a vector of major, minor, patch
+    auto ver = Rcpp::IntegerVector::create(ARMA_VERSION_MAJOR, ARMA_VERSION_MINOR, ARMA_VERSION_PATCH);
+    // and place it in a list (as e.g. packageVersion() in R returns)
+    auto lst = Rcpp::List::create(ver);
+    // and class it as 'package_version' accessing print() etc methods
+    lst.attr("class") = Rcpp::CharacterVector::create("package_version", "numeric_version");
+    return lst;
 }
 
 // Per request of Gábor Csárdi in https://github.com/RcppCore/RcppArmadillo/issues/11

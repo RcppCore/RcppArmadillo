@@ -2,9 +2,12 @@
 % Please edit documentation in R/RcppExports.R
 \name{armadillo_version}
 \alias{armadillo_version}
+\alias{armadillo_version_typed}
 \title{Report the version of Armadillo}
 \usage{
 armadillo_version(single)
+
+armadillo_version_typed()
 }
 \arguments{
 \item{single}{A logical vector indicating whether a single return values is requested,
@@ -13,7 +16,9 @@ or a named vector with three elements \code{major}, \code{minor} and \code{patch
 \value{
 Depending on the value of \code{single}, either a single number describing
 the Armadillo version or a named vector with three elements \code{major}, \code{minor}
-and \code{patch}.
+and \code{patch}. The function \code{armadillo_version_typed} returns an S3 object
+of classes \sQuote{package_version} and \sQuote{numeric_version} which offer comparison
+and formatting operators.
 }
 \description{
 Report the version of Armadillo

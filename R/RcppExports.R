@@ -8,10 +8,17 @@
 #' or a named vector with three elements \code{major}, \code{minor} and \code{patch}.
 #' @return Depending on the value of \code{single}, either a single number describing
 #' the Armadillo version or a named vector with three elements \code{major}, \code{minor}
-#' and \code{patch}.
+#' and \code{patch}. The function \code{armadillo_version_typed} returns an S3 object
+#' of classes \sQuote{package_version} and \sQuote{numeric_version} which offer comparison
+#' and formatting operators.
 #' @seealso Armadillo header file \code{arma_version.hpp}.
 armadillo_version <- function(single) {
     .Call(`_RcppArmadillo_armadillo_version`, single)
+}
+
+#' @rdname armadillo_version
+armadillo_version_typed <- function() {
+    .Call(`_RcppArmadillo_armadillo_version_typed`)
 }
 
 #' @rdname armadillo_set_seed

@@ -1,3 +1,11 @@
+2025-10-17  Dirk Eddelbuettel  <edd@debian.org>
+
+	* src/RcppArmadillo.cpp (armadillo_version_typed): Added
+	* man/armadillo_version.Rd: Documentation added
+	* src/RcppExports.cpp: Regenerated
+	* R/RcppExports.R: Idem
+	* NAMESPACE: Exported
+
 2025-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.1.99-1

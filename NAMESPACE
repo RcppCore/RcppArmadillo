@@ -9,6 +9,7 @@ export("fastLmPure",
        "fastLm",
        "RcppArmadillo.package.skeleton",
        "armadillo_version",
+       "armadillo_version_typed",
        "armadillo_set_seed",
        "armadillo_set_seed_random",
 

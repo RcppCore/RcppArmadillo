@@ -22,6 +22,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// armadillo_version_typed
+Rcpp::List armadillo_version_typed();
+RcppExport SEXP _RcppArmadillo_armadillo_version_typed() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(armadillo_version_typed());
+    return rcpp_result_gen;
+END_RCPP
+}
 // armadillo_set_seed_random
 void armadillo_set_seed_random();
 RcppExport SEXP _RcppArmadillo_armadillo_set_seed_random() {
@@ -76,6 +86,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RcppArmadillo_armadillo_version", (DL_FUNC) &_RcppArmadillo_armadillo_version, 1},
+    {"_RcppArmadillo_armadillo_version_typed", (DL_FUNC) &_RcppArmadillo_armadillo_version_typed, 0},
     {"_RcppArmadillo_armadillo_set_seed_random", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed_random, 0},
     {"_RcppArmadillo_armadillo_set_seed", (DL_FUNC) &_RcppArmadillo_armadillo_set_seed, 1},
     {"_RcppArmadillo_armadillo_get_number_of_omp_threads", (DL_FUNC) &_RcppArmadillo_armadillo_get_number_of_omp_threads, 0},
