@@ -14,10 +14,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - {os: macOS-latest}
-          - {os: ubuntu-latest}
+          - { name: container, os: ubuntu-latest, container: rocker/r2u4ci }
+          - { name: macos,     os: macos-latest }
+          #- { name: ubuntu,    os: ubuntu-latest }
+
 
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
 
     steps:
       - name: Checkout
@@ -25,6 +28,8 @@ jobs:
 
       - name: Setup
         uses: eddelbuettel/github-actions/r-ci@master
+        with:
+          dev_version: 'TRUE'
 
       - name: Configure
         run: ./configure; cat src/Makevars
