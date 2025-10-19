@@ -3411,6 +3411,9 @@ printf "%s\n" "found" >&6; }
 printf "%s\n" "$as_me: WARNING: OpenMP unavailable and turned off." >&2;}
         can_use_openmp="no"
     fi
+else
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: not found" >&5
+printf "%s\n" "not found" >&6; }
 fi
 
 if test x"${can_use_openmp}" = x"yes"; then

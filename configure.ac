@@ -204,6 +204,8 @@ if test x"${RSysinfoName}" = x"Darwin"; then
         AC_MSG_WARN([OpenMP unavailable and turned off.])
         can_use_openmp="no"
     fi
+else
+    AC_MSG_RESULT([not found])
 fi
 
 if test x"${can_use_openmp}" = x"yes"; then
