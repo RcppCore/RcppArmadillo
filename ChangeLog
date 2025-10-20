@@ -7,6 +7,11 @@
 
 	* inst/include/current/: Sync with Armadillo 15.2
 
+2025-10-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* configure.ac: Simplified OpenMP setup
+	* configure: Idem
+
 2025-10-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* src/RcppArmadillo.cpp (armadillo_version_typed): Added

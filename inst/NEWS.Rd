@@ -14,6 +14,7 @@
       \item Reworked detection of aliasing, leading to more efficient
       compiled code
     }
+    \item OpenMP detection in \code{configure} has been simplified
   }
 }
 
