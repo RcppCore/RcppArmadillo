@@ -3,9 +3,17 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.1.99-1 (2025-10-16) (GitHub Only)}{
+\section{Changes in RcppArmadillo version 15.2.0-0 (2025-10-20) (GitHub Only)}{
   \itemize{
-    \item Upgraded to Armadillo release 15.2.0 (RC1 right now)
+    \item Upgraded to Armadillo release 15.2.0 (Medium Roast Deluxe)
+    \itemize{
+      \item Added \code{rande()} for generating matrices with elements from
+      exponential distributions
+      \item \code{shift()} has been deprecated in favour of
+      \code{circshift()}, for consistency with Matlab/Octave
+      \item Reworked detection of aliasing, leading to more efficient
+      compiled code
+    }
   }
 }
 
