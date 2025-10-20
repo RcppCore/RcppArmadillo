@@ -85,8 +85,6 @@ class Row : public Mat<eT>
   template<typename T1, typename T2>
   inline explicit Row(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
-  inline explicit Row(const subview<eT>& X, const bool use_colmem);  // only to be used by the quasi_unwrap class
-  
   template<typename T1> inline            Row(const BaseCube<eT,T1>& X);
   template<typename T1> inline Row& operator=(const BaseCube<eT,T1>& X);
   
@@ -169,6 +167,9 @@ class Row : public Mat<eT>
   
   inline       row_iterator end_row  (const uword row_num);
   inline const_row_iterator end_row  (const uword row_num) const;
+  
+  
+  inline explicit Row(const subview<eT>& X, const bool reuse_mem);  // only to be used by the partial_unwrap class
   
   
   template<uword fixed_n_elem> class fixed;

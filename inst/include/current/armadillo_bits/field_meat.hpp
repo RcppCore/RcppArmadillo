@@ -94,7 +94,7 @@ field<oT>::field(const subview_field<oT>& X)
   {
   arma_debug_sigprint_this(this);
   
-  this->operator=(X);
+  (*this).operator=(X);
   }
 
 

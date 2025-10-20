@@ -171,8 +171,8 @@ class subview : public Base< eT, subview<eT> >
   inline       subview<eT> rows(const uword in_row1, const uword in_row2);
   inline const subview<eT> rows(const uword in_row1, const uword in_row2) const;
   
-  inline       subview<eT> cols(const uword in_col1, const uword in_col2);
-  inline const subview<eT> cols(const uword in_col1, const uword in_col2) const;
+  inline       subview<eT> cols(const uword in_col1, const uword in_col2);        // deliberately not returning subview_cols
+  inline const subview<eT> cols(const uword in_col1, const uword in_col2) const;  // deliberately not returning subview_cols
   
   inline       subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
   inline const subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2) const;

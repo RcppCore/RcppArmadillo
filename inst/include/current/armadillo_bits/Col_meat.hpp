@@ -1264,6 +1264,13 @@ Col<eT>::end_row(const uword row_num) const
 
 
 
+
+
+
+//
+
+
+
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
@@ -1856,6 +1863,10 @@ Col<eT>::fixed<fixed_n_elem>::ones()
   
   return *this;
   }
+
+
+
+//
 
 
 

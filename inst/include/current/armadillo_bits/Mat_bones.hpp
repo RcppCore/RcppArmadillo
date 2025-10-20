@@ -120,7 +120,7 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2> inline explicit Mat(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B, const arma_vec_indicator&, const uhword in_vec_state);
   template<typename T1, typename T2> inline explicit Mat(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
   
-  inline explicit    Mat(const subview<eT>& X, const bool use_colmem);  // only to be used by the quasi_unwrap class
+  inline explicit    Mat(const subview<eT>& X, const bool reuse_mem);  // only to be used by quasi_unwrap and partial_unwrap
   
   inline             Mat(const subview<eT>& X, const arma_vec_indicator&, const uhword in_vec_state);
   inline             Mat(const subview<eT>& X);

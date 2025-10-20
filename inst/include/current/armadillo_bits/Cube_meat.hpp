@@ -3148,7 +3148,7 @@ Cube<eT>::Cube(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_debug_sigprint_this(this);
   
-  this->operator=(X);
+  (*this).operator=(X);
   }
 
 

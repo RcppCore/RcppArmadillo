@@ -65,6 +65,9 @@ struct  op_accu_mat
   
   template<typename eT>
   static inline eT apply(const subview_col<eT>& X);
+  
+  template<typename eT>
+  static inline eT apply(const subview_row<eT>& X);
   };
 
 

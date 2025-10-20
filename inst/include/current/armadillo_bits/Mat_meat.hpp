@@ -2021,18 +2021,18 @@ Mat<eT>::Mat(const Base<typename Mat<eT>::pod_type,T1>& A, const Base<typename M
 
 template<typename eT>
 inline
-Mat<eT>::Mat(const subview<eT>& X, const bool use_colmem)
+Mat<eT>::Mat(const subview<eT>& X, const bool reuse_mem)
   : n_rows(X.n_rows)
   , n_cols(X.n_cols)
   , n_elem(X.n_elem)
   , n_alloc(0)
   , vec_state(0)
-  , mem_state(use_colmem ? 3 : 0)
-  , mem      (use_colmem ? X.colptr(0) : nullptr)
+  , mem_state(reuse_mem ? 3           : 0      )
+  , mem      (reuse_mem ? X.colptr(0) : nullptr)
   {
   arma_debug_sigprint_this(this);
   
-  if(use_colmem)
+  if(reuse_mem)
     {
     arma_debug_print("Mat::Mat(): using existing memory in a submatrix");
     }
