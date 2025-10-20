@@ -121,20 +121,6 @@ op_accu_mat::apply(const T1& X)
     return arrayops::accumulate(U.M.memptr(), U.M.n_elem);
     }
   
-  if(is_subview_row<T1>::value)
-    {
-    typedef typename T1::elem_type eT;
-    
-    const subview_row<eT>& sv = reinterpret_cast< const subview_row<eT>& >(X);
-    
-    if(sv.m.n_rows == 1)
-      {
-      const eT* sv_mem = &(sv.m.at(sv.aux_col1));
-      
-      return arrayops::accumulate(sv_mem, sv.n_elem);
-      }
-    }
-  
   const Proxy<T1> P(X);
   
   return (Proxy<T1>::use_at) ? op_accu_mat::apply_proxy_at(P) : op_accu_mat::apply_proxy_linear(P);
@@ -616,19 +602,7 @@ op_accu_mat::apply(const subview<eT>& X)
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
-  if(X_n_rows == 1)
-    {
-    const Mat<eT>& m = X.m;
-    
-    const uword col_offset = X.aux_col1;
-    const uword row_offset = X.aux_row1;
-    
-    eT val = eT(0);
-    
-    for(uword i=0; i < X_n_cols; ++i)  { val += m.at(row_offset, col_offset + i); }
-    
-    return val;
-    }
+  if(X_n_rows == 1)  { return op_accu_mat::apply( static_cast< const subview_row<eT>& >(X) ); }
   
   if(X_n_cols == 1)  { return arrayops::accumulate( X.colptr(0), X_n_rows ); }
   
@@ -652,6 +626,39 @@ op_accu_mat::apply(const subview_col<eT>& X)
   arma_debug_sigprint();  
   
   return arrayops::accumulate( X.colmem, X.n_rows );
+  }
+
+
+
+template<typename eT>
+inline
+eT
+op_accu_mat::apply(const subview_row<eT>& X)
+  {
+  arma_debug_sigprint();  
+  
+  const uword X_m_n_rows = X.m.n_rows;
+  const uword X_n_cols   = X.n_cols;
+  
+  const eT* row_mem = &(X.m.at(X.aux_row1,X.aux_col1));
+  
+  eT val1 = eT(0);
+  eT val2 = eT(0);
+  
+  uword j;
+  
+  for(j=1; j < X_n_cols; j+=2)
+    {
+    val1 += (*row_mem); row_mem += X_m_n_rows;
+    val2 += (*row_mem); row_mem += X_m_n_rows;
+    }
+  
+  if((j-1) < X_n_cols)
+    {
+    val1 += (*row_mem);
+    }
+  
+  return val1 + val2;
   }
 
 

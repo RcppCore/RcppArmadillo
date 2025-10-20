@@ -611,16 +611,6 @@ Row<eT>::Row
 
 
 template<typename eT>
-inline
-Row<eT>::Row(const subview<eT>& X, const bool use_colmem)
-  : Mat<eT>(X, use_colmem)
-  {
-  arma_debug_sigprint();
-  }
-
-
-
-template<typename eT>
 template<typename T1>
 inline
 Row<eT>::Row(const BaseCube<eT,T1>& X)
@@ -1275,6 +1265,20 @@ Row<eT>::end_row(const uword row_num) const
 
 
 template<typename eT>
+inline
+Row<eT>::Row(const subview<eT>& X, const bool reuse_mem)
+  : Mat<eT>(X, reuse_mem)
+  {
+  arma_debug_sigprint_this(this);
+  }
+
+
+
+//
+
+
+
+template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
 Row<eT>::fixed<fixed_n_elem>::fixed()
@@ -1866,6 +1870,10 @@ Row<eT>::fixed<fixed_n_elem>::ones()
   
   return *this;
   }
+
+
+
+//
 
 
 
