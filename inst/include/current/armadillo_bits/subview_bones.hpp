@@ -85,7 +85,7 @@ class subview : public Base< eT, subview<eT> >
   template<typename T1> inline void operator-= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator%= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator/= (const SpBase<eT,T1>& x);
-
+  
   template<typename T1, typename gen_type>
   inline typename enable_if2< is_same_type<typename T1::elem_type, eT>::value, void>::result operator=(const Gen<T1,gen_type>& x);
   
@@ -396,6 +396,11 @@ class subview_col : public subview<eT>
   inline void zeros();
   inline void ones();
   
+  arma_warn_unused inline bool is_finite() const;
+  
+  arma_warn_unused inline bool has_inf() const;
+  arma_warn_unused inline bool has_nan() const;
+  
   arma_inline eT  at_alt    (const uword i) const;
   
   arma_inline eT& operator[](const uword i);
@@ -528,6 +533,8 @@ class subview_row : public subview<eT>
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  const eT* rowmem;
+  
   inline void operator= (const subview<eT>& x);
   inline void operator= (const subview_row& x);
   inline void operator= (const eT val);
@@ -544,6 +551,15 @@ class subview_row : public subview<eT>
   arma_warn_unused arma_inline const Op<subview_row<eT>,op_strans> st() const;
   
   arma_warn_unused arma_inline const Op<subview_row<eT>,op_strans> as_col() const;
+  
+  inline void fill(const eT val);
+  inline void zeros();
+  inline void ones();
+  
+  arma_warn_unused inline bool is_finite() const;
+  
+  arma_warn_unused inline bool has_inf() const;
+  arma_warn_unused inline bool has_nan() const;
   
   inline eT  at_alt    (const uword i) const;
   

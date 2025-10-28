@@ -602,7 +602,30 @@ op_accu_mat::apply(const subview<eT>& X)
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
-  if(X_n_rows == 1)  { return op_accu_mat::apply( static_cast< const subview_row<eT>& >(X) ); }
+  if(X_n_rows == 1)
+    {
+    const uword X_m_n_rows = X.m.n_rows;
+    
+    const eT* mem_ptr = X.colptr(0);
+    
+    eT val1 = eT(0);
+    eT val2 = eT(0);
+    
+    uword j;
+    
+    for(j=1; j < X_n_cols; j+=2)
+      {
+      val1 += (*mem_ptr); mem_ptr += X_m_n_rows;
+      val2 += (*mem_ptr); mem_ptr += X_m_n_rows;
+      }
+    
+    if((j-1) < X_n_cols)
+      {
+      val1 += (*mem_ptr);
+      }
+    
+    return val1 + val2;
+    }
   
   if(X_n_cols == 1)  { return arrayops::accumulate( X.colptr(0), X_n_rows ); }
   
@@ -640,7 +663,7 @@ op_accu_mat::apply(const subview_row<eT>& X)
   const uword X_m_n_rows = X.m.n_rows;
   const uword X_n_cols   = X.n_cols;
   
-  const eT* row_mem = &(X.m.at(X.aux_row1,X.aux_col1));
+  const eT* mem_ptr = X.rowmem;
   
   eT val1 = eT(0);
   eT val2 = eT(0);
@@ -649,13 +672,13 @@ op_accu_mat::apply(const subview_row<eT>& X)
   
   for(j=1; j < X_n_cols; j+=2)
     {
-    val1 += (*row_mem); row_mem += X_m_n_rows;
-    val2 += (*row_mem); row_mem += X_m_n_rows;
+    val1 += (*mem_ptr); mem_ptr += X_m_n_rows;
+    val2 += (*mem_ptr); mem_ptr += X_m_n_rows;
     }
   
   if((j-1) < X_n_cols)
     {
-    val1 += (*row_mem);
+    val1 += (*mem_ptr);
     }
   
   return val1 + val2;

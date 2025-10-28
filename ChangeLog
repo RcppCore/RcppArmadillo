@@ -1,3 +1,7 @@
+2025-10-28  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/current/: Sync with Armadillo 15.2.1
+
 2025-10-21  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/tinytest/test_misc.R: Tests for armadillo_version_typed()
