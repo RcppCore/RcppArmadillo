@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.1-0 (2025-10-28) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.1 (Medium Roast Deluxe)
+    \itemize{
+      \item Faster handling of submatrices with one row
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.0-0 (2025-10-20) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.0 (Medium Roast Deluxe)
