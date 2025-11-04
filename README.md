@@ -76,15 +76,17 @@ C++17](https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Portable-C-and
 since version 4.3.0. See [GitHub issue #475](https://github.com/RcppCore/RcppArmadillo/issues/475)
 for more about choosing between 'legacy' Armadillo 14.6.3 or 'current' Armadillo 15.0.1 or later.
 
-Performance is excellent, and on par or exceeding another package claiming otherwise. See [this
-post][benchmark] and its [repo][ldlasb2] for a detailed debunking of that claim.
+### Performance
+
+Performance is excellent, and on par or exceeding the performance of another package (or two,
+following a renaming) claiming otherwise. See [this post][benchmark] and its [repo][ldlasb2] for a
+detailed debunking of that claim.
 
 ### Documentation
 
-The package contains a pdf vignette which is a pre-print of the
-[paper by Eddelbuettel and Sanderson](http://dx.doi.org/10.1016/j.csda.2013.02.005)
-in CSDA (2014), as well as an introductory vignette for the sparse
-matrix conversions.
+The package contains a pdf vignette which is a pre-print of the [paper by Eddelbuettel and
+Sanderson][rcpparmapaper] in CSDA (2014), as well as an introductory vignette for the sparse matrix
+conversions.
 
 ### Installation
 
@@ -115,3 +117,4 @@ GPL (>= 2)
 [cran pkg]: https://cran.r-project.org/package=RcppArmadillo
 [benchmark]: https://eddelbuettel.github.io/ldlasb2/benchmarks.html
 [ldlasb2]: https://github.com/eddelbuettel/ldlasb2
+[rcpparmapaper]: http://dx.doi.org/10.1016/j.csda.2013.02.005
