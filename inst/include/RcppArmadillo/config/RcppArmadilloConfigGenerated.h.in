@@ -26,7 +26,7 @@
 #if !defined(ARMA_USE_OPENMP)
   #if defined(__APPLE__) && defined(_OPENMP)
     // User has OpenMP available, but check if they want it disabled
-    #ifndef RCPPARMA_MACOS_DISABLE_OPENMP
+    #ifndef RCPPARMADILLO_MACOS_DISABLE_OPENMP
       #define ARMA_USE_OPENMP 1
     #else
       #define ARMA_DONT_USE_OPENMP 1
