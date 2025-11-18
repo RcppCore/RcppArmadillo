@@ -1,9 +1,9 @@
 
 // RcppArmadilloConfig.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2022  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2016 - 2022  George G. Vega Yon
-// Copyright (C)  2017 - 2022  Serguei Sokol
+// Copyright (C)  2010 - 2025  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2016 - 2025  George G. Vega Yon
+// Copyright (C)  2017 - 2025  Serguei Sokol
 //
 // This file is part of RcppArmadillo.
 //
@@ -99,7 +99,12 @@
   // R can be built with its own Rlapack library, or use an external
   // one. Only the latter has zgesdd, a complex-valued SVD using divide-and-conquer
   // on Windows we do not assume ZGESDD
-  #define ARMA_CRIPPLED_LAPACK 1
+  //
+  // Update 2025-Nov: R now generally has good enough LAPACK/BLAS, and newer Arma
+  // versions whine so protecting this now for use with Armadillo older than 15.*
+  #if defined(ARMA_SELECTED_LEGACY_VERSION)
+    #define ARMA_CRIPPLED_LAPACK 1
+  #endif
   // on Windows we can now assume OpenMP with Rtools / gcc 4.9.3
   // note that performance is said to still be poor
   // cf https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#The-MinGW_002dw64-toolchain

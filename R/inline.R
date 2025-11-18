@@ -1,4 +1,4 @@
-## Copyright (C) 2010 - 2024  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+## Copyright (C) 2010 - 2025  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -16,8 +16,7 @@
 ## along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
 
 inlineCxxPlugin <- function(...) {
-    ismacos <- Sys.info()[["sysname"]] == "Darwin"
-    openmpflag <- if (ismacos) "" else "$(SHLIB_OPENMP_CFLAGS)"
+    openmpflag <- "$(SHLIB_OPENMP_CFLAGS)"
     plugin <-  Rcpp::Rcpp.plugin.maker(include.before = "#include <RcppArmadillo.h>",
                                        libs           = paste(openmpflag, "$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)"),
                                        package        = "RcppArmadillo")

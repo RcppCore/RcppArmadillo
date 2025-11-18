@@ -1,3 +1,14 @@
+2025-11-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* R/inline.R (inlineCxxPlugin): No longer special-case macOS for
+	OpenMP but rely on "$(SHLIB_OPENMP_CFLAGS)" as everywhere else
+
+	* inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h.in:
+	Refine macOS OpenMP detection, respect RCPPARMADILLO_MACOS_DISABLE_OPENMP
+
+	* inst/include/RcppArmadillo/config/RcppArmadilloConfig.h:
+	ARMA_CRIPPLED_LAPACK is only defined if 'LEGACY' Armadillo selected
+
 2025-11-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Minor edits
