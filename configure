@@ -3227,25 +3227,16 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+## Rely on Sys.info() from R for cross-compilation cases
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking what system we are on" >&5
 printf %s "checking what system we are on... " >&6; }
-#SYSKERNEL=$(uname -s)
-#SYSMACHINE=$(uname -m)
-#SYSOS=$(uname -o)
-#AC_MSG_RESULT([${SYSKERNEL} ${SYSMACHINE} ${SYSOS}])
-## Rely on Sys.info() from R for cross-compilation cases
 SYSKERNEL=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()["sysname"])')
 SYSMACHINE=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()["machine"])')
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: running ${SYSKERNEL} on ${SYSMACHINE}" >&5
 printf "%s\n" "running ${SYSKERNEL} on ${SYSMACHINE}" >&6; }
 
 
-## Is R already configured to compile things using OpenMP without
-## any extra hand-holding?
-#openmp_already_works="no"
-
-## default to not even thinking about OpenMP as Armadillo wants a pragma
-## variant available if and only if C++11 is used with g++ 5.4 or newer
+## Default to not assuming OpenMP, but then test a variety of setups
 can_use_openmp="no"
 
 ## Ensure TMPDIR is set.
@@ -3279,19 +3270,14 @@ printf "%s\n" "yes" >&6; }
    if test x"${can_use_openmp}" = x"no"; then
        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can already compile OpenMP programs" >&5
 printf %s "checking whether R CMD SHLIB can already compile OpenMP programs... " >&6; }
-
        "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
-           #openmp_already_works="yes"
-           arma_have_openmp="#define ARMA_USE_OPENMP 1"
            can_use_openmp="yes"
        else
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-           #openmp_already_works="no"
-           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
        fi
    fi
@@ -3300,22 +3286,16 @@ printf "%s\n" "no" >&6; }
    if test x"${can_use_openmp}" = x"no"; then
        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile OpenMP via -fopenmp" >&5
 printf %s "checking whether R CMD SHLIB can compile OpenMP via -fopenmp... " >&6; }
-
        PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopen" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
-           #openmp_already_works="yes"
-           arma_have_openmp="#define ARMA_USE_OPENMP 1"
-           can_use_openmp="yes"
            # keep any entries user may have set
            PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
            PKG_LIBS="${PKG_LIBS} -fopenmp"
        else
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-           #openmp_already_works="no"
-           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
        fi
    fi
@@ -3334,13 +3314,10 @@ printf "%s\n" "yes" >&6; }
    if test x"${can_use_openmp}" = x"no"; then
        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile OpenMP programs using '-Xclang -fopenmp'" >&5
 printf %s "checking whether R CMD SHLIB can compile OpenMP programs using '-Xclang -fopenmp'... " >&6; }
-
        PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp" PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
-           #openmp_already_works="yes"
-           arma_have_openmp="#define ARMA_USE_OPENMP 1"
            can_use_openmp="yes"
            # keep any entries user may have set
            PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp"
@@ -3348,9 +3325,51 @@ printf "%s\n" "yes" >&6; }
        else
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-           #openmp_already_works="no"
-           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
+       fi
+   fi
+
+   ## Check if R is configured to compile OpenMP programs using -fopenmp (cf data.table #6409)
+   if test x"${can_use_openmp}" = x"no"; then
+       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile OpenMP programs using '-fopenmp'" >&5
+printf %s "checking whether R CMD SHLIB can compile OpenMP programs using '-fopenmp'... " >&6; }
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+           can_use_openmp="yes"
+           # keep any entries user may have set
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
+           PKG_LIBS="${PKG_LIBS} -fopenmp"
+       else
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+           can_use_openmp="no"
+       fi
+   fi
+
+   if test x"${can_use_openmp}" = x"no"; then
+       if test x"${SYSMACHINE}" = x"arm64"; then
+           HOMEBREW_PREFIX=/opt/homebrew
+       else
+           HOMEBREW_PREFIX=/usr/local
+       fi
+       if test -e "${HOMEBREW_PREFIX}/opt/libomp"; then
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp" >&5
+printf %s "checking whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp... " >&6; }
+           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp" LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+           if test x"$?" = x"0"; then
+               { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+               can_use_openmp="yes"
+               # keep any entries user may have set
+               PKG_CXXFLAGS="${PKG_CXXFLAGS} -I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
+               PKG_LIBS="${PKG_LIBS} -L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+           else
+               { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+               can_use_openmp="no"
+           fi
        fi
     fi
 else
@@ -3362,9 +3381,22 @@ fi # if macOS
 cd "${owd}"
 rm -rf "${BUILDDIR}"
 
+# Overall summary
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for OpenMP" >&5
+printf %s "checking for OpenMP... " >&6; }
+if test x"${can_use_openmp}" = x"yes"; then
+   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: found and suitable" >&5
+printf "%s\n" "found and suitable" >&6; }
+   arma_have_openmp="#define ARMA_USE_OPENMP 1"
+   openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+else
+   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: missing so no OpenMP acceleration" >&5
+printf "%s\n" "missing so no OpenMP acceleration" >&6; }
+   arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+   openmp_flag=""
+fi
 
-
-## now use all these
+## Now use all these
 ARMA_HAVE_OPENMP="${arma_have_openmp}"
 
 OPENMP_FLAG="${openmp_flag}"
