@@ -3225,13 +3225,26 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking what system we are on" >&5
+printf %s "checking what system we are on... " >&6; }
+#SYSKERNEL=$(uname -s)
+#SYSMACHINE=$(uname -m)
+#SYSOS=$(uname -o)
+#AC_MSG_RESULT([${SYSKERNEL} ${SYSMACHINE} ${SYSOS}])
+## Rely on Sys.info() from R for cross-compilation cases
+SYSKERNEL=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()["sysname"])')
+SYSMACHINE=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()["machine"])')
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: running ${SYSKERNEL} on ${SYSMACHINE}" >&5
+printf "%s\n" "running ${SYSKERNEL} on ${SYSMACHINE}" >&6; }
+
+
 ## Is R already configured to compile things using OpenMP without
 ## any extra hand-holding?
 #openmp_already_works="no"
 
 ## default to not even thinking about OpenMP as Armadillo wants a pragma
 ## variant available if and only if C++11 is used with g++ 5.4 or newer
-#can_use_openmp="no"
+can_use_openmp="no"
 
 ## Ensure TMPDIR is set.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether we have a suitable tempdir" >&5
@@ -3239,10 +3252,6 @@ printf %s "checking whether we have a suitable tempdir... " >&6; }
 TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "cat(dirname(tempdir()))")
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ${TMPDIR}" >&5
 printf "%s\n" "${TMPDIR}" >&6; }
-
-## Check if R is configured to compile programs using OpenMP out-of-the-box.
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can already compile programs using OpenMP" >&5
-printf %s "checking whether R CMD SHLIB can already compile programs using OpenMP... " >&6; }
 
 ## Create private directory in TMPDIR.
 BUILDDIR="${TMPDIR}/rcpparmadillo-$$-$RANDOM"
@@ -3258,21 +3267,54 @@ int main() {
 }
 EOF
 
-## Execute R CMD SHLIB.
-"${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
-if test x"$?" = x"0"; then
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+if test x"${SYSKERNEL}" = x"Linux"; then
+
+   ## Check if R is configured to compile programs using OpenMP out-of-the-box.
+   if test x"${can_use_openmp}" = x"no"; then
+       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can already compile OpenMP programs" >&5
+printf %s "checking whether R CMD SHLIB can already compile OpenMP programs... " >&6; }
+
+       ## Execute R CMD SHLIB.
+       "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
-    openmp_already_works="yes"
-    arma_have_openmp="#define ARMA_USE_OPENMP 1"
-    can_use_openmp="yes"
-else
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+           openmp_already_works="yes"
+           arma_have_openmp="#define ARMA_USE_OPENMP 1"
+##FIXME can_use_openmp="yes"
+       else
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-    openmp_already_works="no"
-    arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-    can_use_openmp="no"
+           openmp_already_works="no"
+           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+           can_use_openmp="no"
+       fi
+   fi
+
+   ## If needed, check if R is configured to compile programs using OpenMP with -fopenmp
+   if test x"${can_use_openmp}" = x"no"; then
+       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile OpenMP via -fopenmp" >&5
+printf %s "checking whether R CMD SHLIB can compile OpenMP via -fopenmp... " >&6; }
+
+       ## Execute R CMD SHLIB.
+       PKG_CXXFLAGS=-fopenmp PKG_LIBS=-fopen "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+           openmp_already_works="yes"
+           arma_have_openmp="#define ARMA_USE_OPENMP 1"
+           can_use_openmp="yes"
+       else
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+           openmp_already_works="no"
+           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+           can_use_openmp="no"
+       fi
+   fi
 fi
+
+
 
 ## Go back home.
 cd "${owd}"

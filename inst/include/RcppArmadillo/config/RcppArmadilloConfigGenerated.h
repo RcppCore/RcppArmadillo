@@ -1,0 +1,40 @@
+
+// RcppArmadilloConfigGenerated.h: Autoconf-updated file for LAPACK and OpenMP choices
+//
+// Copyright (C)  2013 - 2025  Dirk Eddelbuettel
+//                       2025  James J. Balamuta
+//
+// This file is part of RcppArmadillo.
+//
+// RcppArmadillo is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// RcppArmadillo is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with RcppArmadillo.  If not, see <http://www.gnu.org/licenses/>.
+
+#ifndef RcppArmadillo__RcppArmadilloConfigGenerated__h
+#define RcppArmadillo__RcppArmadilloConfigGenerated__h
+
+// macOS special case as discussed in https://github.com/RcppCore/RcppArmadillo/issues/493
+#if !defined(ARMA_USE_OPENMP)
+  #if defined(__APPLE__) && defined(_OPENMP)
+    // User has OpenMP available, but check if they want it disabled
+    #ifndef RCPPARMADILLO_MACOS_DISABLE_OPENMP
+      #define ARMA_USE_OPENMP 1
+    #else
+      #define ARMA_DONT_USE_OPENMP 1
+    #endif
+  #else
+    // from configure test for OpenMP based on how R is configured
+    #define ARMA_USE_OPENMP 1
+  #endif
+#endif
+
+#endif
