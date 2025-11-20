@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.2-0 (2025-11-20) (GitHub Only)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.2 (Medium Roast Deluxe)
+    \itemize{
+      \item Improved reproducibility of random number generation when using OpenMP
+    }
+    \item Skip a unit test file under macOS as complex algebra seems to fail
+    under newer macOS LAPACK setting
+    \item Further OpenMP detection rework for macOS
+    \item Define ARMA_CRIPPLED_LAPACK on Windows only if 'LEGACY' Armadillo selected
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.1-0 (2025-10-28) (GitHub Only)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.1 (Medium Roast Deluxe)
