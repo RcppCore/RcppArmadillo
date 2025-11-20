@@ -136,13 +136,15 @@ if test x"${SYSKERNEL}" = x"Darwin"; then
        fi
        if test -e "${HOMEBREW_PREFIX}/opt/libomp"; then
            AC_MSG_CHECKING([whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp])
-           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp" LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
+           LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}" PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
            if test x"$?" = x"0"; then
                AC_MSG_RESULT([yes])
                can_use_openmp="yes"
                # keep any entries user may have set
-               PKG_CXXFLAGS="${PKG_CXXFLAGS} -I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
-               PKG_LIBS="${PKG_LIBS} -L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+               PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}"
+               PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}"
            else
                AC_MSG_RESULT([no])
                can_use_openmp="no"

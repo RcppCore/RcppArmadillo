@@ -3357,14 +3357,16 @@ printf "%s\n" "no" >&6; }
        if test -e "${HOMEBREW_PREFIX}/opt/libomp"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp" >&5
 printf %s "checking whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp... " >&6; }
-           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp" LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
+           LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}" PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
            if test x"$?" = x"0"; then
                { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
                can_use_openmp="yes"
                # keep any entries user may have set
-               PKG_CXXFLAGS="${PKG_CXXFLAGS} -I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
-               PKG_LIBS="${PKG_LIBS} -L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+               PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}"
+               PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}"
            else
                { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
