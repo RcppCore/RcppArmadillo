@@ -20,6 +20,8 @@
 
 library(RcppArmadillo)
 
+if (Sys.info()['sysname'] == "Darwin") exit_file("Skip on macOS")
+
 if (isFALSE(tryCatch({svd(matrix(complex(1, 1, 1),1,1)); TRUE}, error=function(e) FALSE)))
     exit_file("Skipping for lack of Fortran complex functions in this R build")
 

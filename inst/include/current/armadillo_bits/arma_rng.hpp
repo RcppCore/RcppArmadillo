@@ -26,12 +26,19 @@
 #undef  ARMA_USE_THREAD_LOCAL
 #define ARMA_USE_THREAD_LOCAL
 
+#undef  ARMA_USE_THREAD_UNIQUE_RNG_SEED
+#define ARMA_USE_THREAD_UNIQUE_RNG_SEED
+
 #if (defined(ARMA_RNG_ALT) || defined(ARMA_DONT_USE_CXX11_RNG))
   #undef ARMA_USE_CXX11_RNG
 #endif
 
 #if defined(ARMA_DONT_USE_THREAD_LOCAL)
   #undef ARMA_USE_THREAD_LOCAL
+#endif
+
+#if defined(ARMA_DONT_USE_THREAD_UNIQUE_RNG_SEED)
+  #undef ARMA_USE_THREAD_UNIQUE_RNG_SEED
 #endif
 
 
@@ -129,23 +136,41 @@ arma_rng::get_producer()
   {
   #if defined(ARMA_USE_THREAD_LOCAL)
     
-    // use a thread-safe RNG, with each thread having its own unique starting seed
+    // thread-safe RNG
     
-    static std::atomic<std::size_t> mt19937_64_producer_counter(0);
-    
-    static thread_local std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed + mt19937_64_producer_counter++ );
-    
-    arma_rng::warmup_producer(mt19937_64_producer);
+    #if defined(ARMA_USE_THREAD_UNIQUE_RNG_SEED)
+      
+      // each thread has unique starting seed
+      
+      #if defined(ARMA_USE_OPENMP)
+        
+        static thread_local std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed + arma_rng::seed_type(omp_get_thread_num()) );
+        
+      #else
+        
+        static std::atomic<std::size_t> mt19937_64_producer_counter(0);
+        
+        static thread_local std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed + mt19937_64_producer_counter++ );
+        
+      #endif
+      
+    #else
+      
+      // each thread has the same starting seed
+      
+      static thread_local std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed );
+      
+    #endif
     
   #else
     
-    // use a plain RNG in case we don't have thread_local
+    // plain RNG in case we don't have thread_local
     
     static std::mt19937_64 mt19937_64_producer( std::mt19937_64::default_seed );
     
-    arma_rng::warmup_producer(mt19937_64_producer);
-    
   #endif
+  
+  arma_rng::warmup_producer(mt19937_64_producer);
   
   return mt19937_64_producer;
   }
@@ -226,9 +251,45 @@ arma_rng::set_seed(const arma_rng::seed_type val)
     }
   #elif defined(ARMA_USE_CXX11_RNG)
     {
-    arma_rng::lock_producer();
-    arma_rng::get_producer().seed(val);
-    arma_rng::unlock_producer();
+    #if defined(ARMA_USE_OPENMP) && defined(ARMA_USE_THREAD_LOCAL)
+      {
+      arma_rng::lock_producer();
+      
+      #if defined(ARMA_USE_THREAD_UNIQUE_RNG_SEED)
+        constexpr bool thread_unique_rng_seed = true;
+      #else
+        constexpr bool thread_unique_rng_seed = false;
+      #endif
+      
+      // if we're already in a parallel region, assume the user is setting the seed for each thread
+      
+      if( (thread_unique_rng_seed == false) || bool(omp_in_parallel()) )
+        {
+        arma_rng::get_producer().seed(val);
+        }
+      else
+        {
+        const int n_threads = int( (std::max)( int(1), int(omp_get_max_threads()) ) );
+        
+        #pragma omp parallel for ordered schedule(static) num_threads(n_threads)
+        for(int t=0; t < n_threads; ++t)
+          {
+          #pragma omp ordered
+            {
+            arma_rng::get_producer().seed(val + arma_rng::seed_type(omp_get_thread_num()));
+            }
+          }
+        }
+      
+      arma_rng::unlock_producer();
+      }
+    #else
+      {
+      arma_rng::lock_producer();
+      arma_rng::get_producer().seed(val);
+      arma_rng::unlock_producer();
+      }
+    #endif
     }
   #else
     {
