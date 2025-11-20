@@ -15,7 +15,8 @@ jobs:
       matrix:
         include:
           - { name: container, os: ubuntu-latest, container: rocker/r2u4ci }
-          - { name: macos,     os: macos-latest }
+          - { name: macos,     os: macos-latest,  openmp: yes }
+          - { name: macos,     os: macos-latest,  openmp: no }
           #- { name: ubuntu,    os: ubuntu-latest }
 
 
@@ -30,6 +31,26 @@ jobs:
         uses: eddelbuettel/github-actions/r-ci@master
         with:
           dev_version: 'TRUE'
+
+      - name: OpenMP for macOS
+        if: ${{ matrix.os == 'macos-latest' && matrix.openmp == 'yes' }}
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/coatless-shell/openmp/main/install-openmp.sh | bash -s -- --yes
+          mkdir -p ~/.R
+          cat <<EOF > ~/.R/Makevars
+          CPPFLAGS += -Xclang -fopenmp
+          LDFLAGS += -lomp
+          EOF
+
+      - name: Show config on macOS
+        if: ${{ matrix.os == 'macos-latest' && matrix.openmp == 'yes' }}
+        run: |
+          cat ~/.R/Makevars
+          echo -n "R CMD config CXX: "; R CMD config CXX
+          echo -n "R CMD config CPPFLAGS: "; R CMD config CPPFLAGS
+          echo -n "R CMD config LDFLAGS: "; R CMD config LDFLAGS
+          echo -n "R CMD config SHLIB_CXXLD: "; R CMD config SHLIB_CXXLD
+          echo -n "R CMD config SHLIB_CXXLDFLAGS: "; R CMD config SHLIB_CXXLDFLAGS
 
       - name: Configure
         run: ./configure; cat src/Makevars

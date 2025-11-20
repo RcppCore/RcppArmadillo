@@ -68,17 +68,16 @@ EOF
 
 if test x"${SYSKERNEL}" = x"Linux"; then
 
-   ## Check if R is configured to compile programs using OpenMP out-of-the-box.
+   ## Check if R is configured to compile OpenMP programs out-of-the-box.
    if test x"${can_use_openmp}" = x"no"; then
        AC_MSG_CHECKING([whether R CMD SHLIB can already compile OpenMP programs])
 
-       ## Execute R CMD SHLIB.
        "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
            openmp_already_works="yes"
            arma_have_openmp="#define ARMA_USE_OPENMP 1"
-##FIXME can_use_openmp="yes"
+           can_use_openmp="yes"
        else
            AC_MSG_RESULT([no])
            openmp_already_works="no"
@@ -87,12 +86,11 @@ if test x"${SYSKERNEL}" = x"Linux"; then
        fi
    fi
 
-   ## If needed, check if R is configured to compile programs using OpenMP with -fopenmp
+   ## If needed, check if R is configured to compile OpenMP programs using -fopenmp
    if test x"${can_use_openmp}" = x"no"; then
        AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP via -fopenmp])
 
-       ## Execute R CMD SHLIB.
-       PKG_CXXFLAGS=-fopenmp PKG_LIBS=-fopen "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopen" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
            openmp_already_works="yes"
@@ -110,27 +108,49 @@ if test x"${SYSKERNEL}" = x"Linux"; then
    fi
 fi
 
+if test x"${SYSKERNEL}" = x"Darwin"; then
 
+   ## Check if R is configured to compile OpenMP programs using -Xclang -fopenmp
+   if test x"${can_use_openmp}" = x"no"; then
+       AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP programs using '-Xclang -fopenmp'])
+
+       PKG_CXXFLAGS=-Xclang -fopenmp PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           AC_MSG_RESULT([yes])
+           openmp_already_works="yes"
+           arma_have_openmp="#define ARMA_USE_OPENMP 1"
+           can_use_openmp="yes"
+           # keep any entries user may have set
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp"
+           PKG_LIBS="${PKG_LIBS} -lomp"
+       else
+           AC_MSG_RESULT([no])
+           openmp_already_works="no"
+           arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+           can_use_openmp="no"
+       fi
+    fi
+fi
 
 ## Go back home.
 cd "${owd}"
 rm -rf "${BUILDDIR}"
 
-## Additional Apple check
-AC_MSG_CHECKING([for macOS])
-RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
-if test x"${RSysinfoName}" = x"Darwin"; then
-    AC_MSG_RESULT([found])
-    AC_MSG_CHECKING([for macOS Apple compiler])
-    apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
-    if test x"${apple_compiler}" = x"1"; then
-        AC_MSG_RESULT([found])
-        AC_MSG_WARN([OpenMP unavailable and turned off.])
-        can_use_openmp="no"
-    fi
-else
-    AC_MSG_RESULT([not found])
-fi
+dnl ## Additional Apple check
+dnl AC_MSG_CHECKING([for macOS])
+dnl RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
+dnl if test x"${RSysinfoName}" = x"Darwin"; then
+dnl     AC_MSG_RESULT([found])
+dnl     AC_MSG_CHECKING([for macOS Apple compiler])
+dnl     apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
+dnl     if test x"${apple_compiler}" = x"1"; then
+dnl         AC_MSG_RESULT([found])
+dnl         AC_MSG_WARN([OpenMP unavailable and turned off.])
+dnl         can_use_openmp="no"
+dnl     fi
+dnl else
+dnl     AC_MSG_RESULT([not found])
+dnl fi
 
 if test x"${can_use_openmp}" = x"yes"; then
     AC_MSG_CHECKING([for OpenMP])
@@ -151,5 +171,7 @@ fi
 ## now use all these
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
+AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS}"])
+AC_SUBST([PKG_LIBS], ["${PKG_LIBS}"])
 AC_CONFIG_FILES([inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h src/Makevars])
 AC_OUTPUT
