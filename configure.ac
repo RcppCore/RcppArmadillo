@@ -114,7 +114,7 @@ if test x"${SYSKERNEL}" = x"Darwin"; then
    if test x"${can_use_openmp}" = x"no"; then
        AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP programs using '-Xclang -fopenmp'])
 
-       PKG_CXXFLAGS=-Xclang -fopenmp PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp" PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
            openmp_already_works="yes"
