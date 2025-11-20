@@ -66,7 +66,9 @@ int main() {
 }
 EOF
 
+AC_MSG_CHECKING([whether on Linux])
 if test x"${SYSKERNEL}" = x"Linux"; then
+   AC_MSG_RESULT([yes])
 
    ## Check if R is configured to compile OpenMP programs out-of-the-box.
    if test x"${can_use_openmp}" = x"no"; then
@@ -75,12 +77,12 @@ if test x"${SYSKERNEL}" = x"Linux"; then
        "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
-           openmp_already_works="yes"
+           #openmp_already_works="yes"
            arma_have_openmp="#define ARMA_USE_OPENMP 1"
            can_use_openmp="yes"
        else
            AC_MSG_RESULT([no])
-           openmp_already_works="no"
+           #openmp_already_works="no"
            arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
        fi
@@ -93,7 +95,7 @@ if test x"${SYSKERNEL}" = x"Linux"; then
        PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopen" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
-           openmp_already_works="yes"
+           #openmp_already_works="yes"
            arma_have_openmp="#define ARMA_USE_OPENMP 1"
            can_use_openmp="yes"
            # keep any entries user may have set
@@ -101,14 +103,18 @@ if test x"${SYSKERNEL}" = x"Linux"; then
            PKG_LIBS="${PKG_LIBS} -fopenmp"
        else
            AC_MSG_RESULT([no])
-           openmp_already_works="no"
+           #openmp_already_works="no"
            arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
        fi
    fi
-fi
+else
+   AC_MSG_RESULT([no])
+fi # if Linux
 
+AC_MSG_CHECKING([whether on macOS])
 if test x"${SYSKERNEL}" = x"Darwin"; then
+   AC_MSG_RESULT([yes])
 
    ## Check if R is configured to compile OpenMP programs using -Xclang -fopenmp
    if test x"${can_use_openmp}" = x"no"; then
@@ -117,7 +123,7 @@ if test x"${SYSKERNEL}" = x"Darwin"; then
        PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp" PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
-           openmp_already_works="yes"
+           #openmp_already_works="yes"
            arma_have_openmp="#define ARMA_USE_OPENMP 1"
            can_use_openmp="yes"
            # keep any entries user may have set
@@ -125,12 +131,14 @@ if test x"${SYSKERNEL}" = x"Darwin"; then
            PKG_LIBS="${PKG_LIBS} -lomp"
        else
            AC_MSG_RESULT([no])
-           openmp_already_works="no"
+           #openmp_already_works="no"
            arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
            can_use_openmp="no"
        fi
     fi
-fi
+else
+   AC_MSG_RESULT([no])
+fi # if macOS
 
 ## Go back home.
 cd "${owd}"
@@ -152,21 +160,21 @@ dnl else
 dnl     AC_MSG_RESULT([not found])
 dnl fi
 
-if test x"${can_use_openmp}" = x"yes"; then
-    AC_MSG_CHECKING([for OpenMP])
-    ## if R has -fopenmp we should be good
-    allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-    hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-    if test x"${hasOpenMP}" = x""; then
-        AC_MSG_RESULT([missing])
-        arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-        openmp_flag=""
-    else
-        AC_MSG_RESULT([found and suitable])
-        arma_have_openmp="#define ARMA_USE_OPENMP 1"
-        openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
-    fi
-fi
+dnl if test x"${can_use_openmp}" = x"yes"; then
+dnl     AC_MSG_CHECKING([for OpenMP])
+dnl     ## if R has -fopenmp we should be good
+dnl     allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
+dnl     hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
+dnl     if test x"${hasOpenMP}" = x""; then
+dnl         AC_MSG_RESULT([missing])
+dnl         arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+dnl         openmp_flag=""
+dnl     else
+dnl         AC_MSG_RESULT([found and suitable])
+dnl         arma_have_openmp="#define ARMA_USE_OPENMP 1"
+dnl         openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+dnl     fi
+dnl fi
 
 ## now use all these
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
