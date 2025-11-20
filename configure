@@ -3290,6 +3290,7 @@ printf %s "checking whether R CMD SHLIB can compile OpenMP via -fopenmp... " >&6
        if test x"$?" = x"0"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
+           can_use_openmp="yes"
            # keep any entries user may have set
            PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
            PKG_LIBS="${PKG_LIBS} -fopenmp"
@@ -3373,7 +3374,7 @@ printf "%s\n" "no" >&6; }
                can_use_openmp="no"
            fi
        fi
-    fi
+   fi
 else
    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }

@@ -80,6 +80,7 @@ if test x"${SYSKERNEL}" = x"Linux"; then
        PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
+           can_use_openmp="yes"
            # keep any entries user may have set
            PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
            PKG_LIBS="${PKG_LIBS} -fopenmp"
@@ -150,7 +151,7 @@ if test x"${SYSKERNEL}" = x"Darwin"; then
                can_use_openmp="no"
            fi
        fi
-    fi
+   fi
 else
    AC_MSG_RESULT([no])
 fi # if macOS
