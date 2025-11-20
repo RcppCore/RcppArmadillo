@@ -3286,7 +3286,7 @@ printf "%s\n" "no" >&6; }
    if test x"${can_use_openmp}" = x"no"; then
        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether R CMD SHLIB can compile OpenMP via -fopenmp" >&5
 printf %s "checking whether R CMD SHLIB can compile OpenMP via -fopenmp... " >&6; }
-       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopen" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }

@@ -77,7 +77,7 @@ if test x"${SYSKERNEL}" = x"Linux"; then
    ## If needed, check if R is configured to compile OpenMP programs using -fopenmp
    if test x"${can_use_openmp}" = x"no"; then
        AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP via -fopenmp])
-       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopen" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
        if test x"$?" = x"0"; then
            AC_MSG_RESULT([yes])
            # keep any entries user may have set
