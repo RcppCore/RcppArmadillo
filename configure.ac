@@ -28,21 +28,20 @@ AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
 
-## Is R already configured to compile things using OpenMP without
-## any extra hand-holding?
-#openmp_already_works="no"
+## Rely on Sys.info() from R for cross-compilation cases
+AC_MSG_CHECKING([what system we are on])
+SYSKERNEL=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
+SYSMACHINE=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["machine"]])')
+AC_MSG_RESULT([running ${SYSKERNEL} on ${SYSMACHINE}])
 
-## default to not even thinking about OpenMP as Armadillo wants a pragma
-## variant available if and only if C++11 is used with g++ 5.4 or newer
-#can_use_openmp="no"
+
+## Default to not assuming OpenMP, but then test a variety of setups
+can_use_openmp="no"
 
 ## Ensure TMPDIR is set.
 AC_MSG_CHECKING([whether we have a suitable tempdir])
 TMPDIR=$("${R_HOME}/bin/R" --vanilla --slave -e "cat(dirname(tempdir()))")
 AC_MSG_RESULT([${TMPDIR}])
-
-## Check if R is configured to compile programs using OpenMP out-of-the-box.
-AC_MSG_CHECKING([whether R CMD SHLIB can already compile programs using OpenMP])
 
 ## Create private directory in TMPDIR.
 BUILDDIR="${TMPDIR}/rcpparmadillo-$$-$RANDOM"
@@ -58,58 +57,125 @@ int main() {
 }
 EOF
 
-## Execute R CMD SHLIB.
-"${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
-if test x"$?" = x"0"; then
-    AC_MSG_RESULT([yes])
-    openmp_already_works="yes"
-    arma_have_openmp="#define ARMA_USE_OPENMP 1"
-    can_use_openmp="yes"
+AC_MSG_CHECKING([whether on Linux])
+if test x"${SYSKERNEL}" = x"Linux"; then
+   AC_MSG_RESULT([yes])
+
+   ## Check if R is configured to compile OpenMP programs out-of-the-box.
+   if test x"${can_use_openmp}" = x"no"; then
+       AC_MSG_CHECKING([whether R CMD SHLIB can already compile OpenMP programs])
+       "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           AC_MSG_RESULT([yes])
+           can_use_openmp="yes"
+       else
+           AC_MSG_RESULT([no])
+           can_use_openmp="no"
+       fi
+   fi
+
+   ## If needed, check if R is configured to compile OpenMP programs using -fopenmp
+   if test x"${can_use_openmp}" = x"no"; then
+       AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP via -fopenmp])
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB -fopenmp test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           AC_MSG_RESULT([yes])
+           can_use_openmp="yes"
+           # keep any entries user may have set
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
+           PKG_LIBS="${PKG_LIBS} -fopenmp"
+       else
+           AC_MSG_RESULT([no])
+           can_use_openmp="no"
+       fi
+   fi
 else
-    AC_MSG_RESULT([no])
-    openmp_already_works="no"
-    arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-    can_use_openmp="no"
-fi
+   AC_MSG_RESULT([no])
+fi # if Linux
+
+AC_MSG_CHECKING([whether on macOS])
+if test x"${SYSKERNEL}" = x"Darwin"; then
+   AC_MSG_RESULT([yes])
+
+   ## Check if R is configured to compile OpenMP programs using -Xclang -fopenmp
+   if test x"${can_use_openmp}" = x"no"; then
+       AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP programs using '-Xclang -fopenmp'])
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp" PKG_LIBS="${PKG_LIBS} -lomp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           AC_MSG_RESULT([yes])
+           can_use_openmp="yes"
+           # keep any entries user may have set
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} -Xclang -fopenmp"
+           PKG_LIBS="${PKG_LIBS} -lomp"
+       else
+           AC_MSG_RESULT([no])
+           can_use_openmp="no"
+       fi
+   fi
+
+   ## Check if R is configured to compile OpenMP programs using -fopenmp (cf data.table #6409)
+   if test x"${can_use_openmp}" = x"no"; then
+       AC_MSG_CHECKING([whether R CMD SHLIB can compile OpenMP programs using '-fopenmp'])
+       PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp" PKG_LIBS="${PKG_LIBS} -fopenmp" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+       if test x"$?" = x"0"; then
+           AC_MSG_RESULT([yes])
+           can_use_openmp="yes"
+           # keep any entries user may have set
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} -fopenmp"
+           PKG_LIBS="${PKG_LIBS} -fopenmp"
+       else
+           AC_MSG_RESULT([no])
+           can_use_openmp="no"
+       fi
+   fi
+
+   if test x"${can_use_openmp}" = x"no"; then
+       if test x"${SYSMACHINE}" = x"arm64"; then
+           HOMEBREW_PREFIX=/opt/homebrew
+       else
+           HOMEBREW_PREFIX=/usr/local
+       fi
+       if test -e "${HOMEBREW_PREFIX}/opt/libomp"; then
+           AC_MSG_CHECKING([whether R CMD SHLIB can use libomp at ${HOMEBREW_PREFIX}/opt/libomp])
+           LIBOMP_INCLUDE="-I${HOMEBREW_PREFIX}/opt/libomp/include -Xclang -fopenmp"
+           LIBOMP_LINK="-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp"
+           PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}" PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}" "${R_HOME}/bin/R" CMD SHLIB test-omp.cpp >/dev/null 2>&1
+           if test x"$?" = x"0"; then
+               AC_MSG_RESULT([yes])
+               can_use_openmp="yes"
+               # keep any entries user may have set
+               PKG_CXXFLAGS="${PKG_CXXFLAGS} ${LIBOMP_INCLUDE}"
+               PKG_LIBS="${PKG_LIBS} ${LIBOMP_LINK}"
+           else
+               AC_MSG_RESULT([no])
+               can_use_openmp="no"
+           fi
+       fi
+   fi
+else
+   AC_MSG_RESULT([no])
+fi # if macOS
 
 ## Go back home.
 cd "${owd}"
 rm -rf "${BUILDDIR}"
 
-## Additional Apple check
-AC_MSG_CHECKING([for macOS])
-RSysinfoName=$("${R_HOME}/bin/Rscript" --vanilla -e 'cat(Sys.info()[["sysname"]])')
-if test x"${RSysinfoName}" = x"Darwin"; then
-    AC_MSG_RESULT([found])
-    AC_MSG_CHECKING([for macOS Apple compiler])
-    apple_compiler=$($CXX --version 2>&1 | grep -i -c -e 'apple llvm')
-    if test x"${apple_compiler}" = x"1"; then
-        AC_MSG_RESULT([found])
-        AC_MSG_WARN([OpenMP unavailable and turned off.])
-        can_use_openmp="no"
-    fi
-else
-    AC_MSG_RESULT([not found])
-fi
-
+# Overall summary
+AC_MSG_CHECKING([for OpenMP])
 if test x"${can_use_openmp}" = x"yes"; then
-    AC_MSG_CHECKING([for OpenMP])
-    ## if R has -fopenmp we should be good
-    allldflags=$(${R_HOME}/bin/R CMD config --ldflags)
-    hasOpenMP=$(echo ${allldflags} | grep -- -fopenmp)
-    if test x"${hasOpenMP}" = x""; then
-        AC_MSG_RESULT([missing])
-        arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
-        openmp_flag=""
-    else
-        AC_MSG_RESULT([found and suitable])
-        arma_have_openmp="#define ARMA_USE_OPENMP 1"
-        openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
-    fi
+   AC_MSG_RESULT([found and suitable])
+   arma_have_openmp="#define ARMA_USE_OPENMP 1"
+   openmp_flag='$(SHLIB_OPENMP_CXXFLAGS)'
+else
+   AC_MSG_RESULT([missing so no OpenMP acceleration])
+   arma_have_openmp="#define ARMA_DONT_USE_OPENMP 1"
+   openmp_flag=""
 fi
 
-## now use all these
+## Now use all these
 AC_SUBST([ARMA_HAVE_OPENMP], ["${arma_have_openmp}"])
 AC_SUBST([OPENMP_FLAG], ["${openmp_flag}"])
+AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS}"])
+AC_SUBST([PKG_LIBS], ["${PKG_LIBS}"])
 AC_CONFIG_FILES([inst/include/RcppArmadillo/config/RcppArmadilloConfigGenerated.h src/Makevars])
 AC_OUTPUT
