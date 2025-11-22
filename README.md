@@ -2,7 +2,7 @@
 ## RcppArmadillo: R and Armadillo via Rcpp
 
 [![CI](https://github.com/RcppCore/RcppArmadillo/workflows/ci/badge.svg)](https://github.com/RcppCore/RcppArmadillo/actions?query=workflow%3Aci)
-[![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](https://www.r-project.org/Licenses/GPL-2)
 [![CRAN](https://www.r-pkg.org/badges/version/RcppArmadillo)](https://cran.r-project.org/package=RcppArmadillo)
 [![Debian package](https://img.shields.io/debian/v/r-cran-rcpparmadillo/sid?color=brightgreen)](https://packages.debian.org/sid/r-cran-rcpparmadillo)
 [![r-universe](https://rcppcore.r-universe.dev/badges/RcppArmadillo)](https://rcppcore.r-universe.dev/RcppArmadillo)

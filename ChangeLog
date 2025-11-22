@@ -10,6 +10,9 @@
 	* inst/tinytest/test_Rlapack.R: Skip this test involving complex
 	algebra if on macOS as the LAPACK switch by R affects it
 
+        * configure.ac: Refine OpenMP detection once more
+        * configure: Idem
+
 2025-11-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/inline.R (inlineCxxPlugin): No longer special-case macOS for
