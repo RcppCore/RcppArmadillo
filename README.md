@@ -62,6 +62,41 @@ precludes some more compile-time heavy features such as 'Rcpp Modules' which we 
 the [Rcpp][rcpp] docs more details about 'Light', 'Lighter' and 'Lightest'.  In the example above,
 the switch saves about 15% of total compilation time.
 
+You can also experiment directly at the R prompt. The next example creates a one-liner to access the
+Armadillo `hess()` method to compute a [Hessenberg
+matrix](https://en.wikipedia.org/wiki/Hessenberg_matrix), a decomposition into an 'almost
+triangular' matrix. (We chose this example as base R does not have this functionality; it is a more
+interesting example than providing yet another QR, SVD, or Eigen decomposition though these are of
+course equally easily accessible from Armadillo.)
+
+```r
+> library(Rcpp)   # for cppFunction()
+> cppFunction("arma::mat hd(const arma::mat& m) { return hess(m); }", depends="RcppArmadillo")
+> set.seed(20251122)
+> m <- matrix(rnorm(49), 7, 7)
+> hd(m)  # compute Hessenberg decom using the function we just created
+        [,1]     [,2]      [,3]      [,4]       [,5]      [,6]      [,7]
+[1,] 1.15745  1.64589 -0.809926  0.220417 -1.6050835 -0.947760 -0.972432
+[2,] 2.80695 -2.65613  0.119320  0.484858 -0.0877464  0.913440 -0.488142
+[3,] 0.00000  1.95335 -1.436409  1.879113 -0.1532293 -0.532077 -0.319914
+[4,] 0.00000  0.00000 -1.253221 -1.694414  0.2497111  1.233231  1.055706
+[5,] 0.00000  0.00000  0.000000 -3.333499 -1.4800146 -0.913523 -0.667435
+[6,] 0.00000  0.00000  0.000000  0.000000 -1.2050704 -0.294369  1.254402
+[7,] 0.00000  0.00000  0.000000  0.000000  0.0000000  0.324987 -1.504329
+>
+```
+
+Note how we can once again access an Armadillo matrix via the `mat` class in the `arma`
+namespace. Here `mat` is a convenience shortcut for a matrix of type `double`, there is also `imat`
+for an integer matrix and more, see the Armadillo documentation. We tell `Rcpp::cppFunction()` about
+Armadillo via the `depends=` argument, it allows it use information the `RcppArmadillo` package
+provides about its header files etc.
+
+The convenience of an automatic mapping from R directly into the Armadillo classes is a key
+advantage. The package also permits the standard 'const reference' calling semantic ensuring
+efficient transfer and signalling that the variable will not be altered.
+
+
 ### Status
 
 The package is mature yet under active development with releases to [CRAN][cran] about once every

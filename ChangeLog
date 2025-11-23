@@ -1,3 +1,7 @@
+2025-11-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Add a `Rcpp::cppFunction()` example
+
 2025-11-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.2-0
