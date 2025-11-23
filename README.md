@@ -71,10 +71,10 @@ course equally easily accessible from Armadillo.)
 
 ```r
 > library(Rcpp)   # for cppFunction()
-> cppFunction("arma::mat hd(const arma::mat& m) { return hess(m); }", depends="RcppArmadillo")
+> cppFunction("arma::mat h(const arma::mat& m) { return hess(m); }", depends="RcppArmadillo")
 > set.seed(20251122)
 > m <- matrix(rnorm(49), 7, 7)
-> hd(m)  # compute Hessenberg decom using the function we just created
+> h(m)  # compute Hessenberg decom using the function we just created
         [,1]     [,2]      [,3]      [,4]       [,5]      [,6]      [,7]
 [1,] 1.15745  1.64589 -0.809926  0.220417 -1.6050835 -0.947760 -0.972432
 [2,] 2.80695 -2.65613  0.119320  0.484858 -0.0877464  0.913440 -0.488142
