@@ -29,8 +29,6 @@ jobs:
 
       - name: Setup
         uses: eddelbuettel/github-actions/r-ci@master
-        with:
-          dev_version: 'TRUE'
 
       - name: OpenMP for macOS
         if: ${{ matrix.os == 'macos-latest' && matrix.openmp == 'yes' }}

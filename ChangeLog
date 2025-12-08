@@ -1,3 +1,8 @@
+2025-12-08  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml: No longer need to select 'dev' version
+	of r-ci setup as this has become the r-ci default
+
 2025-11-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Add a `Rcpp::cppFunction()` example
