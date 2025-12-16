@@ -49,7 +49,7 @@ Mat<eT>::Mat()
   , n_alloc(0)
   , vec_state(0)
   , mem_state(0)
-  , mem()
+  , mem(nullptr)
   {
   arma_debug_sigprint_this(this);
   }
@@ -312,15 +312,10 @@ Mat<eT>::init_cold()
     const char* error_message = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
-  arma_conform_check
-    (
-      (
-      ( (n_rows > ARMA_MAX_UHWORD) || (n_cols > ARMA_MAX_UHWORD) )
-        ? ( (double(n_rows) * double(n_cols)) > double(ARMA_MAX_UWORD) )
-        : false
-      ),
-    error_message
-    );
+  if( (n_rows > ARMA_MAX_UHWORD) || (n_cols > ARMA_MAX_UHWORD) )
+    {
+    arma_conform_check( ( (double(n_rows) * double(n_cols)) > double(ARMA_MAX_UWORD) ), error_message );
+    }
   
   if(n_elem <= arma_config::mat_prealloc)
     {
@@ -383,17 +378,10 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
     const char* error_message_4 = "Mat::init(): requested size is too large; suggest to enable ARMA_64BIT_WORD";
   #endif
   
-  arma_conform_set_error
-    (
-    err_state,
-    err_msg,
-      (
-      ( (in_n_rows > ARMA_MAX_UHWORD) || (in_n_cols > ARMA_MAX_UHWORD) )
-        ? ( (double(in_n_rows) * double(in_n_cols)) > double(ARMA_MAX_UWORD) )
-        : false
-      ),
-    error_message_4
-    );
+  if( (in_n_rows > ARMA_MAX_UHWORD) || (in_n_cols > ARMA_MAX_UHWORD) )
+    {
+    arma_conform_set_error( err_state, err_msg, ( (double(in_n_rows) * double(in_n_cols)) > double(ARMA_MAX_UWORD) ), error_message_4 );
+    }
   
   arma_conform_check(err_state, err_msg);
   
@@ -7580,10 +7568,40 @@ Mat<eT>::resize(const uword new_n_elem)
   {
   arma_debug_sigprint();
   
-  const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
-  const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
+  const bool reuse_mem = 
+    ( is_vec() && (mem_state == 0) )
+    &&
+    (
+         ( (new_n_elem <= arma_config::mat_prealloc) && (n_elem <= arma_config::mat_prealloc) && (    n_elem >  0      ) )
+      || ( (new_n_elem >  arma_config::mat_prealloc) && (n_elem >  arma_config::mat_prealloc) && (new_n_elem <= n_alloc) )
+    );
   
-  return (*this).resize(new_n_rows, new_n_cols);
+  if(reuse_mem)
+    {
+    arma_debug_print("Mat::resize(): reusing memory");
+    
+    if(new_n_elem > n_elem)
+      {
+      arma_debug_print("Mat::resize(): zeroing memory");
+      
+      eT* t_mem = (*this).memptr();   // the (n_elem > 0) check above ensures that (*this).memptr() is a valid pointer
+      
+      for(uword ii = n_elem; ii < new_n_elem; ++ii)  { t_mem[ii] = eT(0); }
+      }
+    
+    access::rw(n_rows) = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+    access::rw(n_cols) = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
+    access::rw(n_elem) = new_n_elem;
+    }
+  else
+    {
+    const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+    const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
+    
+    (*this).resize(new_n_rows, new_n_cols);
+    }
+  
+  return (*this);
   }
 
 

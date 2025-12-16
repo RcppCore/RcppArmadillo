@@ -1,3 +1,7 @@
+2025-12-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/current/: Sync with Armadillo 15.2.3
+
 2025-12-08  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml: No longer need to select 'dev' version

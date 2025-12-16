@@ -153,15 +153,19 @@ op_repcube::apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword copies_p
   
   if(out.is_empty())  { return; }
   
-  // TODO: this is a rudimentary implementation
-  
-  const SizeCube X_size = SizeCube(X.n_rows, X.n_cols, X.n_slices);
-  
-  for(uword s = 0; s < out.n_slices; s += X.n_slices)
-  for(uword c = 0; c < out.n_cols;   c += X.n_cols  )
-  for(uword r = 0; r < out.n_rows;   r += X.n_rows  )
+  for(uword s=0; s < X.n_slices; ++s)
     {
-    out.subcube(r, c, s, X_size) = X;
+    // avoid use of Cube::slice() to prevent generating Mat objects that the user may not need
+    
+    const Mat<eT>   X_slice_s(const_cast<eT*>(X.slice_memptr(s)),   X.n_rows,   X.n_cols, false, true);
+          Mat<eT> out_slice_s(              out.slice_memptr(s) , out.n_rows, out.n_cols, false, true);
+    
+    op_repmat::apply_noalias(out_slice_s, X_slice_s, copies_per_row, copies_per_col);
+    
+    for(uword t=1; t < copies_per_slice; ++t)
+      {
+      arrayops::copy(out.slice_memptr(s + (t * X.n_slices)), out_slice_s.memptr(), out_slice_s.n_elem);
+      }
     }
   }
 
