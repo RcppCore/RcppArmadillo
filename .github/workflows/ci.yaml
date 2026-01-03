@@ -59,6 +59,12 @@ jobs:
       - name: Test
         run: ./run.sh run_tests
 
+      - name: Install
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          R CMD INSTALL .
+          Rscript -e 'RcppArmadillo::armadillo_get_number_of_omp_threads()'
+
       - name: Coverage
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
