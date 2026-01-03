@@ -30,33 +30,6 @@ jobs:
       - name: Setup
         uses: eddelbuettel/github-actions/r-ci@master
 
-      # - name: OpenMP for macOS
-      #   if: ${{ matrix.os == 'macos-latest' && matrix.openmp == 'yes' }}
-      #   run: |
-      #     curl -fsSL https://raw.githubusercontent.com/coatless-shell/openmp/main/install-openmp.sh | bash -s -- --yes
-      #     mkdir -p ~/.R
-      #     cat <<EOF > ~/.R/Makevars
-      #     CPPFLAGS += -Xclang -fopenmp
-      #     LDFLAGS += -lomp
-      #     EOF
-      #     cat ~/.R/Makevars
-      #     echo -n "R CMD config CXX: "; R CMD config CXX
-      #     echo -n "R CMD config CPPFLAGS: "; R CMD config CPPFLAGS
-      #     echo -n "R CMD config LDFLAGS: "; R CMD config LDFLAGS
-      #     echo -n "R CMD config SHLIB_CXXLD: "; R CMD config SHLIB_CXXLD
-      #     echo -n "R CMD config SHLIB_CXXLDFLAGS: "; R CMD config SHLIB_CXXLDFLAGS
-
-      - name: OpenMP for macOS
-        if: ${{ matrix.os == 'macos-latest' && matrix.openmp == 'yes' }}
-        run: |
-          curl -O https://mac.r-project.org/openmp/openmp-17.0.6-darwin20-Release.tar.gz
-          sudo tar fvxz openmp-17.0.6-darwin20-Release.tar.gz -C /
-          rm openmp-17.0.6-darwin20-Release.tar.gz
-          sudo xcode-select -s /Applications/Xcode_16.2.app
-          echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> $GITHUB_ENV
-          echo "xcode is set: $(xcode-select --print-path)"
-          echo "using SDK: $(xcrun --show-sdk-version)"
-
       - name: Configure
         run: ./configure; cat src/Makevars
 
