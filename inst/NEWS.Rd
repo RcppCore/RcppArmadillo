@@ -3,6 +3,12 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.3-1.1 (2026-01-03)}{
+  \itemize{
+    \item Refined OpenMP setup (Dirk in \ghpr{500}
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.3-1 (2025-12-16)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.3 (Medium Roast Deluxe)
@@ -10,7 +16,7 @@
       \item Faster \code{.resize()} for vectors
       \item Faster \code{repcube()}
     }
-c  }
+  }
 }
 
 \section{Changes in RcppArmadillo version 15.2.2-1 (2025-11-21)}{
