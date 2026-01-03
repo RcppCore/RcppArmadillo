@@ -52,4 +52,4 @@ armadillo_throttle_cores <- function(n = 2) {
 armadillo_reset_cores <- function() {
     n <- .pkgenv[["omp_threads"]]
     armadillo_set_number_of_omp_threads(n)
-}
+}														# nocov end
