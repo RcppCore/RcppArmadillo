@@ -1,6 +1,6 @@
 ## init.R: Startup
 ##
-## Copyright (C)  2023  Dirk Eddelbuettel
+## Copyright (C)  2023-2026  Dirk Eddelbuettel
 ##
 ## This file is part of RcppArmadillo.
 ##
@@ -19,8 +19,23 @@
 
 .pkgenv <- new.env(parent=emptyenv())
 
-.onLoad <- function(libname, pkgname) {
-    .pkgenv[["omp_threads"]] <- armadillo_get_number_of_omp_threads()		# #nocov
+.onLoad <- function(libname, pkgname) {					# nocov start
+    ## simple fallback: 'Ncpus' (if set) or else all cpus seen by OpenMP
+    ncores <- getOption("Ncpus", armadillo_get_number_of_omp_threads())
+    ## consider OMP_THREAD_LIMIT (cf Writing R Extensions), gets NA if envvar unset
+    ompcores <- as.integer(Sys.getenv("OMP_THREAD_LIMIT"))
+    ## keep the smaller value, omitting NA
+    ncores <- min(na.omit(c(ncores, ompcores)))
+    .pkgenv[["omp_threads"]] <- ncores
+    armadillo_throttle_cores(ncores)
+}
+
+.onAttach <- function(libname, pkgname) {
+    if (interactive()) {
+        packageStartupMessage("RcppArmadillo ", packageVersion("RcppArmadillo"),
+                              " using ", .pkgenv[["omp_threads"]], " cores. See ",
+                              "'help(\"RcppArmadillo-package\")' for details.")
+    }
 }
 
 ##' Throttle (or Reset) (Rcpp)Armadillo to Two Cores
@@ -37,4 +52,4 @@ armadillo_throttle_cores <- function(n = 2) {
 armadillo_reset_cores <- function() {
     n <- .pkgenv[["omp_threads"]]
     armadillo_set_number_of_omp_threads(n)
-}
+}														# nocov end

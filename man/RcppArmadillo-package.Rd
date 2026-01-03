@@ -3,12 +3,8 @@
 \alias{RcppArmadillo}
 \alias{RcppArmadilloExample}
 \docType{package}
-\title{
-  R and Armadillo Integration
-}
-\description{
-  The package brings the power of Armadillo to R.
-}
+\title{R and Armadillo Integration}
+\description{The package brings the power of Armadillo to R.}
 \section{Armadillo}{
   \code{Armadillo} is a C++ linear algebra library, aiming towards a good
   balance between speed and ease of use.
@@ -28,45 +24,28 @@
   Armadillo has been primarily developed at NICTA (Australia) by Conrad
   Sanderson, with contributions from around the world.
 }
-
 \section{RcppArmadillo}{
   \code{RcppArmadillo} acts as a bridge between \code{Rcpp} and \code{Armadillo},
   allowing the programmer to write code using Armadillo classes that integrate
   seemlessly with \code{R} via \code{Rcpp}.
 }
-
 \section{Using RcppArmadillo}{
   The simplest way to get started is to create a skeleton of a package
   using \code{RcppArmadillo}. This can be done conveniently by the
   \code{\link{RcppArmadillo.package.skeleton}}
   function.
-
-  The important steps are
-  \itemize{
-    \item Include the \code{RcppArmadillo.h} header file, which also includes
-    \code{armadillo.h}.
-    \item Import Rcpp, and LinkingTo Rcpp and RcppArmadillo by adding these lines to
-    the DESCRIPTION file:
-
-    \preformatted{
-      Imports: Rcpp (>= 0.11.0)
-      LinkingTo: Rcpp, RcppArmadillo
-    }
-
-    \item Link against the BLAS and LAPACK libraries, by adding this line
-    in the \code{Makevars} and \code{Makevars.win} files:
-    \preformatted{PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) }
-  }
 }
-
-\section{Support}{
-  Please use the Rcpp-devel mailing list on r-forge
-  for questions about RcppArmadillo (subscribe first).
-  \url{https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel}
-
+\section{Threading}{
+  The Armadillo library can take advantage of OpenMP to execute computations in
+  parallel via multi-threaded code. The number of cores uses can be set (or
+  retrieved) explicitly via helper functions \code{armadillo_get_number_of_omp+threads()} and
+  \code{armadillo_set_number_of_omp_threads()}. A default value is stored at package startup; it
+  recognises R option value \code{Ncpus} and environment variable
+  \code{OMP_THREAD_LIMIT}.  Additional helper functions
+  \code{armadillo_throttle_cores()} and \code{armadillo_reset_cores()} are
+  available to (temporarily) lower the number of cores uses and to reset to
+  the package default value set at startup.
 }
-
-
 \author{
   For RcppArmadillo: Dirk Eddelbuettel, Romain Francois, Doug Bates and
   Binxiang Ni
@@ -87,9 +66,7 @@
   "RcppArmadillo: Accelerating R with high-performance C++ linear algebra",
   Computational	Statistics and Data Analysis, 2014, 71, March, pages
   1054-1063, \doi{10.1016/j.csda.2013.02.005}.
-)
-
 }
-\keyword{ package }
-\keyword{ programming }
-\keyword{ interface }
+\keyword{package}
+\keyword{programming}
+\keyword{interface}
