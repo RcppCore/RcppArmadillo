@@ -26,14 +26,14 @@
     ompcores <- as.integer(Sys.getenv("OMP_THREAD_LIMIT"))
     ## keep the smaller value, omitting NA
     ncores <- min(na.omit(c(ncores, ompcores)))
-    .pkgenv[["nb_threads"]] <- ncores
+    .pkgenv[["omp_threads"]] <- ncores
     armadillo_throttle_cores(ncores)
 }
 
 .onAttach <- function(libname, pkgname) {
     if (interactive()) {
         packageStartupMessage("RcppArmadillo ", packageVersion("RcppArmadillo"),
-                              " using ", .pkgenv[["nb_threads"]], " cores. See ",
+                              " using ", .pkgenv[["omp_threads"]], " cores. See ",
                               "'help(\"RcppArmadillo-package\")' for details.")
     }
 }
