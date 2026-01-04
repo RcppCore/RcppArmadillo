@@ -1,3 +1,8 @@
+2026-01-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* NAMESPACE: Also import stats:na.omit and utils::packageVersion for
+	use in init.R
+
 2026-01-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* R/init.R: Expand openmp core count logic respecting Ncpus and
