@@ -1,3 +1,7 @@
+2026-01-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .github/workflows/ci.yaml: Switch to actions/checkout@v6
+
 2026-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* NAMESPACE: Also import stats:na.omit and utils::packageVersion for
