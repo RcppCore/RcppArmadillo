@@ -32,7 +32,8 @@
 
 .onAttach <- function(libname, pkgname) {
     if (interactive()) {
-        packageStartupMessage("RcppArmadillo ", packageVersion("RcppArmadillo"),
+        packageStartupMessage("RcppArmadillo ",
+                              packageDescription("RcppArmadillo", fields="Version"),
                               " using ", .pkgenv[["omp_threads"]], " cores. See ",
                               "'help(\"RcppArmadillo-package\")' for details.")
     }
