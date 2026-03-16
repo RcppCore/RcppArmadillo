@@ -65,6 +65,7 @@ op_htrans::apply_mat_noalias(Mat<eT>& out, const Mat<eT>& A, const typename arma
     op_htrans::apply_mat_noalias_large(out, A);
     }
   else
+  if( (A_n_rows != 0) && (A_n_cols != 0) )
     {
     eT* outptr = out.memptr();
     

@@ -80,6 +80,8 @@ op_accu_mat::apply_proxy_at(const Proxy<T1>& P)
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
   
+  if(n_rows == 0)  { return eT(0); }
+  
   eT val = eT(0);
   
   if(n_rows != 1)
@@ -145,6 +147,8 @@ op_accu_mat::apply_omit_helper(const Proxy<T1>& P, functor is_omitted)
     {
     const uword n_rows = P.get_n_rows();
     const uword n_cols = P.get_n_cols();
+    
+    if(n_rows == 0)  { return eT_zero; }
     
     for(uword c=0; c < n_cols; ++c)
     for(uword r=0; r < n_rows; ++r)
@@ -602,6 +606,8 @@ op_accu_mat::apply(const subview<eT>& X)
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
+  if( (X_n_rows == 0) || (X_n_cols == 0) )  { return eT(0); }
+  
   if(X_n_rows == 1)
     {
     const uword X_m_n_rows = X.m.n_rows;
@@ -749,6 +755,8 @@ op_accu_cube::apply_proxy_at(const ProxyCube<T1>& P)
   const uword n_rows   = P.get_n_rows();
   const uword n_cols   = P.get_n_cols();
   const uword n_slices = P.get_n_slices();
+  
+  if( (n_rows == 0) || (n_cols == 0) )  { return eT(0); }
   
   eT val1 = eT(0);
   eT val2 = eT(0);

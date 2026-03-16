@@ -688,15 +688,22 @@ SpMat<eT>::operator=(const SpMat<eT>& x)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::operator+=(const SpMat<eT>& x)
+SpMat<eT>::operator+=(const SpMat<eT>& X)
   {
   arma_debug_sigprint();
   
   sync_csc();
   
-  SpMat<eT> out = (*this) + x;
-  
-  steal_mem(out);
+  if(X.n_nonzero == 0)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "addition");
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) + X;
+    
+    steal_mem(tmp);
+    }
   
   return *this;
   }
@@ -706,15 +713,22 @@ SpMat<eT>::operator+=(const SpMat<eT>& x)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::operator-=(const SpMat<eT>& x)
+SpMat<eT>::operator-=(const SpMat<eT>& X)
   {
   arma_debug_sigprint();
   
   sync_csc();
   
-  SpMat<eT> out = (*this) - x;
-  
-  steal_mem(out);
+  if(X.n_nonzero == 0)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "subtraction");
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) - X;
+    
+    steal_mem(tmp);
+    }
   
   return *this;
   }
@@ -724,15 +738,15 @@ SpMat<eT>::operator-=(const SpMat<eT>& x)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::operator*=(const SpMat<eT>& y)
+SpMat<eT>::operator*=(const SpMat<eT>& X)
   {
   arma_debug_sigprint();
   
   sync_csc();
   
-  SpMat<eT> z = (*this) * y;
+  SpMat<eT> tmp = (*this) * X;
   
-  steal_mem(z);
+  steal_mem(tmp);
   
   return *this;
   }
@@ -743,15 +757,24 @@ SpMat<eT>::operator*=(const SpMat<eT>& y)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::operator%=(const SpMat<eT>& y)
+SpMat<eT>::operator%=(const SpMat<eT>& X)
   {
   arma_debug_sigprint();
   
   sync_csc();
   
-  SpMat<eT> z = (*this) % y;
-  
-  steal_mem(z);
+  if(X.n_nonzero == 0)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "element-wise multiplication");
+    
+    (*this).zeros();
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) % X;
+    
+    steal_mem(tmp);
+    }
   
   return *this;
   }
@@ -1338,9 +1361,16 @@ SpMat<eT>::operator+=(const SpSubview<eT>& X)
   
   sync_csc();
   
-  SpMat<eT> tmp = (*this) + X;
-  
-  steal_mem(tmp);
+  if(X.n_nonzero == 0)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "addition");
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) + X;
+    
+    steal_mem(tmp);
+    }
   
   return *this;
   }
@@ -1356,64 +1386,82 @@ SpMat<eT>::operator-=(const SpSubview<eT>& X)
   
   sync_csc();
   
-  SpMat<eT> tmp = (*this) - X;
-  
-  steal_mem(tmp);
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
-inline
-SpMat<eT>&
-SpMat<eT>::operator*=(const SpSubview<eT>& y)
-  {
-  arma_debug_sigprint();
-  
-  sync_csc();
-  
-  SpMat<eT> z = (*this) * y;
-  
-  steal_mem(z);
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
-inline
-SpMat<eT>&
-SpMat<eT>::operator%=(const SpSubview<eT>& x)
-  {
-  arma_debug_sigprint();
-  
-  sync_csc();
-  
-  SpMat<eT> tmp = (*this) % x;
-  
-  steal_mem(tmp);
-  
-  return *this;
-  }
-
-
-
-template<typename eT>
-inline
-SpMat<eT>&
-SpMat<eT>::operator/=(const SpSubview<eT>& x)
-  {
-  arma_debug_sigprint();
-  
-  arma_conform_assert_same_size(n_rows, n_cols, x.n_rows, x.n_cols, "element-wise division");
-  
-  // There is no pretty way to do this.
-  for(uword elem = 0; elem < n_elem; elem++)
+  if(X.n_nonzero == 0)
     {
-    at(elem) /= x(elem);
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "subtraction");
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) - X;
+    
+    steal_mem(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const SpSubview<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  sync_csc();
+  
+  SpMat<eT> tmp = (*this) * X;
+  
+  steal_mem(tmp);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const SpSubview<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  sync_csc();
+  
+  if(X.n_nonzero == 0)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "element-wise multiplication");
+    
+    (*this).zeros();
+    }
+  else
+    {
+    SpMat<eT> tmp = (*this) % X;
+    
+    steal_mem(tmp);
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const SpSubview<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  // NOTE: use of this function is not advised; it is implemented only for completeness
+  
+  arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "element-wise division");
+  
+  for(uword c = 0; c < n_cols; ++c)
+  for(uword r = 0; r < n_rows; ++r)
+    {
+    at(r, c) /= X.at(r, c);
     }
   
   return *this;
@@ -1507,9 +1555,9 @@ SpMat<eT>::operator*=(const SpSubview_col_list<eT,T1>& X)
   
   sync_csc();
   
-  SpMat<eT> z = (*this) * X;
+  SpMat<eT> tmp = (*this) * X;
   
-  steal_mem(z);
+  steal_mem(tmp);
   
   return *this;
   }

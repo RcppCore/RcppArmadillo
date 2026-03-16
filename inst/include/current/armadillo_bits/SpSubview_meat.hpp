@@ -44,6 +44,8 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   
   m.sync_csc();
   
+  if( (n_elem == 0) || (m.n_nonzero == 0) )  { return; }   // (*this).n_nonzero already set to zero
+  
   // count the number of non-zeros in the subview
   uword count = 0;
   
@@ -126,6 +128,8 @@ SpSubview<eT>::operator+=(const eT val)
   Mat<eT> tmp( (*this).n_rows, (*this).n_cols, arma_nozeros_indicator() );
   
   tmp.fill(val);
+  
+  if(n_nonzero == 0)  { return (*this).operator=(tmp); }
   
   return (*this).operator=( (*this) + tmp );
   }
@@ -319,6 +323,15 @@ SpSubview<eT>::operator+=(const Base<eT, T1>& x)
   {
   arma_debug_sigprint();
   
+  if(n_nonzero == 0)
+    {
+    const quasi_unwrap<T1> U(x.get_ref());
+    
+    arma_conform_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "addition");
+    
+    return (*this).operator=(U.M);
+    }
+  
   return (*this).operator=( (*this) + x.get_ref() );
   }
 
@@ -368,6 +381,8 @@ SpSubview<eT>::operator%=(const Base<eT, T1>& x)
   const Mat<eT>& B     = U.M;
   
   arma_conform_assert_same_size(sv.n_rows, sv.n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
+  
+  if(n_nonzero == 0)  { return *this; }
   
   SpMat<eT>& sv_m = access::rw(sv.m);
   
@@ -555,6 +570,15 @@ SpSubview<eT>::operator+=(const SpBase<eT, T1>& x)
   {
   arma_debug_sigprint();
   
+  if(n_nonzero == 0)
+    {
+    const unwrap_spmat<T1> U(x.get_ref());
+    
+    arma_conform_assert_same_size(n_rows, n_cols, U.M.n_rows, U.M.n_cols, "addition");
+    
+    return (*this).operator_equ_common(U.M);
+    }
+  
   // TODO: implement dedicated machinery
   return (*this).operator=( (*this) + x.get_ref() );
   }
@@ -595,6 +619,15 @@ const SpSubview<eT>&
 SpSubview<eT>::operator%=(const SpBase<eT, T1>& x)
   {
   arma_debug_sigprint();
+  
+  if(n_nonzero == 0)
+    {
+    const SpProxy<T1> P(x.get_ref());
+    
+    arma_conform_assert_same_size(n_rows, n_cols, P.get_n_rows(), P.get_n_cols(), "element-wise multiplication");
+    
+    return *this;
+    }
   
   // TODO: implement dedicated machinery
   return (*this).operator=( (*this) % x.get_ref() );
@@ -647,6 +680,8 @@ SpSubview<eT>::for_each(functor F)
   
   m.sync_csc();
   m.invalidate_cache();
+  
+  if(n_nonzero == 0)  { return; }
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
@@ -704,6 +739,8 @@ SpSubview<eT>::for_each(functor F) const
   
   m.sync_csc();
   
+  if(n_nonzero == 0)  { return; }
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
   
@@ -742,6 +779,8 @@ SpSubview<eT>::transform(functor F)
   
   m.sync_csc();
   m.invalidate_cache();
+  
+  if(n_nonzero == 0)  { return; }
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
@@ -812,6 +851,8 @@ SpSubview<eT>::replace(const eT old_val, const eT new_val)
   
   m.sync_csc();
   m.invalidate_cache();
+  
+  if(n_nonzero == 0)  { return; }
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
