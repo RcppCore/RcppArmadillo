@@ -1,10 +1,14 @@
+2026-03-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/current/: Sync with Armadillo 15.2.4
+
 2026-01-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml: Switch to actions/checkout@v6
 
 2026-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
-	* NAMESPACE: Also import stats:na.omit and utils::packageVersion for
+	* NAMESPACE: Also import stats::na.omit and utils::packageVersion for
 	use in init.R
 
 2026-01-03  Dirk Eddelbuettel  <edd@debian.org>
