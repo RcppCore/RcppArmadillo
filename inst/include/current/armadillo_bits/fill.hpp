@@ -22,22 +22,29 @@
 
 namespace fill
   {
-  struct fill_none  {};
-  struct fill_zeros {};
-  struct fill_ones  {};
-  struct fill_eye   {};
-  struct fill_randu {};
-  struct fill_randn {};
+  struct fill_none    {};
+  struct fill_zeros   {};
+  struct fill_ones    {};
+  struct fill_eye     {};
+  struct fill_randu   {};
+  struct fill_randn   {};
+  struct fill_nan     {};
+  struct fill_pos_inf {};
+  struct fill_neg_inf {};
   
   template<typename fill_type> 
   struct fill_class { inline constexpr fill_class() {} };
   
-  static constexpr fill_class<fill_none > none;
-  static constexpr fill_class<fill_zeros> zeros;
-  static constexpr fill_class<fill_ones > ones;
-  static constexpr fill_class<fill_eye  > eye;
-  static constexpr fill_class<fill_randu> randu;
-  static constexpr fill_class<fill_randn> randn;
+  static constexpr fill_class<fill_none   > none;
+  static constexpr fill_class<fill_zeros  > zeros;
+  static constexpr fill_class<fill_ones   > ones;
+  static constexpr fill_class<fill_eye    > eye;
+  static constexpr fill_class<fill_randu  > randu;
+  static constexpr fill_class<fill_randn  > randn;
+  static constexpr fill_class<fill_nan    > nan;
+  static constexpr fill_class<fill_pos_inf> inf;
+  static constexpr fill_class<fill_pos_inf> pos_inf;
+  static constexpr fill_class<fill_neg_inf> neg_inf;
   
   //
   

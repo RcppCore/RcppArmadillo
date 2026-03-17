@@ -142,6 +142,9 @@ class subview : public Base< eT, subview<eT> >
   arma_inline       eT* colptr(const uword in_col);
   arma_inline const eT* colptr(const uword in_col) const;
   
+  arma_inline       eT* startptr();
+  arma_inline const eT* startptr() const;
+  
   template<typename eT2>
   inline bool check_overlap(const subview<eT2>& x) const;
   

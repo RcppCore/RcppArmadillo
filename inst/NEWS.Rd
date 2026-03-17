@@ -3,9 +3,14 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.2.3-1.1 (2026-01-03)}{
+\section{Changes in RcppArmadillo version 15.2.4-0 (2026-03-16)}{
   \itemize{
-    \item Refined OpenMP setup (Dirk in \ghpr{500}
+    \item Upgraded to Armadillo release 15.2.4 (Medium Roast Deluxe)
+    \itemize{
+      \item Workarounds for bugs in GCC and Clang sanitisers (ASAN false positives)
+      \item Faster handling of blank sparse matrices
+    }
+    \item Refined OpenMP setup (Dirk in \ghpr{500})
   }
 }
 

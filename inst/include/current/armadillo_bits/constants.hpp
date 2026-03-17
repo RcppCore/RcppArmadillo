@@ -62,11 +62,14 @@ namespace priv
       }
     
     
+    //
+    
+    
     template<typename eT>
     static
     constexpr
     typename arma_real_only<eT>::result
-    inf(typename arma_real_only<eT>::result* junk = nullptr)
+    pos_inf(typename arma_real_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -78,13 +81,13 @@ namespace priv
     static
     constexpr
     typename arma_cx_only<eT>::result
-    inf(typename arma_cx_only<eT>::result* junk = nullptr)
+    pos_inf(typename arma_cx_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
       typedef typename get_pod_type<eT>::result T;
       
-      return eT( Datum_helper::inf<T>(), Datum_helper::inf<T>() );
+      return eT( Datum_helper::pos_inf<T>(), Datum_helper::pos_inf<T>() );
       }
     
     
@@ -92,12 +95,54 @@ namespace priv
     static
     constexpr
     typename arma_integral_only<eT>::result
-    inf(typename arma_integral_only<eT>::result* junk = nullptr)
+    pos_inf(typename arma_integral_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
       return std::numeric_limits<eT>::max();
       }
+    
+    
+    //
+    
+    
+    template<typename eT>
+    static
+    constexpr
+    typename arma_real_only<eT>::result
+    neg_inf(typename arma_real_only<eT>::result* junk = nullptr)
+      {
+      arma_ignore(junk);
+      
+      return (std::numeric_limits<eT>::has_infinity) ? eT(-std::numeric_limits<eT>::infinity()) : eT(std::numeric_limits<eT>::lowest());
+      }
+    
+    
+    template<typename eT>
+    static
+    constexpr
+    typename arma_cx_only<eT>::result
+    neg_inf(typename arma_cx_only<eT>::result* junk = nullptr)
+      {
+      arma_ignore(junk);
+      
+      typedef typename get_pod_type<eT>::result T;
+      
+      return eT( Datum_helper::neg_inf<T>(), Datum_helper::neg_inf<T>() );
+      }
+    
+    
+    template<typename eT>
+    static
+    constexpr
+    typename arma_integral_only<eT>::result
+    neg_inf(typename arma_integral_only<eT>::result* junk = nullptr)
+      {
+      arma_ignore(junk);
+      
+      return std::numeric_limits<eT>::lowest();
+      }
+    
     };
   }
 
@@ -125,7 +170,9 @@ struct Datum
   static const eT log_min;      //!< log of the minimum representable value
   static const eT log_max;      //!< log of the maximum representable value
   static const eT nan;          //!< "not a number"
-  static const eT inf;          //!< infinity 
+  static const eT inf;          //!< positive infinity
+  static const eT pos_inf;      //!< positive infinity
+  static const eT neg_inf;      //!< negative infinity
 
   // 
   
@@ -176,7 +223,9 @@ template<typename eT> const eT Datum<eT>::eps         = std::numeric_limits<eT>:
 template<typename eT> const eT Datum<eT>::log_min     = std::log(std::numeric_limits<eT>::min());
 template<typename eT> const eT Datum<eT>::log_max     = std::log(std::numeric_limits<eT>::max());
 template<typename eT> const eT Datum<eT>::nan         = priv::Datum_helper::nan<eT>();
-template<typename eT> const eT Datum<eT>::inf         = priv::Datum_helper::inf<eT>();
+template<typename eT> const eT Datum<eT>::inf         = priv::Datum_helper::pos_inf<eT>();
+template<typename eT> const eT Datum<eT>::pos_inf     = priv::Datum_helper::pos_inf<eT>();
+template<typename eT> const eT Datum<eT>::neg_inf     = priv::Datum_helper::neg_inf<eT>();
 
 template<typename eT> const eT Datum<eT>::m_u       = eT(1.66053906892e-27);
 template<typename eT> const eT Datum<eT>::N_A       = eT(6.02214076e23);

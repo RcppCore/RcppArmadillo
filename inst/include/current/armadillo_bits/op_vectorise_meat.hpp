@@ -176,6 +176,8 @@ op_vectorise_col::apply_subview(Mat<eT>& out, const subview<eT>& sv)
   
   out.set_size(sv.n_elem, 1);
   
+  if(sv.n_elem == 0)  { return; }
+  
   eT* out_mem = out.memptr();
   
   for(uword col=0; col < sv_n_cols; ++col)
@@ -200,6 +202,8 @@ op_vectorise_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   const uword N = P.get_n_elem();
   
   out.set_size(N, 1);
+  
+  if(N == 0)  { return; }
   
   eT* outmem = out.memptr();
   
@@ -304,6 +308,8 @@ op_vectorise_row::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   const uword n_elem = P.get_n_elem();
   
   out.set_size(1, n_elem);
+  
+  if(n_elem == 0)  { return; }
   
   eT* outmem = out.memptr();
   
@@ -470,6 +476,8 @@ op_vectorise_cube_col::apply_proxy(Mat<typename T1::elem_type>& out, const T1& e
   const uword N = P.get_n_elem();
   
   out.set_size(N, 1);
+  
+  if(N == 0)  { return; }
   
   eT* outmem = out.memptr();
   
