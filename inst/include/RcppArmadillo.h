@@ -1,7 +1,7 @@
 
 // RcppArmadillo.h: Rcpp/Armadillo glue
 //
-// Copyright (C)  2010 - 2021  Dirk Eddelbuettel, Romain Francois and Douglas Bates
+// Copyright (C)  2010-2026  Dirk Eddelbuettel, Romain Francois and Douglas Bates
 //
 // This file is part of RcppArmadillo.
 //
@@ -24,9 +24,6 @@
 #if defined(Rcpp_hpp) && !defined(COMPILING_RCPPARMADILLO)
     #error "The file 'Rcpp.h' should not be included. Please correct to include only 'RcppArmadillo.h'."
 #endif
-
-// Deal with Armadillo 14.6.3 (fallback) versus 15.0.* (or later, preference) selection
-#include <RcppArmadillo/version/arma.h>
 
 // Set up actual #include <armadillo> after first #include <RcppArmadilloConfig> and more config
 #include <RcppArmadillo/interface/RcppArmadilloForward.h>

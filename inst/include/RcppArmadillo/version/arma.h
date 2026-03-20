@@ -21,62 +21,12 @@
 #ifndef RcppArmadillo__version__arma__h
 #define RcppArmadillo__version__arma__h
 
-
-// Purpose: By explicitly defining or undefining a variable the 'defined(...) that
-// is in RcppArmadilloForward.h works as expected allowing us to selectively include
-// either a 'legacy' Armadillo (i.e. 14.6.3. the last version to a) allow C++11 and
-// b) permit suppression of deprecation warnings) or a 'current' Armadillo (i.e. as
-// of this writing 15.0.1, or any later version)
+// This file was used to provide a selection mechanism with proper fallbacks after the
+// release of Armadill 15.0.0 and its switch to  C++14 as the minimum standard. Now that
+// all CRAN packages can compile under this standard -- following a managed transition
+// period permitting adjustments as needed -- this is no longer required and the file is
+// effectively empty.
 //
-// See https://github.com/RcppCore/RcppArmadillo/issues/475 for more details
-
-// Sanity check: Cannot select both current and legacy but only one
-#if defined(ARMA_USE_CURRENT) && defined(ARMA_USE_LEGACY)
-    #error "Do not select both 'current' and 'legacy', only one choice is possible."
-#endif
-
-// Sanity check: Cannot select current under C++11
-#if defined(ARMA_USE_CURRENT) && __cplusplus <= 201103L
-    #error "Do not select 'current' with C++11 (or older) as 'current' requires C++14 or newer."
-#endif
-
-// Carefully check and set if the user has -DARMA_USE_CURRENT
-// This can be set in src/Makevars(.win) via PKG_CPPFLAGS (or equivalent)
-#if defined(ARMA_USE_CURRENT)
-#define ARMA_SELECTED_CURRENT_VERSION
-#else
-#undef ARMA_SELECTED_CURRENT_VERSION
-#endif
-
-// Carefully check and set if the user has -DARMA_USE_LEGACY
-// This can be set in src/Makevars(.win) via PKG_CPPFLAGS (or equivalent)
-#if defined(ARMA_USE_LEGACY)
-#define ARMA_SELECTED_LEGACY_VERSION
-#else
-#undef ARMA_SELECTED_LEGACY_VERSION
-#endif
-
-// Fallback: Use 'legacy' and warn.
-// This toggle can be turned to default to 'current' (allowing a legacy override) which we plan
-// to do after a (sufficiently long) adjustment period
-#if !defined(ARMA_SELECTED_LEGACY_VERSION) && !defined(ARMA_SELECTED_CURRENT_VERSION)
-    // Show messages, adjusted for compilation standard (as we also want to move on from C++11)
-    // We plan to 'at some point' flip to for C++14
-    #if __cplusplus < 201402L
-        #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT and also removing C++11 compilation directive. See GitHub issue #475 for more.")
-        // Define selector used in RcppArmadilloForward.h
-        #define ARMA_SELECTED_LEGACY_VERSION
-        #undef ARMA_SELECTED_CURRENT_VERSION
-    #endif
-    // -- no longer automatically fall back to legacy version (unless in C++11 mode)
-    // #else
-    //     #pragma message("Using fallback compilation with Armadillo 14.6.3. Please consider defining -DARMA_USE_CURRENT. See GitHub issue #475 for more.")
-    //     // Define selector used in RcppArmadilloForward.h
-    //     // It is our intention to select current here after transition instead of legacy
-    //     #define ARMA_SELECTED_LEGACY_VERSION
-    //     #undef ARMA_SELECTED_CURRENT_VERSION
-    // #endif
-#endif
-
+// See https://github.com/RcppCore/RcppArmadillo/issues/475 for more details.
 
 #endif
