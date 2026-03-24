@@ -76,8 +76,8 @@ prettyDate <- format(Sys.Date(), "%B %e, %Y")
 
   \title{RcppArmadillo: Accelerating R \\with High-Performance C++ Linear Algebra\footnote{
       This vignette corresponds to a
-      \href{http://dx.doi.org/10.1016/j.csda.2013.02.005}{paper published} in
-      \href{http://www.journals.elsevier.com/computational-statistics-and-data-analysis/}{Computational Statistics and Data Analysis}.
+      \href{https://dx.doi.org/10.1016/j.csda.2013.02.005}{paper published} in
+      \href{https://www.journals.elsevier.com/computational-statistics-and-data-analysis/}{Computational Statistics and Data Analysis}.
       Currently still identical to the paper, this vignette version may over time receive minor updates.
       For citations, please use \citet{Eddelbuettel+Sanderson:2014:RcppArmadillo} as provided by \code{citation("RcppArmadillo")}.
       %
@@ -92,7 +92,7 @@ prettyDate <- format(Sys.Date(), "%B %e, %Y")
   %\cortext[cor]{Corresponding author. Email: \url{edd@debian.org}.}% Postal address: 711 Monroe Avenue,
     %River Forest, IL 60305, USA. } %he \pkg{RcppArmadillo} package is available
     %with the electronic version of this article, as well as via every CRAN mirror.}
-  \address[de]{Debian Project, \url{http://www.debian.org}}
+  \address[de]{Debian Project, \url{https://www.debian.org}}
 
   \author[cs1,cs2]{Conrad Sanderson}
   %\ead[cs1]{nowhere}  % CS i'd prefer to leave out my email address
@@ -269,7 +269,7 @@ now-common multi-core platforms~\citep{Kurzak_2010}.
     \bottomrule
   \end{tabular}
 \caption{Selected \pkg{Armadillo} functions with brief descriptions; see
-  \texttt{http://arma.sf.net/docs.html} for more complete
+  \texttt{https://arma.sf.net/docs.html} for more complete
   documentation. Several optional additional arguments have been omitted
   here for brevity.\label{tab:arma}}
 \end{table}
@@ -478,7 +478,7 @@ All of these steps involve only matrix multiplication and inversions, making
 the algorithm very suitable for an implementation in any language which
 can use matrix expressions. An example for \proglang{Matlab} is provided on
 the Mathworks website\footnote{See
-  \url{http://www.mathworks.com/products/matlab-coder/demos.html?file=/products/demos/shipping/coder/coderdemo_kalman_filter.html}.}
+  \url{https://www.mathworks.com/products/matlab-coder/demos.html?file=/products/demos/shipping/coder/coderdemo_kalman_filter.html}.}
 and shown in Listing~\ref{code:matlabkalman}.
 
 \lstset{
@@ -894,7 +894,7 @@ of applied researchers deploying computational methods in statistical
 computing and data analysis.
 As of early-2013, about 30 \proglang{R} packages on CRAN deploy
 \pkg{RcppArmadillo}\footnote{See
-  \url{http://cran.r-project.org/package=RcppArmadillo} for more details.},
+  \url{https://cran.r-project.org/package=RcppArmadillo} for more details.},
 showing both the usefulness of \proglang{Armadillo} and its acceptance by
 the \proglang{R} community.
 

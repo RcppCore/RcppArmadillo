@@ -7,19 +7,19 @@ rmdvignettes := 	$(rmdsources:.Rmd=.pdf)
 %.pdf:			%.Rmd
 			Rscript -e 'rmarkdown::render("$<")'
 			Rscript -e 'tools::compactPDF("$@", gs_quality="ebook")'
-			cp -vax $@ ../pdf
+			cp -vax $@ ..
 
 all:			${rmdvignettes} RcppArmadillo-intro.pdf
 
-RcppArmadillo-intro.tex: RcppArmadillo-intro.Rnw
+RcppArmadillo-intro.pdf: RcppArmadillo-intro.Rnw
 			Rscript -e 'Sweave("$<")'
-
-RcppArmadillo-intro.pdf: RcppArmadillo-intro.tex
-			Rscript -e 'tools::texi2pdf("$<", texi2dvi="pdflatex")'
-			Rscript -e 'tools::texi2pdf("$<", texi2dvi="pdflatex")'
+			pdflatex RcppArmadillo-intro.tex
+			bibtex RcppArmadillo-intro.aux
+			pdflatex RcppArmadillo-intro.tex
+			pdflatex RcppArmadillo-intro.tex
 			Rscript -e 'tools::compactPDF("$@", gs_quality="ebook")'
-			cp -vax $@ ../pdf
+			cp -vax $@ ..
 
 clean:
-			@rm -rf *.aux *.log *.out *.tex *.spl Rcpp*.pdf \
-				RcppArmadillo*_cache pinp.cls jss.bst
+			@rm -rf *.aux *.log *.out *.tex *.spl *.bbl *.blg Rcpp*.pdf \
+				RcppArmadillo*_cache pinp.cls jss.bst auto/
