@@ -1,3 +1,11 @@
+2026-03-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/RcppArmadillo.h: No longer dispatch to version/arma.h
+	* inst/include/RcppArmadillo/version/arma.h: No longer differentiate
+	between use with C++14 or later for current version and fallback
+	* inst/include/legancy/*: Removed fallback Armadillo 14.6.3
+	* inst/include/current/*: Moved up to unconditional default
+
 2026-03-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.4-1
