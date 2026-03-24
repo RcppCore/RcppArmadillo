@@ -4,8 +4,12 @@
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
 \section{Changes in RcppArmadillo version 15.x.y-1 [unreleased] (2026-xx-yy)}{
-  \item Sunset the pre-C++14 fallback of including Armadillo 4.6.4 (Dirk in
-  \ghpr{504} closing \ghit{503})
+  \itemize{
+    \item Sunset the pre-C++14 fallback of including Armadillo 4.6.4 (Dirk in
+    \ghpr{504} closing \ghit{503})
+    \item The vignettes have refreshed bibliographies, are now built using
+    the \code{Rcpp::asis} vignette builder
+  }
 }
 
 \section{Changes in RcppArmadillo version 15.2.4-1 (2026-03-17)}{
