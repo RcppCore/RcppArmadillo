@@ -2,8 +2,8 @@
 // RcppArmadilloForward.h: Rcpp/Armadillo glue
 //
 // Copyright (C)  2010 - 2014  Dirk Eddelbuettel, Romain Francois and Douglas Bates
-// Copyright (C)  2015 - 2025  Dirk Eddelbuettel
-// Copyright (C)  2019 - 2025  Conrad Sanderson
+// Copyright (C)  2015 - 2026  Dirk Eddelbuettel
+// Copyright (C)  2019 - 2026  Conrad Sanderson
 //
 // This file is part of RcppArmadillo.
 //
@@ -47,39 +47,8 @@
 // installation of Armadillo
 #define ARMA_DONT_USE_WRAPPER
 
-// See version/arma.h header for the (user and/or compilation) drive selection of these defines
-#if defined(ARMA_SELECTED_CURRENT_VERSION) || (__cplusplus >= 201402L)
-
-    // we include Armadillo 15.0.1 here -- but do it quietly
-    //#pragma message("Using compilation with current Armadillo version.")
-
-    // Armadillo 15.0.1 or later
-    #include "current/armadillo"
-
-#else
-
-    // we use a catch-all else branch to provide for packages including this file directly
-    // needless to say, we recommend one of the official entry-point headers
-    #if !defined(ARMA_SELECTED_LEGACY_VERSION)
-        #pragma message("Neither 'current' nor 'legacy' version selected. Ensure you use proper entry point headers.")
-    #endif
-
-    // we include Armadillo 14.6.3 here -- but do it quietly
-    //#pragma message("Using fallback compilation with Armadillo 14.6.3.")
-
-    // Armadillo has deprecation warnings (which RcppArmadillo suppressed at time to
-    // minimise issies at CRAN).  Should your package display any, and you decide
-    // _not_ to fix the root causes (see RcppArmadillo GitHub Issues #391 and #402
-    // for details) then defining the following macro will help. You can add a
-    // #define in your source code before including the RcppArmadillo header, or add
-    // a -DARMA_IGNORE_DEPRECATED_MARKER to the PKG_CPPFLAGS in src/Makevars.
-    //
-    // Renabling globally again for Armadillo 14.6.* as too many packages trigger this
-    #define ARMA_IGNORE_DEPRECATED_MARKER
-
-    #include "legacy/armadillo"
-
-#endif
+// Armadillo 15.0.1 or later
+#include "armadillo"
 
 /* forward declarations */
 namespace Rcpp {
