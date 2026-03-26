@@ -1,5 +1,7 @@
 2026-03-26  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Roll minor version and date
+
 	* cleanup: No longer remove vignettes/*.pdf
 
 2026-03-24  Dirk Eddelbuettel  <edd@debian.org>
