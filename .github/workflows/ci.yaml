@@ -14,10 +14,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: container, os: ubuntu-latest, container: rocker/r2u4ci }
+          #- { name: container, os: ubuntu-latest, container: rocker/r2u4ci }
           - { name: macos,     os: macos-latest,  openmp: yes }
           #- { name: macos,     os: macos-latest,  openmp: no }
-          #- { name: ubuntu,    os: ubuntu-latest }
+          - { name: ubuntu,    os: ubuntu-latest }
 
 
     runs-on: ${{ matrix.os }}
