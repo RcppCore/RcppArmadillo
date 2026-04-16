@@ -946,12 +946,12 @@ SpSubview<eT>::clamp(const eT min_val, const eT max_val)
   
   if(is_cx<eT>::no)
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpSubview::clamp(): min_val must be less than max_val" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "SpSubview::clamp(): min_val must be less than max_val" );
     }
   else
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpSubview::clamp(): real(min_val) must be less than real(max_val)" );
-    arma_conform_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "SpSubview::clamp(): imag(min_val) must be less than imag(max_val)" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "SpSubview::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_conform_check( ((access::tmp_imag(min_val) <= access::tmp_imag(max_val)) == false), "SpSubview::clamp(): imag(min_val) must be less than imag(max_val)" );
     }
   
   if((n_elem == 0) || (n_nonzero == 0))  { return; }

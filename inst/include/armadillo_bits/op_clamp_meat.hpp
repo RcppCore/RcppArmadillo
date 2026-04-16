@@ -34,7 +34,7 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
   const eT min_val = in.aux;
   const eT max_val = in.aux_out_eT;
   
-  arma_conform_check( (min_val > max_val), "clamp(): min_val must be less than max_val" );
+  arma_conform_check( ((min_val <= max_val) == false), "clamp(): min_val must be less than max_val" );
   
   if(is_Mat<T1>::value)
     {
@@ -83,7 +83,7 @@ op_clamp::apply(Mat_noalias<typename T1::elem_type>& out, const mtOp<typename T1
   const eT min_val = in.aux;
   const eT max_val = in.aux_out_eT;
   
-  arma_conform_check( (min_val > max_val), "clamp(): min_val must be less than max_val" );
+  arma_conform_check( ((min_val <= max_val) == false), "clamp(): min_val must be less than max_val" );
   
   if((quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp))
     {
@@ -186,7 +186,7 @@ op_clamp::apply(Cube<typename T1::elem_type>& out, const mtOpCube<typename T1::e
   const eT min_val = in.aux;
   const eT max_val = in.aux_out_eT;
   
-  arma_conform_check( (min_val > max_val), "clamp(): min_val must be less than max_val" );
+  arma_conform_check( ((min_val <= max_val) == false), "clamp(): min_val must be less than max_val" );
   
   if(is_Cube<T1>::value)
     {
@@ -350,8 +350,8 @@ op_clamp_cx::apply_direct(Mat<eT>& out, const Mat<eT>& X, const eT min_val, cons
   const T max_val_real = std::real(max_val);
   const T max_val_imag = std::imag(max_val);
   
-  arma_conform_check( (min_val_real > max_val_real), "clamp(): real(min_val) must be less than real(max_val)" );
-  arma_conform_check( (min_val_imag > max_val_imag), "clamp(): imag(min_val) must be less than imag(max_val)" );
+  arma_conform_check( ((min_val_real <= max_val_real) == false), "clamp(): real(min_val) must be less than real(max_val)" );
+  arma_conform_check( ((min_val_imag <= max_val_imag) == false), "clamp(): imag(min_val) must be less than imag(max_val)" );
   
   if(&out != &X)
     {
@@ -401,8 +401,8 @@ op_clamp_cx::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T
   const T max_val_real = std::real(max_val);
   const T max_val_imag = std::imag(max_val);
   
-  arma_conform_check( (min_val_real > max_val_real), "clamp(): real(min_val) must be less than real(max_val)" );
-  arma_conform_check( (min_val_imag > max_val_imag), "clamp(): imag(min_val) must be less than imag(max_val)" );
+  arma_conform_check( ((min_val_real <= max_val_real) == false), "clamp(): real(min_val) must be less than real(max_val)" );
+  arma_conform_check( ((min_val_imag <= max_val_imag) == false), "clamp(): imag(min_val) must be less than imag(max_val)" );
   
   const uword n_rows = P.get_n_rows();
   const uword n_cols = P.get_n_cols();
@@ -503,8 +503,8 @@ op_clamp_cx::apply_direct(Cube<eT>& out, const Cube<eT>& X, const eT min_val, co
   const T max_val_real = std::real(max_val);
   const T max_val_imag = std::imag(max_val);
   
-  arma_conform_check( (min_val_real > max_val_real), "clamp(): real(min_val) must be less than real(max_val)" );
-  arma_conform_check( (min_val_imag > max_val_imag), "clamp(): imag(min_val) must be less than imag(max_val)" );
+  arma_conform_check( ((min_val_real <= max_val_real) == false), "clamp(): real(min_val) must be less than real(max_val)" );
+  arma_conform_check( ((min_val_imag <= max_val_imag) == false), "clamp(): imag(min_val) must be less than imag(max_val)" );
   
   if(&out != &X)
     {
@@ -554,8 +554,8 @@ op_clamp_cx::apply_proxy_noalias(Cube<typename T1::elem_type>& out, const ProxyC
   const T max_val_real = std::real(max_val);
   const T max_val_imag = std::imag(max_val);
   
-  arma_conform_check( (min_val_real > max_val_real), "clamp(): real(min_val) must be less than real(max_val)" );
-  arma_conform_check( (min_val_imag > max_val_imag), "clamp(): imag(min_val) must be less than imag(max_val)" );
+  arma_conform_check( ((min_val_real <= max_val_real) == false), "clamp(): real(min_val) must be less than real(max_val)" );
+  arma_conform_check( ((min_val_imag <= max_val_imag) == false), "clamp(): imag(min_val) must be less than imag(max_val)" );
   
   const uword n_rows   = P.get_n_rows();
   const uword n_cols   = P.get_n_cols();

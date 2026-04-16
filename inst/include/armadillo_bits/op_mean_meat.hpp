@@ -435,17 +435,94 @@ op_mean::mean_all(const T1& X)
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
   
-  const quasi_unwrap<T1> U(X);
+  eT result = eT(0);
   
-  if(U.M.n_elem == 0)
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == false) && (Proxy<T1>::use_at == false) && (Proxy<T1>::use_mp == false) && (is_fp16<T>::no) )
     {
-    arma_conform_check(true, "mean(): object has no elements");
+    arma_debug_print("op_mean::mean_all(): using proxy");
     
-    return Datum<eT>::nan;
+    const Proxy<T1> P(X);
+    
+    if(P.get_n_elem() == 0)
+      {
+      arma_conform_check(true, "mean(): object has no elements");
+      
+      return Datum<eT>::nan;
+      }
+    
+    result = op_mean::mean_all_proxy(P);
+    }
+  else
+    {
+    arma_debug_print("op_mean::mean_all(): using quasi_unwrap");
+    
+    const quasi_unwrap<T1> U(X);
+    
+    if(U.M.n_elem == 0)
+      {
+      arma_conform_check(true, "mean(): object has no elements");
+      
+      return Datum<eT>::nan;
+      }
+    
+    result = op_mean::direct_mean(U.M.memptr(), U.M.n_elem);
     }
   
-  return op_mean::direct_mean(U.M.memptr(), U.M.n_elem);
+  return result;
+  }
+
+
+
+template<typename T1>
+inline
+typename T1::elem_type
+op_mean::mean_all_proxy(const Proxy<T1>& P)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const uword N = P.get_n_elem();
+  
+  const typename Proxy<T1>::ea_type Pea = P.get_ea();
+  
+  eT acc1 = eT(0);
+  eT acc2 = eT(0);
+  
+  uword i,j;
+  
+  for(i=0, j=1; j < N; i+=2, j+=2)
+    {
+    acc1 += Pea[i];
+    acc2 += Pea[j];
+    }
+  
+  if(i < N)
+    {
+    acc1 += Pea[i];
+    }
+  
+  const eT mean = (acc1 + acc2) / T(N);
+  
+  if(arma_isfinite(mean))  { return mean; }
+  
+  // handle possible overflow
+  
+  eT r_mean = eT(0);
+  
+  for(uword ii=0; ii < N; ++ii)
+    {
+    const eT val = Pea[ii];
+    
+    if(arma_isnonfinite(val))  { return mean; }
+    
+    r_mean = r_mean + (val - r_mean) / T(ii+1);
+    }
+  
+  return r_mean;
   }
 
 
@@ -467,22 +544,39 @@ op_mean::mean_all(const Op<T1, op_omit>& in)
     if(omit_mode == 2)  { arma_warn(1, "omit_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
     }
   
-  const quasi_unwrap<T1> U(in.m);
-  
-  if(U.M.n_elem == 0)
-    {
-    arma_conform_check(true, "mean(): object has no elements");
-    
-    return Datum<eT>::nan;
-    }
-  
   auto is_omitted_1 = [](const eT& x) -> bool { return arma_isnan(x);       };
   auto is_omitted_2 = [](const eT& x) -> bool { return arma_isnonfinite(x); };
   
   eT result = eT(0);
   
-  if(omit_mode == 1)  { result = op_mean::mean_all_omit(U.M.memptr(), U.M.n_elem, is_omitted_1); }
-  if(omit_mode == 2)  { result = op_mean::mean_all_omit(U.M.memptr(), U.M.n_elem, is_omitted_2); }
+  if( (is_Mat<typename Proxy<T1>::stored_type>::value == false) && (Proxy<T1>::use_at == false) && (Proxy<T1>::use_mp == false) )
+    {
+    const Proxy<T1> P(in.m);
+    
+    if(P.get_n_elem() == 0)
+      {
+      arma_conform_check(true, "mean(): object has no elements");
+      
+      return Datum<eT>::nan;
+      }
+    
+    if(omit_mode == 1)  { result = op_mean::mean_all_omit(P, is_omitted_1); }
+    if(omit_mode == 2)  { result = op_mean::mean_all_omit(P, is_omitted_2); }
+    }
+  else
+    {
+    const quasi_unwrap<T1> U(in.m);
+    
+    if(U.M.n_elem == 0)
+      {
+      arma_conform_check(true, "mean(): object has no elements");
+      
+      return Datum<eT>::nan;
+      }
+    
+    if(omit_mode == 1)  { result = op_mean::mean_all_omit(U.M.memptr(), U.M.n_elem, is_omitted_1); }
+    if(omit_mode == 2)  { result = op_mean::mean_all_omit(U.M.memptr(), U.M.n_elem, is_omitted_2); }
+    }
   
   return result;
   }
@@ -521,6 +615,55 @@ op_mean::mean_all_omit(const eT* X_mem, const uword N, functor is_omitted)
   for(uword i=0; i < N; ++i)
     {
     const eT val = X_mem[i];
+    
+    if(is_omitted(val) == false)
+      {
+      r_mean = r_mean + (val - r_mean) / T(count+1);  // kept as count+1 to use same algorithm as op_mean::direct_mean_robust()
+      
+      ++count;
+      }
+    }
+  
+  return r_mean;
+  }
+
+
+
+template<typename T1, typename functor>
+inline
+typename T1::elem_type
+op_mean::mean_all_omit(const Proxy<T1>& P, functor is_omitted)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  typedef typename T1::pod_type   T;
+  
+  const uword N = P.get_n_elem();
+  
+  uword count = 0;
+  eT    acc   = eT(0);
+  
+  for(uword i=0; i < N; ++i)
+    {
+    const eT val = P[i];
+    
+    if(is_omitted(val) == false)  { acc += val; ++count; }
+    }
+  
+  acc /= T(count);
+  
+  if(arma_isfinite(acc))  { return acc; }
+  
+  // handle possible overflow
+  
+  eT r_mean = eT(0);
+  
+  count = 0;
+  
+  for(uword i=0; i < N; ++i)
+    {
+    const eT val = P[i];
     
     if(is_omitted(val) == false)
       {

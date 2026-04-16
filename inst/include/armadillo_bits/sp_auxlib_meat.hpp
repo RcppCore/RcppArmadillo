@@ -503,7 +503,7 @@ sp_auxlib::eigs_sym_arpack(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     arpack::seupd(&rvec, &howmny, select.memptr(), eigval.memptr(), eigvec.memptr(), &ldz, (eT*) &sigma, &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, &info);
     
     // Check for errors.
-    if(info != 0)  { arma_warn(1, "eigs_sym(): ARPACK error ", info, " in seupd()"); return false; }
+    if(info != 0)  { arma_warn(1, "eigs_sym(): arpack::seupd() error: ", info); return false; }
     
     return (info == 0);
     }
@@ -890,7 +890,7 @@ sp_auxlib::eigs_gen_arpack(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     arpack::neupd(&rvec, &howmny, select.memptr(), dr.memptr(), di.memptr(), z.memptr(), &ldz, (T*) &sigmar, (T*) &sigmai, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)  { arma_warn(1, "eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
+    if(info != 0)  { arma_warn(1, "eigs_gen(): arpack::neupd() error: ", info); return false; }
     
     // Put it into the outputs.
     eigval.set_size(n_eigvals);
@@ -1138,7 +1138,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
 (std::complex<T>*) NULL, eigvec.memptr(), &ldz, (std::complex<T>*) &sigma, (std::complex<T>*) NULL, workev.memptr(), &bmat, &n, which, &nev, &tol, resid.memptr(), &ncv, v.memptr(), &ldv, iparam.memptr(), ipntr.memptr(), workd.memptr(), workl.memptr(), &lworkl, rwork.memptr(), &info);
     
     // Check for errors.
-    if(info != 0)  { arma_warn(1, "eigs_gen(): ARPACK error ", info, " in neupd()"); return false; }
+    if(info != 0)  { arma_warn(1, "eigs_gen(): arpack::neupd() error: ", info); return false; }
     
     return (info == 0);
     }
@@ -1258,7 +1258,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
     else
     if(info < 0)
       {
-      arma_warn(1, "spsolve(): unknown SuperLU error code from gssv(): ", info);
+      arma_warn(1, "spsolve(): superlu::gssv() error: ", info);
       }
     
     // No need to extract the data from x, since it's using the same memory as X
@@ -1406,7 +1406,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     else
     if( (info == superlu::int_t(A.n_cols+1)) && (user_opts.allow_ugly) )
       {
-      arma_warn(2, "spsolve(): system is singular to working precision (rcond: ", rcond, ")");
+      arma_warn(2, "spsolve(): system is singular to working precision; rcond: ", rcond);
       status = true;
       }
     else
@@ -1417,7 +1417,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     else
     if(info < 0)
       {
-      arma_warn(1, "spsolve(): unknown SuperLU error code from gssvx(): ", info);
+      arma_warn(1, "spsolve(): superlu::gssvx() error: ", info);
       }
     
     // No need to extract the data from x, since it's using the same memory as X
@@ -2013,11 +2013,11 @@ sp_auxlib::run_aupd_plain
       
       if(sym)
         {
-        arma_warn(1, "eigs_sym(): ARPACK error ", info, " in saupd()");
+        arma_warn(1, "eigs_sym(): arpack::saupd() error: ", info);
         }
       else
         {
-        arma_warn(1, "eigs_gen(): ARPACK error ", info, " in naupd()");
+        arma_warn(1, "eigs_gen(): arpack::naupd() error: ", info);
         }
       
       return; // Parent frame can look at the value of info.
@@ -2200,7 +2200,7 @@ sp_auxlib::run_aupd_shiftinvert
     
     if( (x_rcond < std::numeric_limits<eT>::epsilon()) || arma_isnan(x_rcond) )
       {
-      arma_warn(2, "matrix is singular to working precision (rcond: ", x_rcond, ")");
+      arma_warn(2, "matrix is singular to working precision; rcond: ", x_rcond);
       info = blas_int(-1);
       return;
       }
@@ -2270,11 +2270,11 @@ sp_auxlib::run_aupd_shiftinvert
       
       if(sym)
         {
-        arma_warn(2, "eigs_sym(): ARPACK error ", info, " in saupd()");
+        arma_warn(2, "eigs_sym(): arpack::saupd() error: ", info);
         }
       else
         {
-        arma_warn(2, "eigs_gen(): ARPACK error ", info, " in naupd()");
+        arma_warn(2, "eigs_gen(): arpack::naupd() error: ", info);
         }
       
       return; // Parent frame can look at the value of info.

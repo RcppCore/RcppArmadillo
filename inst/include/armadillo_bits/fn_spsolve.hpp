@@ -55,7 +55,7 @@ spsolve_helper
   
   const superlu_opts& opts = (settings.id == 1) ? static_cast<const superlu_opts&>(settings) : superlu_opts_default;
   
-  arma_conform_check( ( (opts.pivot_thresh < double(0)) || (opts.pivot_thresh > double(1)) ), "spsolve(): pivot_thresh must be in the [0,1] interval" );
+  arma_conform_check( ( ((opts.pivot_thresh >= double(0)) == false) || ((opts.pivot_thresh <= double(1)) == false) ), "spsolve(): pivot_thresh must be in the [0,1] interval" );
   
   if(sig == 's')  // SuperLU solver
     {
@@ -110,12 +110,12 @@ spsolve_helper
   
   if( (status == false) && (rcond > T(0)) )
     {
-    arma_warn(2, "spsolve(): system is singular (rcond: ", rcond, ")");
+    arma_warn(2, "spsolve(): system is singular; rcond: ", rcond);
     }
   
   if( (status == true) && (rcond > T(0)) && (rcond < std::numeric_limits<T>::epsilon()) )
     {
-    arma_warn(2, "solve(): solution computed, but system is singular to working precision (rcond: ", rcond, ")");
+    arma_warn(2, "spsolve(): solution computed, but system is singular to working precision; rcond: ", rcond);
     }
   
   return status;

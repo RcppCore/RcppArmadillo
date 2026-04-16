@@ -94,7 +94,7 @@ op_pinv::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  arma_conform_check((tol < T(0)), "pinv(): tolerance must be >= 0");
+  arma_conform_check( ((tol >= T(0)) == false), "pinv(): tolerance must be > 0" );
   
   // method_id = 0 -> default setting
   // method_id = 1 -> use standard algorithm

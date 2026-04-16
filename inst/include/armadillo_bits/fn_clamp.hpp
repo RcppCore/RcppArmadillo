@@ -97,12 +97,12 @@ clamp(const SpBase<typename T1::elem_type,T1>& X, const typename T1::elem_type m
   
   if(is_cx<eT>::no)
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "clamp(): min_val must be less than max_val" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "clamp(): min_val must be less than max_val" );
     }
   else
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "clamp(): real(min_val) must be less than real(max_val)" );
-    arma_conform_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "clamp(): imag(min_val) must be less than imag(max_val)" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "clamp(): real(min_val) must be less than real(max_val)" );
+    arma_conform_check( ((access::tmp_imag(min_val) <= access::tmp_imag(max_val)) == false), "clamp(): imag(min_val) must be less than imag(max_val)" );
     }
   
   SpMat<eT> out = X.get_ref();

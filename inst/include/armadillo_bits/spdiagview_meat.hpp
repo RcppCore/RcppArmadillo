@@ -923,7 +923,7 @@ spdiagview<eT>::clamp(const eT min_val, const eT max_val)
   {
   arma_debug_sigprint();
   
-  SpMat<eT> tmp(*this);
+  Mat<eT> tmp(*this);
   
   tmp.clamp(min_val, max_val);
   

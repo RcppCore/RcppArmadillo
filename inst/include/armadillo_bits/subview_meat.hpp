@@ -979,34 +979,11 @@ subview<eT>::replace(const eT old_val, const eT new_val)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  if( (s_n_rows == 0) || (s_n_cols == 0) )  { return; }
+  if(s_n_rows == 0)  { return; }
   
-  if(s_n_rows == 1)
+  if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
     {
-    Mat<eT>& A = const_cast< Mat<eT>& >(s.m);
-    
-    const uword A_n_rows = A.n_rows;
-    
-    eT* Aptr = &(A.at(s.aux_row1,s.aux_col1));
-    
-    if(arma_isnan(old_val))
-      {
-      for(uword ucol=0; ucol < s_n_cols; ++ucol)
-        {
-        (*Aptr) = (arma_isnan(*Aptr)) ? new_val : (*Aptr);
-        
-        Aptr += A_n_rows;
-        }
-      }
-    else
-      {
-      for(uword ucol=0; ucol < s_n_cols; ++ucol)
-        {
-        (*Aptr) = ((*Aptr) == old_val) ? new_val : (*Aptr);
-        
-        Aptr += A_n_rows;
-        }
-      }
+    arrayops::replace(s.colptr(0), s.n_elem, old_val, new_val);
     }
   else
     {
@@ -1050,12 +1027,12 @@ subview<eT>::clamp(const eT min_val, const eT max_val)
   
   if(is_cx<eT>::no)
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview::clamp(): min_val must be less than max_val" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "subview::clamp(): min_val must be less than max_val" );
     }
   else
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "subview::clamp(): real(min_val) must be less than real(max_val)" );
-    arma_conform_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "subview::clamp(): imag(min_val) must be less than imag(max_val)" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "subview::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_conform_check( ((access::tmp_imag(min_val) <= access::tmp_imag(max_val)) == false), "subview::clamp(): imag(min_val) must be less than imag(max_val)" );
     }
   
   subview<eT>& s = *this;
@@ -1085,33 +1062,17 @@ subview<eT>::fill(const eT val)
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  if( (s_n_rows == 0) || (s_n_cols == 0) )  { return; }
+  if(s_n_rows == 0)  { return; }
   
-  if(s_n_rows == 1)
+  if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
     {
-    Mat<eT>& A = const_cast< Mat<eT>& >(s.m);
-    
-    const uword A_n_rows = A.n_rows;
-    
-    eT* Aptr = &(A.at(s.aux_row1,s.aux_col1));
-    
-    for(uword ii=0; ii < s_n_cols; ++ii)
-      {
-      (*Aptr) = val;  Aptr += A_n_rows;
-      }
+    arrayops::inplace_set( s.colptr(0), val, s.n_elem );
     }
   else
     {
-    if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
+    for(uword ucol=0; ucol < s_n_cols; ++ucol)
       {
-      arrayops::inplace_set( s.colptr(0), val, s.n_elem );
-      }
-    else
-      {
-      for(uword ucol=0; ucol < s_n_cols; ++ucol)
-        {
-        arrayops::inplace_set( s.colptr(ucol), val, s_n_rows );
-        }
+      arrayops::inplace_set( s.colptr(ucol), val, s_n_rows );
       }
     }
   }
@@ -1130,35 +1091,17 @@ subview<eT>::zeros()
   const uword s_n_rows = s.n_rows;
   const uword s_n_cols = s.n_cols;
   
-  if( (s_n_rows == 0) || (s_n_cols == 0) )  { return; }
+  if(s_n_rows == 0)  { return; }
   
-  if(s_n_rows == 1)
+  if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
     {
-    Mat<eT>& A = const_cast< Mat<eT>& >(s.m);
-    
-    const uword A_n_rows = A.n_rows;
-    
-    eT* Aptr = &(A.at(s.aux_row1,s.aux_col1));
-    
-    constexpr eT eT_zero = eT(0);
-    
-    for(uword ii=0; ii < s_n_cols; ++ii)
-      {
-      (*Aptr) = eT_zero;  Aptr += A_n_rows;
-      }
+    arrayops::fill_zeros( s.colptr(0), s.n_elem );
     }
   else
     {
-    if( (s.aux_row1 == 0) && (s_n_rows == s.m.n_rows) )
+    for(uword ucol=0; ucol < s_n_cols; ++ucol)
       {
-      arrayops::fill_zeros( s.colptr(0), s.n_elem );
-      }
-    else
-      {
-      for(uword ucol=0; ucol < s_n_cols; ++ucol)
-        {
-        arrayops::fill_zeros( s.colptr(ucol), s_n_rows );
-        }
+      arrayops::fill_zeros( s.colptr(ucol), s_n_rows );
       }
     }
   }
@@ -1212,13 +1155,22 @@ subview<eT>::randu()
   
   if(s_n_rows == 1)
     {
+    // NOTE: special handling to ensure that the same sequence is generated as per subview_row::randu()
+    
     podarray<eT> tmp(s_n_cols);
     
     eT* tmp_mem = tmp.memptr();
     
     arma_rng::randu<eT>::fill( tmp_mem, s_n_cols );
     
-    for(uword ii=0; ii < s_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
+    eT* mem_ptr = startptr();
+    
+    const uword m_n_rows = s.m.n_rows;
+    
+    for(uword ii=0; ii < s_n_cols; ++ii)
+      {
+      (*mem_ptr) = tmp_mem[ii];  mem_ptr += m_n_rows;
+      }
     }
   else
     {
@@ -1254,13 +1206,22 @@ subview<eT>::randn()
   
   if(s_n_rows == 1)
     {
+    // NOTE: special handling to ensure that the same sequence is generated as per subview_row::randu()
+    
     podarray<eT> tmp(s_n_cols);
     
     eT* tmp_mem = tmp.memptr();
     
     arma_rng::randn<eT>::fill( tmp_mem, s_n_cols );
     
-    for(uword ii=0; ii < s_n_cols; ++ii)  { at(0,ii) = tmp_mem[ii]; }
+    eT* mem_ptr = startptr();
+    
+    const uword m_n_rows = s.m.n_rows;
+    
+    for(uword ii=0; ii < s_n_cols; ++ii)
+      {
+      (*mem_ptr) = tmp_mem[ii];  mem_ptr += m_n_rows;
+      }
     }
   else
     {
@@ -1578,15 +1539,18 @@ subview<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
   {
   arma_debug_sigprint();
   
+  typedef typename get_pod_type<eT>::result T;
+  
+  arma_conform_check( ((tol >= T(0)) == false), "is_zero(): parameter 'tol' must be >= 0" );
+  
   const uword local_n_rows = n_rows;
   const uword local_n_cols = n_cols;
   
-  if(local_n_rows != 0)
+  if( (local_n_rows == 0) || (local_n_cols == 0) )  { return false; }
+  
+  for(uword ii=0; ii < local_n_cols; ++ii)
     {
-    for(uword ii=0; ii<local_n_cols; ++ii)
-      {
-      if(arrayops::is_zero(colptr(ii), local_n_rows, tol) == false)  { return false; }
-      }
+    if(arrayops::is_zero(colptr(ii), local_n_rows, tol) == false)  { return false; }
     }
   
   return true;
@@ -3570,6 +3534,18 @@ subview_col<eT>::as_row() const
 template<typename eT>
 inline
 void
+subview_col<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_debug_sigprint();
+  
+  arrayops::replace( access::rwp(colmem), subview<eT>::n_rows, old_val, new_val );
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview_col<eT>::fill(const eT val)
   {
   arma_debug_sigprint();
@@ -3605,6 +3581,30 @@ subview_col<eT>::ones()
 
 template<typename eT>
 inline
+void
+subview_col<eT>::randu()
+  {
+  arma_debug_sigprint();
+  
+  arma_rng::randu<eT>::fill( access::rwp(colmem), subview<eT>::n_rows );
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_col<eT>::randn()
+  {
+  arma_debug_sigprint();
+  
+  arma_rng::randn<eT>::fill( access::rwp(colmem), subview<eT>::n_rows );
+  }
+
+
+
+template<typename eT>
+inline
 bool
 subview_col<eT>::is_finite() const
   {
@@ -3613,6 +3613,22 @@ subview_col<eT>::is_finite() const
   if(arma_config::fast_math_warn)  { arma_warn(1, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
   return arrayops::is_finite(colmem, subview<eT>::n_rows);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+subview_col<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
+  {
+  arma_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  arma_conform_check( ((tol >= T(0)) == false), "is_zero(): parameter 'tol' must be >= 0" );
+  
+  return arrayops::is_zero(colmem, subview<eT>::n_rows, tol);
   }
 
 
@@ -4601,6 +4617,40 @@ subview_row<eT>::as_col() const
 template<typename eT>
 inline
 void
+subview_row<eT>::replace(const eT old_val, const eT new_val)
+  {
+  arma_debug_sigprint();
+  
+  eT* mem_ptr = access::rwp(rowmem);
+  
+  const uword local_s_n_cols = subview<eT>::n_cols;
+  const uword local_m_n_rows = subview<eT>::m.n_rows;
+  
+  if(arma_isnan(old_val))
+    {
+    for(uword ii=0; ii < local_s_n_cols; ++ii)
+      {
+      eT& val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+      
+      val = (arma_isnan(val)) ? new_val : val;
+      }
+    }
+  else
+    {
+    for(uword ii=0; ii < local_s_n_cols; ++ii)
+      {
+      eT& val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+      
+      val = (val == old_val) ? new_val : val;
+      }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
 subview_row<eT>::fill(const eT val)
   {
   arma_debug_sigprint();
@@ -4644,6 +4694,58 @@ subview_row<eT>::ones()
 
 template<typename eT>
 inline
+void
+subview_row<eT>::randu()
+  {
+  arma_debug_sigprint();
+  
+  const uword local_s_n_cols = subview<eT>::n_cols;
+  const uword local_m_n_rows = subview<eT>::m.n_rows;
+  
+  podarray<eT> tmp(local_s_n_cols);
+  
+  eT* tmp_mem = tmp.memptr();
+  
+  arma_rng::randu<eT>::fill( tmp_mem, local_s_n_cols );
+  
+  eT* mem_ptr = access::rwp(rowmem);
+  
+  for(uword ii=0; ii < local_s_n_cols; ++ii)
+    {
+    (*mem_ptr) = tmp_mem[ii];  mem_ptr += local_m_n_rows;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+subview_row<eT>::randn()
+  {
+  arma_debug_sigprint();
+  
+  const uword local_s_n_cols = subview<eT>::n_cols;
+  const uword local_m_n_rows = subview<eT>::m.n_rows;
+  
+  podarray<eT> tmp(local_s_n_cols);
+  
+  eT* tmp_mem = tmp.memptr();
+  
+  arma_rng::randn<eT>::fill( tmp_mem, local_s_n_cols );
+  
+  eT* mem_ptr = access::rwp(rowmem);
+  
+  for(uword ii=0; ii < local_s_n_cols; ++ii)
+    {
+    (*mem_ptr) = tmp_mem[ii];  mem_ptr += local_m_n_rows;
+    }
+  }
+
+
+
+template<typename eT>
+inline
 bool
 subview_row<eT>::is_finite() const
   {
@@ -4661,6 +4763,82 @@ subview_row<eT>::is_finite() const
     const eT val = (*mem_ptr);  mem_ptr += local_m_n_rows;
     
     if(arma_isnonfinite(val))  { return false; }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+subview_row<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
+  {
+  arma_debug_sigprint();
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  arma_conform_check( ((tol >= T(0)) == false), "is_zero(): parameter 'tol' must be >= 0" );
+  
+  const uword local_s_n_cols = subview<eT>::n_cols;
+  const uword local_m_n_rows = subview<eT>::m.n_rows;
+  
+  if(local_s_n_cols == 0)  { return false; }
+  
+  const eT* mem_ptr = rowmem;
+  
+  if(is_cx<eT>::yes)
+    {
+    if(tol == T(0))
+      {
+      for(uword ii=0; ii < local_s_n_cols; ++ii)
+        {
+        const eT& val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+        
+        const T val_real = access::tmp_real(val);
+        const T val_imag = access::tmp_imag(val);
+        
+        if(eop_aux::arma_abs(val_real) != T(0))  { return false; }
+        if(eop_aux::arma_abs(val_imag) != T(0))  { return false; }
+        }
+      }
+    else
+      {
+      for(uword ii=0; ii < local_s_n_cols; ++ii)
+        {
+        const eT& val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+        
+        const T val_real = access::tmp_real(val);
+        const T val_imag = access::tmp_imag(val);
+        
+        // convoluted formulation to handle NaNs
+        if( (eop_aux::arma_abs(val_real) <= tol) == false )  { return false; }
+        if( (eop_aux::arma_abs(val_imag) <= tol) == false )  { return false; }
+        }
+      }
+    }
+  else  // not complex
+    {
+    if(tol == T(0))
+      {
+      for(uword ii=0; ii < local_s_n_cols; ++ii)
+        {
+        const eT val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+        
+        if(val != eT(0))  { return false; }
+        }
+      }
+    else
+      {
+      for(uword ii=0; ii < local_s_n_cols; ++ii)
+        {
+        const eT val = (*mem_ptr);  mem_ptr += local_m_n_rows;
+        
+        // convoluted formulation to handle NaNs
+        if( (eop_aux::arma_abs(val) <= tol) == false )  { return false; }
+        }
+      }
     }
   
   return true;

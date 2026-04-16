@@ -110,8 +110,8 @@ op_norm2est::norm2est
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  arma_conform_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
-  arma_conform_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
+  arma_conform_check( ((tolerance >= T(0)) == false), "norm2est(): parameter 'tolerance' must be > 0" );
+  arma_conform_check( (max_iter == uword(0)),         "norm2est(): parameter 'max_iter' must be > 0"  );
   
   const T tol = (tolerance == T(0)) ? T(1e-6) : T(tolerance);
   
@@ -190,8 +190,8 @@ op_norm2est::norm2est
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  arma_conform_check( (tolerance <      T(0)), "norm2est(): parameter 'tolerance' must be > 0" );
-  arma_conform_check( (max_iter  == uword(0)), "norm2est(): parameter 'max_iter' must be > 0"  );
+  arma_conform_check( ((tolerance >= T(0)) == false), "norm2est(): parameter 'tolerance' must be > 0" );
+  arma_conform_check( (max_iter == uword(0)),         "norm2est(): parameter 'max_iter' must be > 0"  );
   
   const T tol = (tolerance == T(0)) ? T(1e-6) : T(tolerance);
   

@@ -110,8 +110,8 @@ internal_approx_equal_worker
   
   arma_conform_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
   
-  if(use_abs_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
-  if(use_rel_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
+  if(use_abs_diff)  { arma_conform_check( (cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)) || arma_isnan(abs_tol)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
+  if(use_rel_diff)  { arma_conform_check( (cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)) || arma_isnan(rel_tol)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
   
   const Proxy<T1> PA(A.get_ref());
   const Proxy<T2> PB(B.get_ref());
@@ -203,8 +203,8 @@ internal_approx_equal_worker
   
   arma_conform_check( ((use_abs_diff == false) && (use_rel_diff == false)), "internal_approx_equal_worker(): both 'use_abs_diff' and 'use_rel_diff' are false" );
   
-  if(use_abs_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
-  if(use_rel_diff)  { arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
+  if(use_abs_diff)  { arma_conform_check( (cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)) || arma_isnan(abs_tol)), "approx_equal(): argument 'abs_tol' must be >= 0" ); }
+  if(use_rel_diff)  { arma_conform_check( (cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)) || arma_isnan(rel_tol)), "approx_equal(): argument 'rel_tol' must be >= 0" ); }
   
   const ProxyCube<T1> PA(A.get_ref());
   const ProxyCube<T2> PB(B.get_ref());
@@ -418,7 +418,7 @@ approx_equal(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T
   
   arma_conform_check( (sig == 'r'), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
   
-  arma_conform_check( cond_rel< is_signed<T>::value >::lt(tol, T(0)), "approx_equal(): argument 'tol' must be >= 0" );
+  arma_conform_check( (cond_rel< is_signed<T>::value >::lt(tol, T(0)) || arma_isnan(tol)), "approx_equal(): argument 'tol' must be >= 0" );
   
   const unwrap_spmat<T1> UA(A.get_ref());
   const unwrap_spmat<T2> UB(B.get_ref());
@@ -460,8 +460,8 @@ approx_equal(const SpBase<typename T1::elem_type,T1>& A, const SpBase<typename T
   
   arma_conform_check( ((sig == 'r') || (sig == 'b')), "approx_equal(): only the \"absdiff\" method is currently implemented for sparse matrices" );
   
-  arma_conform_check( cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)), "approx_equal(): argument 'abs_tol' must be >= 0" );
-  arma_conform_check( cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)), "approx_equal(): argument 'rel_tol' must be >= 0" );
+  arma_conform_check( (cond_rel< is_signed<T>::value >::lt(abs_tol, T(0)) || arma_isnan(abs_tol)), "approx_equal(): argument 'abs_tol' must be >= 0" );
+  arma_conform_check( (cond_rel< is_signed<T>::value >::lt(rel_tol, T(0)) || arma_isnan(rel_tol)), "approx_equal(): argument 'rel_tol' must be >= 0" );
   
   return approx_equal(A.get_ref(), B.get_ref(), "abs", abs_tol);
   }

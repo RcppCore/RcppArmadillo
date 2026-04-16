@@ -134,15 +134,25 @@ diagview<eT>::operator+=(const eT val)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
+  diagview<eT>& d = *this;
   
-  const uword t_n_elem     = n_elem;
-  const uword t_row_offset = row_offset;
-  const uword t_col_offset = col_offset;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   
-  for(uword ii=0; ii < t_n_elem; ++ii)
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
     {
-    t_m.at( ii + t_row_offset,  ii + t_col_offset) += val;
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) += val;
+    d_m.at( jj + d_row_offset,  jj + d_col_offset) += val;
+    }
+  
+  if(ii < d_n_elem)
+    {
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) += val;
     }
   }
 
@@ -155,15 +165,25 @@ diagview<eT>::operator-=(const eT val)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
+  diagview<eT>& d = *this;
   
-  const uword t_n_elem     = n_elem;
-  const uword t_row_offset = row_offset;
-  const uword t_col_offset = col_offset;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   
-  for(uword ii=0; ii < t_n_elem; ++ii)
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
     {
-    t_m.at( ii + t_row_offset,  ii + t_col_offset) -= val;
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) -= val;
+    d_m.at( jj + d_row_offset,  jj + d_col_offset) -= val;
+    }
+  
+  if(ii < d_n_elem)
+    {
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) -= val;
     }
   }
 
@@ -176,15 +196,25 @@ diagview<eT>::operator*=(const eT val)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
+  diagview<eT>& d = *this;
   
-  const uword t_n_elem     = n_elem;
-  const uword t_row_offset = row_offset;
-  const uword t_col_offset = col_offset;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   
-  for(uword ii=0; ii < t_n_elem; ++ii)
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
     {
-    t_m.at( ii + t_row_offset,  ii + t_col_offset) *= val;
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) *= val;
+    d_m.at( jj + d_row_offset,  jj + d_col_offset) *= val;
+    }
+  
+  if(ii < d_n_elem)
+    {
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) *= val;
     }
   }
 
@@ -197,15 +227,25 @@ diagview<eT>::operator/=(const eT val)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& t_m = const_cast< Mat<eT>& >(m);
+  diagview<eT>& d = *this;
   
-  const uword t_n_elem     = n_elem;
-  const uword t_row_offset = row_offset;
-  const uword t_col_offset = col_offset;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   
-  for(uword ii=0; ii < t_n_elem; ++ii)
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
     {
-    t_m.at( ii + t_row_offset,  ii + t_col_offset) /= val;
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) /= val;
+    d_m.at( jj + d_row_offset,  jj + d_col_offset) /= val;
+    }
+  
+  if(ii < d_n_elem)
+    {
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) /= val;
     }
   }
 
@@ -235,6 +275,12 @@ diagview<eT>::operator= (const Base<eT,T1>& o)
     ( (d_n_elem != P.get_n_elem()) || ((P.get_n_rows() != 1) && (P.get_n_cols() != 1)) ),
     "diagview: given object has incompatible size"
     );
+  
+  constexpr bool is_gen_zeros = (is_same_type< T1, Gen<Mat<eT>, gen_zeros> >::yes) || (is_same_type< T1, Gen<Col<eT>, gen_zeros> >::yes);
+  constexpr bool is_gen_ones  = (is_same_type< T1, Gen<Mat<eT>, gen_ones > >::yes) || (is_same_type< T1, Gen<Col<eT>, gen_ones > >::yes);
+  
+  if(is_gen_zeros)  { d.zeros(); return; }
+  if(is_gen_ones )  { d.ones();  return; }
   
   const bool have_alias = P.is_alias(d_m);
   
@@ -948,13 +994,25 @@ diagview<eT>::fill(const eT val)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& x = const_cast< Mat<eT>& >(m);
+  diagview<eT>& d = *this;
   
-  const uword local_n_elem = n_elem;
+  Mat<eT>& d_m = const_cast< Mat<eT>& >(d.m);
   
-  for(uword ii=0; ii < local_n_elem; ++ii)
+  const uword d_n_elem     = d.n_elem;
+  const uword d_row_offset = d.row_offset;
+  const uword d_col_offset = d.col_offset;
+  
+  uword ii,jj;
+  
+  for(ii=0, jj=1; jj < d_n_elem; ii+=2, jj+=2)
     {
-    x.at(ii+row_offset, ii+col_offset) = val;
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) = val;
+    d_m.at( jj + d_row_offset,  jj + d_col_offset) = val;
+    }
+  
+  if(ii < d_n_elem)
+    {
+    d_m.at( ii + d_row_offset,  ii + d_col_offset) = val;
     }
   }
 

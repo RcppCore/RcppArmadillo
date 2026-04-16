@@ -113,7 +113,7 @@ op_wishrnd::apply_noalias_mode2(Mat<eT>& out, const Mat<eT>& D, const eT df)
   {
   arma_debug_sigprint();
   
-  arma_conform_check( (df <= eT(0)),            "df must be greater than zero"                 );
+  arma_conform_check( ((df > eT(0))  == false), "df must be greater than zero"                 );
   arma_conform_check( (D.is_square() == false), "wishrnd(): given matrix must be square sized" );
   
   if(D.is_empty())  { out.reset(); return true; }
@@ -256,7 +256,7 @@ op_iwishrnd::apply_noalias_mode2(Mat<eT>& out, const Mat<eT>& Dinv, const eT df)
   {
   arma_debug_sigprint();
   
-  arma_conform_check( (df <= eT(0)),               "df must be greater than zero"                  );
+  arma_conform_check( ((df > eT(0))     == false), "df must be greater than zero"                  );
   arma_conform_check( (Dinv.is_square() == false), "iwishrnd(): given matrix must be square sized" );
   
   if(Dinv.is_empty())  { out.reset(); return true; }

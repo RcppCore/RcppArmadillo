@@ -722,9 +722,9 @@ gmm_full<eT>::learn
     || (seed_mode == random_subset)
     || (seed_mode == random_spread);
   
-  arma_conform_check( (dist_mode_ok == false), "gmm_full::learn(): dist_mode must be eucl_dist or maha_dist" );
-  arma_conform_check( (seed_mode_ok == false), "gmm_full::learn(): unknown seed_mode"                        );
-  arma_conform_check( (var_floor < eT(0)    ), "gmm_full::learn(): variance floor is negative"               );
+  arma_conform_check( (dist_mode_ok         == false), "gmm_full::learn(): dist_mode must be eucl_dist or maha_dist" );
+  arma_conform_check( (seed_mode_ok         == false), "gmm_full::learn(): unknown seed_mode"                        );
+  arma_conform_check( ((var_floor >= eT(0)) == false), "gmm_full::learn(): variance floor must be > 0"               );
   
   const unwrap<T1>   tmp_X(data.get_ref());
   const Mat<eT>& X = tmp_X.M;
