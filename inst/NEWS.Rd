@@ -3,7 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.x.y-1 [unreleased] (2026-xx-yy)}{
+\section{Changes in RcppArmadillo version 15.2.5-0 [unreleased] (2026-04-yy)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.5 (Medium Roast Deluxe)
+    \itemize{
+      \item Fix for handling NaN elements in \code{.is_zero()}
+      \item Fix for handling NaN in tolerance and conformance checks
+      \item Faster handling of diagonal views and submatrices with one row
+    }
+  }
   \itemize{
     \item Sunset the pre-C++14 fallback of including Armadillo 4.6.4 (Dirk in
     \ghpr{504} closing \ghit{503})
