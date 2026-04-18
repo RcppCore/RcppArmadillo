@@ -1,8 +1,8 @@
 #!/usr/bin/r -t
 ##
-##  Copyright (C) 2013         Romain Francois
-##  Copyright (C) 2014 - 2019  Christian Gunning and Dirk Eddelbuettel
-##  Copyright (C) 2019         Dirk Eddelbuettel
+##  Copyright (C) 2013-2026  Romain Francois
+##  Copyright (C) 2014-2026  Christian Gunning and Dirk Eddelbuettel
+##  Copyright (C) 2019-2026  Dirk Eddelbuettel
 ##
 ##  This file is part of RcppArmadillo.
 ##
@@ -32,17 +32,19 @@ Rcpp::sourceCpp("cpp/rmultinom.cpp")
 
 ## test cases
 ## should be indentical between R and C++
-tests <- list(
-    vanilla=list( n=5, size=100, prob=rep(1/10,10)),
-    big=list( n=5, size=1e6, prob=rep(1/1e3,1e3)),
-    fixup.prob=list( n=10, size=1e5, prob=1:10),
-    n0=list( n=0, size=5, prob=1:10),
-    size0=list( n=10, size=0, prob=1:10)
+tests <- list(vanilla=list( n=5, size=100, prob=rep(1/10,10)),
+              fixup.prob=list( n=10, size=1e5, prob=1:10),
+              n0=list( n=0, size=5, prob=1:10),
+              size0=list( n=10, size=0, prob=1:10)
 )
+## In April 2026, R-devel improved rmultinom() vai a more precise calculation
+## Our calculation here corresponds to the prior version and this test is affected
+if (getRversion() < "4.7.0")
+    tests[["big"]] <- list(n=5, size=1e6, prob=rep(1/1e3,1e3))
 
-fail.tests <- list(
-    na.prob=list( n=7, size=100, prob=c(1:10,NA)),
-    prob0=list( n=10, size=100, prob=0)
+
+fail.tests <- list(na.prob=list( n=7, size=100, prob=c(1:10,NA)),
+                   prob0=list( n=10, size=100, prob=0)
 )
 
 ## these give errors

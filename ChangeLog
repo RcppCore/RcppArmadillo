@@ -5,6 +5,9 @@
 	* vignettes/RcppArmadillo-intro.pdf: Regenerated
 	* vignettes/RcppArmadillo-sparseMatrix.pdf: Idem
 
+	* inst/tinytest/test_rmultinom.R: Do not run one sub-test under
+	R-devel which has switched to a more precise rmultinom()
+
 2026-04-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll micro version and date
