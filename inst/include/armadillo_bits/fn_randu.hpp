@@ -62,7 +62,7 @@ randu(const distr_param& param)
   
   param.get_double_vals(a,b);
   
-  arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
   
   const double val = double(arma_rng::randu<double>());
   
@@ -86,7 +86,7 @@ randu(const distr_param& param)
   
   param.get_double_vals(a,b);
   
-  arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+  arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
   
   eT val = eT(0);
   
@@ -119,7 +119,7 @@ randu(const uword n_elem, const distr_param& param = distr_param())
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<double>::fill(out.memptr(), n_elem, a, b);
     }
@@ -156,7 +156,7 @@ randu(const uword n_elem, const distr_param& param = distr_param(), const typena
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<eT>::fill(out.memptr(), out.n_elem, a, b);
     }
@@ -188,7 +188,7 @@ randu(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<double>::fill(out.memptr(), out.n_elem, a, b);
     }
@@ -237,7 +237,7 @@ randu(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<eT>::fill(out.memptr(), out.n_elem, a, b);
     }
@@ -284,7 +284,7 @@ randu(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<double>::fill(out.memptr(), out.n_elem, a, b);
     }
@@ -330,7 +330,7 @@ randu(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(a,b);
     
-    arma_conform_check( (a >= b), "randu(): incorrect distribution parameters; a must be less than b" );
+    arma_conform_check( ((a < b) == false), "randu(): incorrect distribution parameters; a must be less than b" );
     
     arma_rng::randu<eT>::fill(out.memptr(), out.n_elem, a, b);
     }

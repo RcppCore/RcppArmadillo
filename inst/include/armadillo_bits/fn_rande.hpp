@@ -47,7 +47,7 @@ rande(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
   
   param.get_double_vals(lambda, unused);
   
-  arma_conform_check( (lambda <= double(0)), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
+  arma_conform_check( ((lambda > double(0)) == false), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
   
   obj_type out(n_rows, n_cols, arma_nozeros_indicator());
   
@@ -138,7 +138,7 @@ rande(const distr_param& param = distr_param())
   
   param.get_double_vals(lambda, unused);
   
-  arma_conform_check( (lambda <= double(0)), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
+  arma_conform_check( ((lambda > double(0)) == false), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
   
   double out_val = double(0);
   
@@ -162,7 +162,7 @@ rande(const distr_param& param = distr_param())
   
   param.get_double_vals(lambda, unused);
   
-  arma_conform_check( (lambda <= double(0)), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
+  arma_conform_check( ((lambda > double(0)) == false), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
   
   eT out_val = eT(0);
   
@@ -189,7 +189,7 @@ rande(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
   
   param.get_double_vals(lambda, unused);
   
-  arma_conform_check( (lambda <= double(0)), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
+  arma_conform_check( ((lambda > double(0)) == false), "rande(): incorrect distribution parameters; lambda must be greater than zero" );
   
   cube_type out(n_rows, n_cols, n_slices, arma_nozeros_indicator());
   

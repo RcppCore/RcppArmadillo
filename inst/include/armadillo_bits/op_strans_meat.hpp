@@ -200,7 +200,7 @@ op_strans::apply_mat_noalias(Mat<eT>& out, const TA& A)
       op_strans::apply_mat_noalias_large(out, A);
       }
     else
-    if( (A_n_rows != 0) && (A_n_cols != 0) )
+    if(A_n_cols != 0)
       {
       eT* outptr = out.memptr();
       

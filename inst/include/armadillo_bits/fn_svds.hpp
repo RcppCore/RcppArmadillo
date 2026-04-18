@@ -47,7 +47,7 @@ svds_helper
     "svds(): two or more output objects are the same object"
     );
   
-  arma_conform_check( (tol < T(0)), "svds(): tol must be >= 0" );
+  arma_conform_check( ((tol >= T(0)) == false), "svds(): tol must be >= 0" );
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   const SpMat<eT>& A =   tmp.M;
@@ -171,7 +171,7 @@ svds_helper
     "svds(): two or more output objects are the same object"
     );
   
-  arma_conform_check( (tol < T(0)), "svds(): tol must be >= 0" );
+  arma_conform_check( ((tol >= T(0)) == false), "svds(): tol must be >= 0" );
   
   const unwrap_spmat<T1> tmp(X.get_ref());
   const SpMat<eT>& A =   tmp.M;

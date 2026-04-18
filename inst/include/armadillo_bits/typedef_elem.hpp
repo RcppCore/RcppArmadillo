@@ -26,7 +26,7 @@
 #else
   #if   UCHAR_MAX >= 0xff
     typedef unsigned char    u8;
-    typedef          char    s8;
+    typedef          char    s8;  // kept for compatibility with earlier versions of Armadillo
   #elif defined(UINT8_MAX)
     typedef          uint8_t u8;
     typedef           int8_t s8;

@@ -62,7 +62,7 @@ randn(const distr_param& param)
   
   param.get_double_vals(mu,sd);
   
-  arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+  arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
   
   const double val = double(arma_rng::randn<double>());
   
@@ -86,7 +86,7 @@ randn(const distr_param& param)
   
   param.get_double_vals(mu,sd);
   
-  arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+  arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
   
   eT val = eT(0);
   
@@ -119,7 +119,7 @@ randn(const uword n_elem, const distr_param& param = distr_param())
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), n_elem, mu, sd);
     }
@@ -156,7 +156,7 @@ randn(const uword n_elem, const distr_param& param = distr_param(), const typena
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -188,7 +188,7 @@ randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -237,7 +237,7 @@ randn(const uword n_rows, const uword n_cols, const distr_param& param = distr_p
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -284,7 +284,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<double>::fill(out.memptr(), out.n_elem, mu, sd);
     }
@@ -330,7 +330,7 @@ randn(const uword n_rows, const uword n_cols, const uword n_slices, const distr_
     
     param.get_double_vals(mu,sd);
     
-    arma_conform_check( (sd <= double(0)), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
+    arma_conform_check( ((sd > double(0)) == false), "randn(): incorrect distribution parameters; standard deviation must be > 0" );
     
     arma_rng::randn<eT>::fill(out.memptr(), out.n_elem, mu, sd);
     }

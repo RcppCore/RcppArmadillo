@@ -3565,7 +3565,7 @@ SpMat<eT>::is_symmetric(const typename get_pod_type<elem_type>::result tol) cons
   
   if(tol == T(0))  { return (*this).is_symmetric(); }
   
-  arma_conform_check( (tol < T(0)), "is_symmetric(): parameter 'tol' must be >= 0" );
+  arma_conform_check( ((tol >= T(0)) == false), "is_symmetric(): parameter 'tol' must be >= 0" );
   
   const SpMat<eT>& A = (*this);
   
@@ -3611,7 +3611,7 @@ SpMat<eT>::is_hermitian(const typename get_pod_type<elem_type>::result tol) cons
   
   if(tol == T(0))  { return (*this).is_hermitian(); }
   
-  arma_conform_check( (tol < T(0)), "is_hermitian(): parameter 'tol' must be >= 0" );
+  arma_conform_check( ((tol >= T(0)) == false), "is_hermitian(): parameter 'tol' must be >= 0" );
   
   const SpMat<eT>& A = (*this);
   
@@ -4204,12 +4204,12 @@ SpMat<eT>::clamp(const eT min_val, const eT max_val)
   
   if(is_cx<eT>::no)
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): min_val must be less than max_val" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "SpMat::clamp(): min_val must be less than max_val" );
     }
   else
     {
-    arma_conform_check( (access::tmp_real(min_val) > access::tmp_real(max_val)), "SpMat::clamp(): real(min_val) must be less than real(max_val)" );
-    arma_conform_check( (access::tmp_imag(min_val) > access::tmp_imag(max_val)), "SpMat::clamp(): imag(min_val) must be less than imag(max_val)" );
+    arma_conform_check( ((access::tmp_real(min_val) <= access::tmp_real(max_val)) == false), "SpMat::clamp(): real(min_val) must be less than real(max_val)" );
+    arma_conform_check( ((access::tmp_imag(min_val) <= access::tmp_imag(max_val)) == false), "SpMat::clamp(): imag(min_val) must be less than imag(max_val)" );
     }
   
   if(n_nonzero == 0)  { return *this; }
@@ -4389,7 +4389,7 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
   {
   arma_debug_sigprint();
   
-  arma_conform_check( ( (density < double(0)) || (density > double(1)) ), "sprandu(): density must be in the [0,1] interval" );
+  arma_conform_check( ( ((density >= double(0)) == false) || ((density <= double(1)) == false) ), "sprandu(): density must be in the [0,1] interval" );
   
   const uword new_n_nonzero = uword(density * double(in_rows) * double(in_cols) + 0.5);
   
@@ -4466,7 +4466,7 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
   {
   arma_debug_sigprint();
   
-  arma_conform_check( ( (density < double(0)) || (density > double(1)) ), "sprandn(): density must be in the [0,1] interval" );
+  arma_conform_check( ( ((density >= double(0)) == false) || ((density <= double(1)) == false) ), "sprandn(): density must be in the [0,1] interval" );
   
   const uword new_n_nonzero = uword(density * double(in_rows) * double(in_cols) + 0.5);
   

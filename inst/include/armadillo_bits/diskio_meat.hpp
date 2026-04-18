@@ -373,29 +373,37 @@ inline
 std::string
 diskio::gen_tmp_name(const std::string& x)
   {
-  union { uword val; void* ptr; } u;
+  arma_debug_sigprint();
   
-  u.val = uword(0);
-  u.ptr = const_cast<std::string*>(&x);
+  const char* charlist = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const char* suffix1  = ".!";
   
-  const u16 a = u16( (u.val >> 8)   & 0xFFFF );
-  const u16 b = u16( (std::clock()) & 0xFFFF );
+  constexpr std::size_t charlist_length = 36;
+  constexpr std::size_t  suffix1_length =  2;
+  constexpr std::size_t  suffix2_length =  6;
   
-  std::ostringstream ss;
+  typedef typename std::minstd_rand::result_type local_seed_type;
   
-  ss << x << ".tmp_";
+  std::minstd_rand                           local_engine;
+  std::uniform_int_distribution<std::size_t> local_distr(0, charlist_length - 1);
   
-  ss.setf(std::ios_base::hex, std::ios_base::basefield);
+  local_engine.seed( static_cast<local_seed_type>( (std::clock()) & 0xFFFF ) );
   
-  ss.width(4);
-  ss.fill('0');
-  ss << a;
+  const std::size_t x_length = x.length();
   
-  ss.width(4);
-  ss.fill('0');
-  ss << b;
+  std::string out(x_length + suffix1_length + suffix2_length, '0');  // create string filled with char '0' (not 0)
   
-  return ss.str();
+  std::size_t count = 0;
+  
+  for(; count < x_length; ++count)  { out[count] = x[count]; }
+  
+  for(std::size_t i=0; i < suffix1_length; ++i, ++count)  { out[count] = suffix1[i]; }
+  
+  local_distr(local_engine);  // ignore first random number
+  
+  for(std::size_t i=0; i < suffix2_length; ++i, ++count)  { out[count] = charlist[ local_distr(local_engine)]; }
+  
+  return out;
   }
 
 
