@@ -1,3 +1,10 @@
+2026-04-18  Dirk Eddelbuettel  <edd@debian.org>
+
+	* vignettes/rmd/RcppArmadillo.bib: Refresh some URLs
+	* vignettes/rmd/RcppArmadillo-sparseMatrix.rmd: Idem
+	* vignettes/RcppArmadillo-intro.pdf: Regenerated
+	* vignettes/RcppArmadillo-sparseMatrix.pdf: Idem
+
 2026-04-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll micro version and date
