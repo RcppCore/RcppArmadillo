@@ -87,6 +87,8 @@ op_orth::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   // set tolerance to default if it hasn't been specified
   if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon(); }
   
+  if(arma_isnan(tol))  { return false; }
+  
   uword count = 0;
   
   for(uword i=0; i < s_n_elem; ++i)  { count += (s_mem[i] > tol) ? uword(1) : uword(0); }
@@ -173,6 +175,8 @@ op_null::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1::
   
   // set tolerance to default if it hasn't been specified
   if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * s_mem[0] * std::numeric_limits<T>::epsilon(); }
+  
+  if(arma_isnan(tol))  { return false; }
   
   uword count = 0;
   

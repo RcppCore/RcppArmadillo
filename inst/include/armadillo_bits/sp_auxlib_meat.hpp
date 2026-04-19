@@ -214,6 +214,8 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     if(ncv < (n_eigvals + 1)) { ncv = (n_eigvals + 1); }
     if(ncv > n              ) { ncv = n;               }
     
+    if(arma_isnan(opts.tol))  { return false; }
+    
     eT tol = (std::max)(eT(opts.tol), std::numeric_limits<eT>::epsilon());
     
     uword maxiter = uword(opts.maxiter);
@@ -346,6 +348,8 @@ sp_auxlib::eigs_sym_newarp(Col<eT>& eigval, Mat<eT>& eigvec, const SpMat<eT>& X,
     // Re-check that we are within the limits
     if(ncv < (n_eigvals + 1)) { ncv = (n_eigvals + 1); }
     if(ncv > n              ) { ncv = n;               }
+    
+    if(arma_isnan(opts.tol))  { return false; }
     
     eT tol = (std::max)(eT(opts.tol), std::numeric_limits<eT>::epsilon());
     
@@ -666,6 +670,8 @@ sp_auxlib::eigs_gen_newarp(Col< std::complex<T> >& eigval, Mat< std::complex<T> 
     // Re-check that we are within the limits
     if(ncv < (n_eigvals + 3)) { ncv = (n_eigvals + 3); }
     if(ncv > n              ) { ncv = n;               }
+    
+    if(arma_isnan(opts.tol))  { return false; }
     
     T tol = (std::max)(T(opts.tol), std::numeric_limits<T>::epsilon());
     

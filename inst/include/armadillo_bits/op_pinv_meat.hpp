@@ -176,6 +176,8 @@ op_pinv::apply_diag(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::r
   
   if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * max_abs_Aii * std::numeric_limits<T>::epsilon(); }
   
+  if(arma_isnan(tol))  { return false; }
+  
   for(uword i=0; i<N; ++i)
     {
     if(diag_abs_vals[i] >= tol)
@@ -235,6 +237,8 @@ op_pinv::apply_sym(Mat<eT>& out, const Mat<eT>& A, typename get_pod_type<eT>::re
   
   // set tolerance to default if it hasn't been specified
   if(tol == T(0))  { tol = (std::max)(A.n_rows, A.n_cols) * abs_eigval[0] * std::numeric_limits<T>::epsilon(); }
+  
+  if(arma_isnan(tol))  { return false; }
   
   uword count = 0;
   
@@ -309,6 +313,8 @@ op_pinv::apply_gen(Mat<eT>& out, Mat<eT>& A, typename get_pod_type<eT>::result t
   
   // set tolerance to default if it hasn't been specified
   if( (tol == T(0)) && (s.n_elem > 0) )  { tol = (std::max)(n_rows, n_cols) * s[0] * std::numeric_limits<T>::epsilon(); }
+  
+  if(arma_isnan(tol))  { return false; }
   
   uword count = 0;
   
