@@ -1,11 +1,10 @@
-// -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
-/* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
+// rmultinom.h: Rcpp/Armadillo equivalent to R's stats::rmultinom().
 //
-// rmultinom.h: Rcpp/Armadillo equivalent to R's stats::rmultinom().  
 // This is intended for use in C++ functions, and should *not* be called from R.
 // It should yield identical results to R.
 //
-// Copyright (C)  2014  Christian Gunning
+// Copyright (C)  2014-2026  Christian Gunning
+// Copyright (C)  2026       Dirk Eddelbuettel and R Core
 //
 // This file is part of RcppArmadillo.
 //
@@ -29,38 +28,62 @@
 namespace Rcpp{
     namespace RcppArmadillo{
 
-        IntegerVector rmultinom(int size,  NumericVector prob) {
+        IntegerVector rmultinom(int size, NumericVector prob) {
             // meaning of n, size, prob as in ?rmultinom
             // opposite of sample() - n=number of draws
-            double pp;            
-            int ii;
             int probsize = prob.size();
-            // Return object
-            IntegerVector draws(probsize);
-            if (size < 0 || size == NA_INTEGER) throw std::range_error( "Invalid size");
-            long double p_tot = 0.;
-            p_tot = std::accumulate(prob.begin(), prob.end(), p_tot);
-            if (fabs((double)(p_tot - 1.)) > 1e-7) {
-                throw std::range_error("Probabilities don't sum to 1, please use FixProb");
+            IntegerVector draws(probsize);            // Return object
+
+            if (size < 0 || size == NA_INTEGER)
+                Rcpp::stop( "Invalid size");
+
+            // Using Kahan compensated summation for platform-independent accuracy
+            // avoids relying on LDOUBLE (long double) which varies across platforms.
+            // Code borrowed with full credits from R.
+            double p_tot = 0.0,
+                p_comp = 0.0; // Kahan compensation term
+
+            for (int ii = 0; ii < probsize; ii++) {
+                double pp = prob[ii];
+                if (!R_FINITE(pp) || pp < 0. || pp > 1.) {
+                    Rcpp::warning("Domain issue in rmultinom");
+                    draws[ii] = NA_INTEGER;
+                    return draws;
+                }
+                // Kahan summation: p_tot += pp with compensation
+                double y = pp - p_comp,
+                    t = p_tot + y;
+                p_comp = (t - p_tot) - y;
+                p_tot = t;
+                draws[ii] = 0;
             }
-            
-            // do as rbinom
-            if (size == 0 ) {
-                 return draws;
-            }
-            //rmultinom(size, REAL(prob), k, &INTEGER(ans)[ik]);
+
+            if (fabs((double)(p_tot - 1.0)) > 1e-7)
+                Rcpp::stop("Probabilities do not sum to 1, please use FixProb");
+            if (probsize == 1 && p_tot == 0.0) 	// trivial border case: do as rbinom
+                return draws;
+            if (size == 0 )             		// do as rbinom
+                return draws;
+
+            // rmultinom(size, REAL(prob), k, &INTEGER(ans)[ik]);
+            // generate first draws-1 obs via binomials
             // for each slot
-            for (ii = 0; ii < probsize-1; ii++) { /* (p_tot, n) are for "remaining binomial" */
-                if (prob[ii]) {
-                    pp = prob[ii] / p_tot;
-                    // >= 1; > 1 happens because of rounding 
+            for (int ii = 0; ii < probsize-1; ii++) { /* (p_tot, n) are for "remaining binomial" */
+                if (prob[ii] != 0.) {
+                    double pp = prob[ii] / p_tot;
+                    // >= 1; > 1 happens because of rounding
                     draws[ii] = ((pp < 1.) ? (int) Rf_rbinom((double) size,  pp) : size);
                     size -= draws[ii];
-                } // else { ret[ii] = 0; }
+                } else {
+                    draws[ii] = 0;
+                }
                 // all done
-                if (size <= 0)  return draws;
-                // i.e. p_tot = sum(prob[(k+1):K]) 
-                p_tot -= prob[ii]; 
+                if (size <= 0) return draws;
+                // Kahan subtraction: p_tot -= prob[k] with compensation
+                double y = -prob[ii] - p_comp,
+                    t = p_tot + y;
+                p_comp = (t - p_tot) - y;
+                p_tot = t;
             }
             // the rest go here
             draws[probsize-1] = size;

@@ -38,8 +38,9 @@ tests <- list(vanilla=list( n=5, size=100, prob=rep(1/10,10)),
               size0=list( n=10, size=0, prob=1:10)
 )
 ## In April 2026, R-devel improved rmultinom() vai a more precise calculation
-## Our calculation here corresponds to the prior version and this test is affected
-if (getRversion() < "4.7.0")
+## The routine in RcppArmadilloExtensions has been updated to but we can only
+## compare with R-devel (i.e. R 4.7.0 or later)
+if (getRversion() >= "4.7.0")
     tests[["big"]] <- list(n=5, size=1e6, prob=rep(1/1e3,1e3))
 
 

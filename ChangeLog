@@ -2,6 +2,11 @@
 
 	* inst/include/armadillo_bits/: Sync with Armadillo 15.2.6
 
+	* inst/include/RcppArmadilloExtensions/rmultinom.h (rmultinom): Carry
+	'Kahan summation' improvement from R-devel over here
+	* inst/tinytest/test_rmultinom.R: Run one sub-test only under R-devel
+	as improved code here corresponds to the improved code there
+
 2026-04-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.2.5-1
