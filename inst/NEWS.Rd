@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.6-1 (2026-04-20)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.6 (Medium Roast Deluxe)
+    \itemize{
+      \item Ensure internally computed tolerances are not \code{NaN}
+    }
+    \item The \code{rmultinom} deploys 'Kahan summation' as R-devel does now.
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.5-1 [github-only] (2026-04-18)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.5 (Medium Roast Deluxe)
