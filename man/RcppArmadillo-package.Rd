@@ -38,7 +38,7 @@
 \section{Threading}{
   The Armadillo library can take advantage of OpenMP to execute computations in
   parallel via multi-threaded code. The number of cores uses can be set (or
-  retrieved) explicitly via helper functions \code{armadillo_get_number_of_omp+threads()} and
+  retrieved) explicitly via helper functions \code{armadillo_get_number_of_omp_threads()} and
   \code{armadillo_set_number_of_omp_threads()}. A default value is stored at package startup; it
   recognises R option value \code{Ncpus} and environment variable
   \code{OMP_THREAD_LIMIT}.  Additional helper functions

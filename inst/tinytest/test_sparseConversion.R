@@ -677,7 +677,7 @@ ind <- p10[1:3, ]
 dgc <- as(as(as(ind, "dMatrix"), "generalMatrix"), "CsparseMatrix")
 expect_equal(dgc, asSpMat(ind))#, msg="ind2dgC_9")
 
-if (suppressMessages(require(slam))) {
+if (suppressMessages(requireNamespace("slam", quietly=TRUE))) {
     ## simple_triplet_matrix from package slam
     test.as.stm2dgc <- function() {
         stm <- as.simple_triplet_matrix(diag(2))
