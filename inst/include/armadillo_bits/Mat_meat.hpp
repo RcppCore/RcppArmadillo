@@ -2544,7 +2544,7 @@ Mat<eT>::Mat(const subview_elem1<eT,T1>& X, const arma_vec_indicator&, const uhw
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  subview_elem1<eT,T1>::extract_noalias(*this, X);
   }
 
 
@@ -2563,7 +2563,7 @@ Mat<eT>::Mat(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  subview_elem1<eT,T1>::extract_noalias(*this, X);
   }
 
 
@@ -2672,7 +2672,7 @@ Mat<eT>::Mat(const subview_elem2<eT,T1,T2>& X, const arma_vec_indicator&, const 
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  subview_elem2<eT,T1,T2>::extract_noalias(*this, X);
   }
 
 
@@ -2691,7 +2691,7 @@ Mat<eT>::Mat(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  subview_elem2<eT,T1,T2>::extract_noalias(*this, X);
   }
 
 

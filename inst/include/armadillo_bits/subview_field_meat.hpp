@@ -507,23 +507,16 @@ subview_field<oT>::fill(const oT& x)
 template<typename oT>
 inline
 void
-subview_field<oT>::extract(field<oT>& actual_out, const subview_field<oT>& in)
+subview_field<oT>::extract(field<oT>& out, const subview_field<oT>& in)
   {
   arma_debug_sigprint();
   
-  //
-  const bool alias = (&actual_out == &in.f);
-  
-  field<oT>* tmp = (alias) ? new field<oT> : nullptr;
-  field<oT>& out = (alias) ? (*tmp)        : actual_out;
-  
-  //
+  // NOTE: we're assuming that the field has already been set to the correct size and there is no aliasing;
+  // size setting and alias checking is done by either the field constructor or operator=()
   
   const uword n_rows   = in.n_rows;
   const uword n_cols   = in.n_cols;
   const uword n_slices = in.n_slices;
-  
-  out.set_size(n_rows, n_cols, n_slices);
   
   arma_debug_print(arma_str::format("out.n_rows: %u; out.n_cols: %u; out.n_slices: %u; in.f.n_rows: %u; in.f.n_cols: %u; in.f.n_slices: %u") % out.n_rows % out.n_cols % out.n_slices % in.f.n_rows % in.f.n_cols % in.f.n_slices);
   
@@ -543,12 +536,6 @@ subview_field<oT>::extract(field<oT>& actual_out, const subview_field<oT>& in)
       {
       out.at(row,col,slice) = in.at(row,col,slice);
       }
-    }
-  
-  if(alias)
-    {
-    actual_out = out;
-    delete tmp;
     }
   }
 

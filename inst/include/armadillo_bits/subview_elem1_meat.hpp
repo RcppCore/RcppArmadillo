@@ -762,6 +762,55 @@ subview_elem1<eT,T1>::operator/= (const Base<eT,T2>& x)
 template<typename eT, typename T1>
 inline
 void
+subview_elem1<eT,T1>::extract_noalias(Mat<eT>& out, const subview_elem1<eT,T1>& in)
+  {
+  arma_debug_sigprint();
+  
+  const quasi_unwrap<T1> tmp1(in.a.get_ref());
+  const umat& aa = tmp1.M;
+  
+  if(resolves_to_vector<T1>::no)
+    {
+    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
+    }
+  
+  const uword* aa_mem    = aa.memptr();
+  const uword  aa_n_elem = aa.n_elem;
+  
+  const eT*   m_mem    = in.m.memptr();
+  const uword m_n_elem = in.m.n_elem;
+  
+  out.set_size(aa_n_elem, 1);
+  
+  eT* out_mem = out.memptr();
+  
+  uword i,j;
+  for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
+    {
+    const uword ii = aa_mem[i];
+    const uword jj = aa_mem[j];
+    
+    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
+    
+    out_mem[i] = m_mem[ii];
+    out_mem[j] = m_mem[jj];
+    }
+  
+  if(i < aa_n_elem)
+    {
+    const uword ii = aa_mem[i];
+    
+    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
+    
+    out_mem[i] = m_mem[ii];
+    }
+  }
+
+
+
+template<typename eT, typename T1>
+inline
+void
 subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& in)
   {
   arma_debug_sigprint();
@@ -777,12 +826,12 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
-  const Mat<eT>& m_local = in.m;
+  const Mat<eT>& m = in.m;
   
-  const eT*   m_mem    = m_local.memptr();
-  const uword m_n_elem = m_local.n_elem;
+  const eT*   m_mem    = m.memptr();
+  const uword m_n_elem = m.n_elem;
   
-  const bool alias = (&actual_out == &m_local);
+  const bool alias = (&actual_out == &m);
   
   if(alias)  { arma_debug_print("subview_elem1::extract(): aliasing detected"); }
   

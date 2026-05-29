@@ -38,6 +38,9 @@ struct unwrap_default
     }
   
   const Mat<eT> M;
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -55,6 +58,9 @@ struct unwrap_fixed
     }
   
   const T1& M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -94,6 +100,9 @@ struct unwrap< Mat<eT> >
     }
   
   const Mat<eT>& M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -111,6 +120,9 @@ struct unwrap< Row<eT> >
     }
   
   const Row<eT>& M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -128,6 +140,9 @@ struct unwrap< Col<eT> >
     }
   
   const Col<eT>& M;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -145,6 +160,9 @@ struct unwrap< subview_col<eT> >
     }
   
   const Col<eT> M;
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -162,6 +180,9 @@ struct unwrap< subview_cols<eT> >
     }
   
   const Mat<eT> M;
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -179,6 +200,9 @@ struct unwrap< mtGlue<out_eT, T1, T2, glue_type> >
     }
   
   const Mat<out_eT> M;
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -196,6 +220,9 @@ struct unwrap< mtOp<out_eT, T1, op_type> >
     }
   
   const Mat<out_eT> M;
+  
+  template<typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
   };
 
 
@@ -311,7 +338,6 @@ struct quasi_unwrap< Mat<eT> >
 template<typename eT>
 struct quasi_unwrap< Row<eT> >
   {
-  
   inline
   quasi_unwrap(const Row<eT>& A)
     : M(A)

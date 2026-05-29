@@ -90,6 +90,8 @@ class subview_elem1 : public Base< eT, subview_elem1<eT,T1> >
   template<typename T2> inline void operator%= (const Base<eT,T2>& x);
   template<typename T2> inline void operator/= (const Base<eT,T2>& x);
   
+  inline static void extract_noalias(Mat<eT>& out, const subview_elem1& in);
+  
   inline static void extract(Mat<eT>& out, const subview_elem1& in);
   
   template<typename op_type> inline static void mat_inplace_op(Mat<eT>& out, const subview_elem1& in);

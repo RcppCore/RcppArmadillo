@@ -94,7 +94,9 @@ field<oT>::field(const subview_field<oT>& X)
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  init(X.n_rows, X.n_cols, X.n_slices);
+  
+  subview_field<oT>::extract(*this, X);
   }
 
 
@@ -107,7 +109,20 @@ field<oT>::operator=(const subview_field<oT>& X)
   {
   arma_debug_sigprint();
   
-  subview_field<oT>::extract(*this, X);
+  const bool alias = (this == &(X.f));
+  
+  if(alias == false)
+    {
+    (*this).init(X.n_rows, X.n_cols, X.n_slices);
+    
+    subview_field<oT>::extract(*this, X);
+    }
+  else
+    {
+    field<oT> tmp(X);
+    
+    (*this).operator=(std::move(tmp));
+    }
   
   return *this;
   }

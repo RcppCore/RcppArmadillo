@@ -957,7 +957,7 @@ Base_extra_yes<elem_type,derived>::is_sympd(typename get_pod_type<elem_type>::re
   
   typedef typename get_pod_type<elem_type>::result T;
   
-  arma_conform_check( ((tol >= T(0)) == false), "is_sympd(): parameter 'tol' must be > 0" );
+  arma_conform_check( ((tol >= T(0)) == false), "is_sympd(): parameter 'tol' must be >= 0" );
   
   Mat<elem_type> X = static_cast<const derived&>(*this);
   

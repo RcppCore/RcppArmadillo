@@ -920,16 +920,131 @@ subview_elem2<eT,T1,T2>::operator/= (const SpBase<eT,expr>& x)
 template<typename eT, typename T1, typename T2>
 inline
 void
+subview_elem2<eT,T1,T2>::extract_noalias(Mat<eT>& out, const subview_elem2<eT,T1,T2>& in)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT>& m = in.m;
+  
+  const uword m_n_rows = m.n_rows;
+  const uword m_n_cols = m.n_cols;
+  
+  if( (in.all_rows == false) && (in.all_cols == false) )
+    {
+    const quasi_unwrap<T1> tmp1(in.base_ri.get_ref());
+    const quasi_unwrap<T2> tmp2(in.base_ci.get_ref());
+    
+    const umat& ri = tmp1.M;
+    const umat& ci = tmp2.M;
+    
+    arma_conform_check
+      (
+      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    out.set_size(ri_n_elem, ci_n_elem);
+    
+    eT*   out_mem   = out.memptr();
+    uword out_count = 0;
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+        
+        out_mem[out_count] = m.at(row,col);
+        ++out_count;
+        }
+      }
+    }
+  else
+  if( (in.all_rows == true) && (in.all_cols == false) )
+    {
+    const quasi_unwrap<T2> tmp2(in.base_ci.get_ref());
+    
+    const umat& ci = tmp2.M;
+    
+    arma_conform_check
+      (
+      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ci_mem    = ci.memptr();
+    const uword  ci_n_elem = ci.n_elem;
+    
+    out.set_size(m_n_rows, ci_n_elem);
+    
+    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
+      {
+      const uword col = ci_mem[ci_count];
+      
+      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
+      
+      arrayops::copy( out.colptr(ci_count), m.colptr(col), m_n_rows );
+      }
+    }
+  else
+  if( (in.all_rows == false) && (in.all_cols == true) )
+    {
+    const quasi_unwrap<T1> tmp1(in.base_ri.get_ref());
+    
+    const umat& ri = tmp1.M;
+    
+    arma_conform_check
+      (
+      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
+      "Mat::elem(): given object must be a vector"
+      );
+    
+    const uword* ri_mem    = ri.memptr();
+    const uword  ri_n_elem = ri.n_elem;
+    
+    out.set_size(ri_n_elem, m_n_cols);
+    
+    for(uword col=0; col < m_n_cols; ++col)
+      {
+      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
+        {
+        const uword row = ri_mem[ri_count];
+        
+        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
+        
+        out.at(ri_count,col) = m.at(row,col);
+        }
+      }
+    }
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
 subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,T2>& in)
   {
   arma_debug_sigprint();
   
-  Mat<eT>& m_local = const_cast< Mat<eT>& >(in.m);
+  const Mat<eT>& m = in.m;
   
-  const uword m_n_rows = m_local.n_rows;
-  const uword m_n_cols = m_local.n_cols;
+  const uword m_n_rows = m.n_rows;
+  const uword m_n_cols = m.n_cols;
   
-  const bool alias = (&actual_out == &m_local);
+  const bool alias = (&actual_out == &m);
   
   if(alias)  { arma_debug_print("subview_elem2::extract(): aliasing detected"); }
   
@@ -973,7 +1088,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
         
         arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
         
-        out_mem[out_count] = m_local.at(row,col);
+        out_mem[out_count] = m.at(row,col);
         ++out_count;
         }
       }
@@ -981,7 +1096,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
   else
   if( (in.all_rows == true) && (in.all_cols == false) )
     {
-    const unwrap_check_mixed<T2> tmp2(in.base_ci.get_ref(), m_local);
+    const unwrap_check_mixed<T2> tmp2(in.base_ci.get_ref(), m);
     
     const umat& ci = tmp2.M;
     
@@ -1002,13 +1117,13 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
       
       arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
       
-      arrayops::copy( out.colptr(ci_count), m_local.colptr(col), m_n_rows );
+      arrayops::copy( out.colptr(ci_count), m.colptr(col), m_n_rows );
       }
     }
   else
   if( (in.all_rows == false) && (in.all_cols == true) )
     {
-    const unwrap_check_mixed<T1> tmp1(in.base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T1> tmp1(in.base_ri.get_ref(), m);
     
     const umat& ri = tmp1.M;
     
@@ -1031,7 +1146,7 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
         
         arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
         
-        out.at(ri_count,col) = m_local.at(row,col);
+        out.at(ri_count,col) = m.at(row,col);
         }
       }
     }
