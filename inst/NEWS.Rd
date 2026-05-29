@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.2.7-1 (2026-05-29)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.2.7 (Medium Roast Deluxe)
+    \itemize{
+      \item More efficient checks for aliasing
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.6-1 (2026-04-20)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.6 (Medium Roast Deluxe)
