@@ -27,6 +27,8 @@ struct mtGlueCube : public BaseCube< out_eT, mtGlueCube<out_eT, T1, T2, glue_typ
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   
+  static constexpr bool has_subview = T1::has_subview || T2::has_subview;
+  
   arma_inline  mtGlueCube(const T1& in_A, const T2& in_B);
   arma_inline  mtGlueCube(const T1& in_A, const T2& in_B, const uword in_aux_uword);
   arma_inline ~mtGlueCube();

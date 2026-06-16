@@ -26,6 +26,8 @@ struct OpCube : public BaseCube< typename T1::elem_type, OpCube<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static constexpr bool has_subview = T1::has_subview;
+  
   inline explicit OpCube(const BaseCube<typename T1::elem_type, T1>& in_m);
   inline          OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const elem_type in_aux);
   inline          OpCube(const BaseCube<typename T1::elem_type, T1>& in_m, const elem_type in_aux, const uword in_aux_uword_a, const uword in_aux_uword_b, const uword in_aux_uword_c);

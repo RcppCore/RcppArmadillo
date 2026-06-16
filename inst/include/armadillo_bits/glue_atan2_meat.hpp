@@ -103,8 +103,8 @@ glue_atan2::apply_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1>& P1,
     {
     if(use_mp)
       {
-      const unwrap<typename Proxy<T1>::stored_type> U1(P1.Q);
-      const unwrap<typename Proxy<T2>::stored_type> U2(P2.Q);
+      const plain_unwrap<typename Proxy<T1>::stored_type> U1(P1.Q);
+      const plain_unwrap<typename Proxy<T2>::stored_type> U2(P2.Q);
       
       out = arma::atan2(U1.M, U2.M);
       }

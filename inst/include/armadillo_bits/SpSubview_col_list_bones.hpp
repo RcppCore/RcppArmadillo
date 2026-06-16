@@ -33,6 +33,8 @@ class SpSubview_col_list : public SpBase< eT, SpSubview_col_list<eT,T1> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   const SpMat<eT>&       m;
   const quasi_unwrap<T1> U_ci;
   

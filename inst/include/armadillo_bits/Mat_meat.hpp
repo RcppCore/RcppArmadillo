@@ -1369,7 +1369,23 @@ Mat<eT>::Mat(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, const 
     {
     init_cold();
     
-    arrayops::copy( memptr(), aux_mem, n_elem );
+    if(aux_mem == nullptr)
+      {
+      arrayops::fill_zeros(memptr(), n_elem);
+      }
+    else
+      {
+      arrayops::copy( memptr(), aux_mem, n_elem );
+      }
+    }
+  else
+  if(aux_mem == nullptr)
+    {
+    access::rw(mem_state) = 0;
+    
+    init_cold();
+    
+    arrayops::fill_zeros(memptr(), n_elem);
     }
   }
 
@@ -1392,7 +1408,14 @@ Mat<eT>::Mat(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols)
   
   init_cold();
   
-  arrayops::copy( memptr(), aux_mem, n_elem );
+  if(aux_mem == nullptr)
+    {
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  else
+    {
+    arrayops::copy( memptr(), aux_mem, n_elem );
+    }
   }
 
 
@@ -2591,9 +2614,9 @@ Mat<eT>::operator+=(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem1<eT,T1>::plus_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator+=(tmp);
   }
 
 
@@ -2606,9 +2629,9 @@ Mat<eT>::operator-=(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem1<eT,T1>::minus_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator-=(tmp);
   }
 
 
@@ -2621,9 +2644,9 @@ Mat<eT>::operator*=(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  glue_times::apply_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator*=(tmp);
   }
 
 
@@ -2636,9 +2659,9 @@ Mat<eT>::operator%=(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem1<eT,T1>::schur_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator%=(tmp);
   }
 
 
@@ -2651,9 +2674,9 @@ Mat<eT>::operator/=(const subview_elem1<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem1<eT,T1>::div_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator/=(tmp);
   }
 
 
@@ -2719,9 +2742,9 @@ Mat<eT>::operator+=(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem2<eT,T1,T2>::plus_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator+=(tmp);
   }
 
 
@@ -2734,9 +2757,9 @@ Mat<eT>::operator-=(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem2<eT,T1,T2>::minus_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator-=(tmp);
   }
 
 
@@ -2749,9 +2772,9 @@ Mat<eT>::operator*=(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint();
   
-  glue_times::apply_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator*=(tmp);
   }
 
 
@@ -2764,9 +2787,9 @@ Mat<eT>::operator%=(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem2<eT,T1,T2>::schur_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator%=(tmp);
   }
 
 
@@ -2779,9 +2802,9 @@ Mat<eT>::operator/=(const subview_elem2<eT,T1,T2>& X)
   {
   arma_debug_sigprint();
   
-  subview_elem2<eT,T1,T2>::div_inplace(*this, X);
+  const Mat<eT> tmp(X);
   
-  return *this;
+  return (*this).operator/=(tmp);
   }
 
 
@@ -4980,8 +5003,8 @@ Mat<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& C = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& C     = tmp.M;
   
   const uword C_n_rows = C.n_rows;
   const uword C_n_cols = C.n_cols;
@@ -5056,8 +5079,8 @@ Mat<eT>::insert_cols(const uword col_num, const Base<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& C = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& C     = tmp.M;
   
   const uword C_n_rows = C.n_rows;
   const uword C_n_cols = C.n_cols;
@@ -7034,6 +7057,31 @@ Mat<eT>::at(const uword in_row, const uword in_col) const
     }
   
 #endif
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::push_back(const eT val)
+  {
+  arma_debug_sigprint();
+  
+  if(mem_state != 0)
+    {
+    arma_conform_check(true, "Mat::push_back(): unsupported operation as auxiliary memory is in use");
+    
+    return;
+    }
+  
+  const uword t_n_rows = n_rows;
+  const uword t_n_cols = n_cols;
+  
+  if( (vec_state == 1) || (t_n_cols == 1) || ((t_n_cols == 0) && (t_n_rows == 0)) )  { (*this).vec_push_back(val, arma_colvec_indicator()); return; }
+  if( (vec_state == 2) || (t_n_rows == 1)                                         )  { (*this).vec_push_back(val, arma_rowvec_indicator()); return; }
+  
+  arma_conform_check(true, "Mat::push_back(): column or row vector layout required");
+  }
 
 
 
@@ -10048,6 +10096,119 @@ Mat<eT>::back() const
 
 
 template<typename eT>
+template<int vec_mode>
+inline
+void
+Mat<eT>::vec_push_back(const eT val, const arma_vec_mode_indicator<vec_mode>&)
+  {
+  arma_debug_sigprint( arma_str::format("n_elem: %u; n_alloc: %u") % n_elem % n_alloc );
+  
+  // vec_mode = 1 means col vector layout
+  // vec_mode = 2 means row vector layout
+  
+  const uword old_n_elem = n_elem;
+  const uword new_n_elem = old_n_elem + 1;
+  
+  if(old_n_elem <= arma_config::mat_prealloc)
+    {
+    if(old_n_elem == 0)
+      {
+      mem_local[0] = val;
+      
+      access::rw(mem   ) = mem_local;
+      access::rw(n_rows) = 1;
+      access::rw(n_cols) = 1;
+      access::rw(n_elem) = 1;
+      }
+    else
+    if(old_n_elem < arma_config::mat_prealloc)
+      {
+      // condition: (old_n_elem >= 1) && (old_n_elem < arma_config::mat_prealloc)
+      
+      mem_local[old_n_elem] = val;
+      
+      if(vec_mode == 1)  { access::rw(n_rows) = new_n_elem; }
+      if(vec_mode == 2)  { access::rw(n_cols) = new_n_elem; }
+      
+      access::rw(n_elem) = new_n_elem;
+      }
+    else
+      {
+      // condition: old_n_elem == arma_config::mat_prealloc
+      
+      const uword new_n_alloc = (std::max)(uword(64), uword(arma_config::mat_prealloc + arma_config::mat_prealloc/2));
+      
+      arma_debug_print( arma_str::format("acquiring new memory; new_n_alloc: %u") % new_n_alloc );
+      
+      eT* new_mem_ptr = memory::acquire<eT>(new_n_alloc);
+      
+      if(new_mem_ptr == nullptr)  { return; }
+      
+      arma_debug_print("copying memory");
+      
+      arrayops::copy(new_mem_ptr, mem_local, arma_config::mat_prealloc);
+      
+      new_mem_ptr[old_n_elem] = val;
+      
+      access::rw(mem) = new_mem_ptr;
+      
+      if(vec_mode == 1)  { access::rw(n_rows) = new_n_elem; }
+      if(vec_mode == 2)  { access::rw(n_cols) = new_n_elem; }
+      
+      access::rw(n_elem)  = new_n_elem;
+      access::rw(n_alloc) = new_n_alloc;
+      }
+    }
+  else
+    {
+    // condition: old_n_elem > arma_config::mat_prealloc
+    
+    if(n_alloc >= new_n_elem)
+      {
+      access::rw(mem[old_n_elem]) = val;
+      
+      if(vec_mode == 1)  { access::rw(n_rows) = new_n_elem; }
+      if(vec_mode == 2)  { access::rw(n_cols) = new_n_elem; }
+      
+      access::rw(n_elem) = new_n_elem;
+      }
+    else
+      {
+      // condition: n_alloc < new_n_elem
+      
+      const uword new_n_alloc = (std::max)(uword(256), uword(n_alloc + n_alloc/2));
+      
+      arma_debug_print( arma_str::format("acquiring new memory; new_n_alloc: %u") % new_n_alloc );
+      
+      const eT* old_mem_ptr = mem;
+            eT* new_mem_ptr = memory::acquire<eT>(new_n_alloc);
+      
+      if(new_mem_ptr == nullptr)  { return; }
+        
+      arma_debug_print("copying memory");
+      
+      arrayops::copy(new_mem_ptr, old_mem_ptr, n_elem);
+      
+      new_mem_ptr[old_n_elem] = val;
+      
+      access::rw(mem) = new_mem_ptr;
+      
+      if(vec_mode == 1)  { access::rw(n_rows) = new_n_elem; }
+      if(vec_mode == 2)  { access::rw(n_cols) = new_n_elem; }
+      
+      access::rw(n_elem ) = new_n_elem;
+      access::rw(n_alloc) = new_n_alloc;
+      
+      arma_debug_print("releasing old memory");
+      
+      memory::release(old_mem_ptr);
+      }
+    }
+  }
+
+
+
+template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed()
@@ -10798,8 +10959,8 @@ Mat_aux::set_real(Mat<eT>& out, const Base<eT,T1>& X)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_assert_same_size( out, A, "Mat::set_real()" );
   

@@ -36,6 +36,8 @@ class subview : public Base< eT, subview<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   const uword aux_row1;
   const uword aux_col1;
   
@@ -376,6 +378,8 @@ class subview_col : public subview<eT>
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   const eT* colmem;
   
   inline void operator= (const subview<eT>& x);
@@ -480,6 +484,8 @@ class subview_cols : public subview<eT>
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   inline  subview_cols(const subview_cols&  in);
   inline  subview_cols(      subview_cols&& in);
   
@@ -540,6 +546,8 @@ class subview_row : public subview<eT>
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  
+  static constexpr bool has_subview = true;
   
   const eT* rowmem;
   
@@ -644,6 +652,8 @@ class subview_row_strans : public Base< eT, subview_row_strans<eT> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   arma_aligned const subview_row<eT>& sv_row;
   
   const uword n_rows;     // equal to n_elem
@@ -678,6 +688,8 @@ class subview_row_htrans : public Base< eT, subview_row_htrans<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
+  
+  static constexpr bool has_subview = true;
   
   arma_aligned const subview_row<eT>& sv_row;
   

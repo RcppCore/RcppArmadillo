@@ -281,8 +281,8 @@ as_scalar_diag(const Base<typename T1::elem_type,T1>& X)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_check_bounds( (A.n_elem != 1), "as_scalar(): expected 1x1 matrix" );
   

@@ -1303,7 +1303,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     const unwrap_spmat<T1> tmp1(A_expr.get_ref());
     const SpMat<eT>& A =   tmp1.M;
     
-    const unwrap<T2>          tmp2(B_expr.get_ref());
+    const plain_unwrap<T2>    tmp2(B_expr.get_ref());
     const Mat<eT>& B_unwrap = tmp2.M;
     
     const bool B_is_modified = ( (user_opts.equilibrate) || (&B_unwrap == &X) );

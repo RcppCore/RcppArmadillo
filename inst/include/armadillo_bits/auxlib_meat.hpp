@@ -2932,8 +2932,8 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     {
     if(is_Mat<T1>::value)
       {
-      const unwrap<T1>   tmp(X.get_ref());
-      const Mat<eT>& M = tmp.M;
+      const plain_unwrap<T1> tmp(X.get_ref());
+      const Mat<eT>& M     = tmp.M;
       
       if(M.n_rows < M.n_cols)  { return auxlib::qr(Q, R, X); }
       }
@@ -5160,8 +5160,8 @@ auxlib::solve_rect_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_
     {
     typedef typename T1::elem_type eT;
     
-    const unwrap<T1>   U(B_expr.get_ref());
-    const Mat<eT>& B = U.M;
+    const plain_unwrap<T1> U(B_expr.get_ref());
+    const Mat<eT>& B     = U.M;
     
     arma_conform_check( (A.n_rows != B.n_rows), "solve(): number of rows in given matrices must be the same" );
     
@@ -5254,8 +5254,8 @@ auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type
     
     out_rcond = T(0);
     
-    const unwrap<T1>   U(B_expr.get_ref());
-    const Mat<eT>& B = U.M;
+    const plain_unwrap<T1> U(B_expr.get_ref());
+    const Mat<eT>& B     = U.M;
     
     arma_conform_check( (A.n_rows != B.n_rows), "solve(): number of rows in given matrices must be the same" );
     
@@ -5387,8 +5387,8 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     {
     typedef typename T1::pod_type eT;
     
-    const unwrap<T1>   U(B_expr.get_ref());
-    const Mat<eT>& B = U.M;
+    const plain_unwrap<T1> U(B_expr.get_ref());
+    const Mat<eT>& B     = U.M;
     
     arma_conform_check( (A.n_rows != B.n_rows), "solve(): number of rows in given matrices must be the same" );
     
@@ -5509,8 +5509,8 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     typedef typename T1::pod_type     T;
     typedef typename std::complex<T> eT;
     
-    const unwrap<T1>   U(B_expr.get_ref());
-    const Mat<eT>& B = U.M;
+    const plain_unwrap<T1> U(B_expr.get_ref());
+    const Mat<eT>& B     = U.M;
     
     arma_conform_check( (A.n_rows != B.n_rows), "solve(): number of rows in given matrices must be the same" );
     

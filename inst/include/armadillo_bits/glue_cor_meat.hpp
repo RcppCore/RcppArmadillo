@@ -32,8 +32,8 @@ glue_cor::apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_cor>& X)
   
   const uword norm_type = X.aux_uword;
   
-  const unwrap<T1> UA(X.A);
-  const unwrap<T2> UB(X.B);
+  const plain_unwrap<T1> UA(X.A);
+  const plain_unwrap<T2> UB(X.B);
   
   const Mat<eT>& A = UA.M;
   const Mat<eT>& B = UB.M;

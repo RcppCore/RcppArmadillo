@@ -31,6 +31,8 @@ struct mtSpGlue : public SpBase< out_eT, mtSpGlue<out_eT, T1, T2, spglue_type> >
   static constexpr bool is_col  = spglue_type::template traits<T1,T2>::is_col;
   static constexpr bool is_xvec = spglue_type::template traits<T1,T2>::is_xvec;
   
+  static constexpr bool has_subview = T1::has_subview || T2::has_subview;
+  
   inline  mtSpGlue(const T1& in_A, const T2& in_B);
   inline ~mtSpGlue();
   

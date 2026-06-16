@@ -1523,7 +1523,7 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
-  const unwrap<T1>                 U;
+  const plain_unwrap<T1>           U;
   const xtrans_mat<elem_type,true> Q;
   
   inline explicit Proxy_xtrans_default(const Op<T1, op_htrans>& A)
@@ -1564,7 +1564,7 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
-  const unwrap<T1>                  U;
+  const plain_unwrap<T1>            U;
   const xtrans_mat<elem_type,false> Q;
   
   inline explicit Proxy_xtrans_default(const Op<T1, op_strans>& A)
@@ -2419,8 +2419,8 @@ struct Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  const unwrap<T1>     U;
-  const Mat<elem_type> Q;
+  const plain_unwrap<T1> U;
+  const Mat<elem_type>   Q;
   
   inline explicit Proxy_vectorise_col_mat(const Op<T1, op_vectorise_col>& A)
     : U(A.m)

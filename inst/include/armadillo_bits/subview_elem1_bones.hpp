@@ -33,9 +33,11 @@ class subview_elem1 : public Base< eT, subview_elem1<eT,T1> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
-  arma_aligned const Mat<eT>         fake_m;
-  arma_aligned const Mat<eT>&        m;
-  arma_aligned const Base<uword,T1>& a;
+  static constexpr bool has_subview = true;
+  
+  const Mat<eT>         fake_m;
+  const Mat<eT>&        m;
+  const Base<uword,T1>& a;
   
   
   protected:
@@ -49,9 +51,8 @@ class subview_elem1 : public Base< eT, subview_elem1<eT,T1> >
   inline ~subview_elem1();
   inline  subview_elem1() = delete;
   
-  template<typename op_type>              inline void inplace_op(const eT                    val);
-  template<typename op_type, typename T2> inline void inplace_op(const subview_elem1<eT,T2>& x  );
-  template<typename op_type, typename T2> inline void inplace_op(const Base<eT,T2>&          x  );
+  template<typename op_type>              inline void inplace_op(const eT           val );
+  template<typename op_type, typename T2> inline void inplace_op(const Base<eT,T2>& expr);
   
   arma_inline const Op<subview_elem1<eT,T1>,op_htrans>  t() const;
   arma_inline const Op<subview_elem1<eT,T1>,op_htrans> ht() const;
@@ -76,13 +77,8 @@ class subview_elem1 : public Base< eT, subview_elem1<eT,T1> >
   
   
   // deliberately returning void
-  template<typename T2> inline void operator_equ(const subview_elem1<eT,T2>& x);
-  template<typename T2> inline void operator=   (const subview_elem1<eT,T2>& x);
-                        inline void operator=   (const subview_elem1<eT,T1>& x);
-  template<typename T2> inline void operator+=  (const subview_elem1<eT,T2>& x);
-  template<typename T2> inline void operator-=  (const subview_elem1<eT,T2>& x);
-  template<typename T2> inline void operator%=  (const subview_elem1<eT,T2>& x);
-  template<typename T2> inline void operator/=  (const subview_elem1<eT,T2>& x);
+  template<typename T2> inline void operator=  (const subview_elem1<eT,T2>& x);
+                        inline void operator=  (const subview_elem1<eT,T1>& x);
   
   template<typename T2> inline void operator=  (const Base<eT,T2>& x);
   template<typename T2> inline void operator+= (const Base<eT,T2>& x);
@@ -93,13 +89,6 @@ class subview_elem1 : public Base< eT, subview_elem1<eT,T1> >
   inline static void extract_noalias(Mat<eT>& out, const subview_elem1& in);
   
   inline static void extract(Mat<eT>& out, const subview_elem1& in);
-  
-  template<typename op_type> inline static void mat_inplace_op(Mat<eT>& out, const subview_elem1& in);
-  
-  inline static void  plus_inplace(Mat<eT>& out, const subview_elem1& in);
-  inline static void minus_inplace(Mat<eT>& out, const subview_elem1& in);
-  inline static void schur_inplace(Mat<eT>& out, const subview_elem1& in);
-  inline static void   div_inplace(Mat<eT>& out, const subview_elem1& in);
   
   template<typename eT2>
   inline bool is_alias(const Mat<eT2>& X) const;

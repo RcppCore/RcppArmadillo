@@ -36,8 +36,8 @@ op_resize::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_resize>& in)
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1>   U(in.m);
-    const Mat<eT>& A = U.M;
+    const plain_unwrap<T1> U(in.m);
+    const Mat<eT>& A     = U.M;
     
     if(&out == &A)
       {

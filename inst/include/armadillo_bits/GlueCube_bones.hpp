@@ -28,6 +28,8 @@ struct GlueCube : public BaseCube< typename T1::elem_type, GlueCube<T1, T2, glue
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static constexpr bool has_subview = T1::has_subview || T2::has_subview;
+  
   inline  GlueCube(const BaseCube<typename T1::elem_type, T1>& in_A, const BaseCube<typename T1::elem_type, T2>& in_B);
   inline ~GlueCube();
   

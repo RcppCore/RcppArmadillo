@@ -213,7 +213,7 @@ op_shuffle::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle>& in)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1> U(in.m);
+  const plain_unwrap<T1> U(in.m);
   
   const uword dim = in.aux_uword_a;
   
@@ -231,7 +231,7 @@ op_shuffle_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_shuffle_v
   {
   arma_debug_sigprint();
   
-  const unwrap<T1> U(in.m);
+  const plain_unwrap<T1> U(in.m);
   
   const uword dim = (T1::is_xvec) ? uword(U.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   

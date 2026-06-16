@@ -97,6 +97,7 @@ glue_powext::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
 
 
 
+// TODO: deprecated; remove in next major version
 template<typename parent, unsigned int mode, typename T2>
 inline
 Mat<typename parent::elem_type>
@@ -280,6 +281,7 @@ glue_powext::apply(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
 
 
 
+// TODO: deprecated; remove in next major version
 template<typename eT, typename T2>
 inline
 Cube<eT>
@@ -426,6 +428,7 @@ glue_powext_cx::apply(Mat< std::complex<T> >& out, const Mat< std::complex<T> >&
 
 
 
+// TODO: deprecated; remove in next major version
 template<typename parent, unsigned int mode, typename T2>
 inline
 Mat<typename parent::elem_type>
@@ -603,6 +606,7 @@ glue_powext_cx::apply(Cube< std::complex<T> >& out, const Cube< std::complex<T> 
 
 
 
+// TODO: deprecated; remove in next major version
 template<typename T, typename T2>
 inline
 Cube< std::complex<T> >

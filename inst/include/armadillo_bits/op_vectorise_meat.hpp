@@ -46,7 +46,7 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
   // allow detection of in-place operation
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(expr);
+    const plain_unwrap<T1> U(expr);
     
     if(&out == &(U.M))
       {
@@ -317,7 +317,7 @@ op_vectorise_row::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
     {
     if(is_Mat<typename Proxy<T1>::stored_type>::value)
       {
-      const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+      const plain_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
       
       arrayops::copy(out.memptr(), tmp.M.memptr(), n_elem);
       }

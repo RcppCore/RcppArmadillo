@@ -807,11 +807,29 @@ Cube<eT>::Cube(eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols, cons
     {
     init_cold();
     
-    arrayops::copy( memptr(), aux_mem, n_elem );
+    if(aux_mem == nullptr)
+      {
+      arrayops::fill_zeros(memptr(), n_elem);
+      }
+    else
+      {
+      arrayops::copy( memptr(), aux_mem, n_elem );
+      }
     }
   else
     {
-    create_mat();
+    if(aux_mem == nullptr)
+      {
+      access::rw(mem_state) = 0;
+      
+      init_cold();
+      
+      arrayops::fill_zeros(memptr(), n_elem);
+      }
+    else
+      {
+      create_mat();
+      }
     }
   }
 
@@ -835,7 +853,14 @@ Cube<eT>::Cube(const eT* aux_mem, const uword aux_n_rows, const uword aux_n_cols
   
   init_cold();
   
-  arrayops::copy( memptr(), aux_mem, n_elem );
+  if(aux_mem == nullptr)
+    {
+    arrayops::fill_zeros(memptr(), n_elem);
+    }
+  else
+    {
+    arrayops::copy( memptr(), aux_mem, n_elem );
+    }
   }
 
 

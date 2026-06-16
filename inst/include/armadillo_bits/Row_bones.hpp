@@ -33,6 +33,8 @@ class Row : public Mat<eT>
   static constexpr bool is_row  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = false;
+  
   inline Row();
   inline Row(const Row<eT>& X);
   
@@ -66,9 +68,6 @@ class Row : public Mat<eT>
   
   inline            Row(Row&& m);
   inline Row& operator=(Row&& m);
-  
-  // inline            Row(Mat<eT>&& m);
-  // inline Row& operator=(Mat<eT>&& m);
   
   inline Row& operator=(const eT val);
   inline Row& operator=(const Row& X);
@@ -153,6 +152,7 @@ class Row : public Mat<eT>
   arma_warn_unused arma_inline       eT& at(const uword in_row, const uword in_col);
   arma_warn_unused arma_inline const eT& at(const uword in_row, const uword in_col) const;
   
+  inline void push_back(const eT val);
   
   inline constexpr bool is_vec()    const { return true;  }
   inline constexpr bool is_rowvec() const { return true;  }
@@ -213,6 +213,8 @@ class Row<eT>::fixed : public Row<eT>
   static constexpr bool is_row  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = false;
+  
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition
   static const uword n_elem;  // value provided below the class definition
@@ -267,6 +269,8 @@ class Row<eT>::fixed : public Row<eT>
   arma_warn_unused arma_inline const eT& at         (const uword in_row, const uword in_col) const;
   arma_warn_unused arma_inline       eT& operator() (const uword in_row, const uword in_col);
   arma_warn_unused arma_inline const eT& operator() (const uword in_row, const uword in_col) const;
+  
+  inline void push_back(const eT) = delete;
   
   arma_warn_unused arma_inline       eT* memptr();
   arma_warn_unused arma_inline const eT* memptr() const;

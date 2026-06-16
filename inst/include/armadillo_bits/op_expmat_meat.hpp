@@ -200,8 +200,8 @@ op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     typedef typename T1::elem_type eT;
     typedef typename T1::pod_type   T;
     
-    const unwrap<T1>   U(expr.get_ref());
-    const Mat<eT>& X = U.M;
+    const plain_unwrap<T1> U(expr.get_ref());
+    const Mat<eT>& X     = U.M;
     
     arma_conform_check( (X.is_square() == false), "expmat_sym(): given matrix must be square sized" );
     

@@ -40,6 +40,8 @@ class subview_cube_slices : public BaseCube< eT, subview_cube_slices<eT,T1> >
   
   public:
   
+  static constexpr bool has_subview = true;
+  
   inline ~subview_cube_slices();
   inline  subview_cube_slices() = delete;
   

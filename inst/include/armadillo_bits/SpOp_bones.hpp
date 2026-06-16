@@ -31,6 +31,8 @@ struct SpOp : public SpBase< typename T1::elem_type, SpOp<T1, op_type> >
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   
+  static constexpr bool has_subview = T1::has_subview;
+  
   inline explicit SpOp(const T1& in_m);
   inline          SpOp(const T1& in_m, const elem_type in_aux);
   inline          SpOp(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);

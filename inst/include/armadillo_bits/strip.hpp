@@ -169,6 +169,48 @@ struct strip_trimat< Op<T1, op_trimat> >
 
 
 template<typename T1>
+struct strip_op_find_default
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_op_find_default(const T1& X)
+    : M(X)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_op_find_default = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct strip_op_find_default< mtOp<uword, T1, op_find_default> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_op_find_default(const mtOp<uword, T1, op_find_default>& X)
+    : M(X.m)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_op_find_default = true;
+  
+  const T1& M;
+  };
+
+
+
+//
+
+
+
+template<typename T1>
 struct sp_strip_trans
   {
   typedef T1 stored_type;

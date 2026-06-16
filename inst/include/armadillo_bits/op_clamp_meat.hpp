@@ -38,7 +38,7 @@ op_clamp::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::elem_t
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(in.m);
+    const plain_unwrap<T1> U(in.m);
     
     // detect in-place operation
     if(&out == &(U.M))
@@ -310,7 +310,7 @@ op_clamp_cx::apply(Mat<typename T1::elem_type>& out, const mtOp<typename T1::ele
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(in.m);
+    const plain_unwrap<T1> U(in.m);
     
     op_clamp_cx::apply_direct(out, U.M, in.aux, in.aux_out_eT);
     }

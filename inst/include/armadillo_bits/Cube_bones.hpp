@@ -82,6 +82,8 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   public:
   
+  static constexpr bool has_subview = false;
+  
   inline ~Cube();
   inline  Cube();
   

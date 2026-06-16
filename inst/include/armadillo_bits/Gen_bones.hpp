@@ -35,6 +35,8 @@ struct Gen
   static constexpr bool is_col  = T1::is_col;
   static constexpr bool is_xvec = T1::is_xvec;
   
+  static constexpr bool has_subview = false;
+  
   const uword n_rows;
   const uword n_cols;
   

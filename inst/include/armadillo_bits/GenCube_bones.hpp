@@ -28,8 +28,9 @@ struct GenCube
   typedef          eT                              elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
-  static constexpr bool use_at    = false;
-  static constexpr bool is_simple = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value);
+  static constexpr bool use_at      = false;
+  static constexpr bool is_simple   = (is_same_type<gen_type, gen_ones>::value) || (is_same_type<gen_type, gen_zeros>::value);
+  static constexpr bool has_subview = false;
   
   const uword n_rows;
   const uword n_cols;

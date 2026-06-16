@@ -32,7 +32,7 @@ op_flipud::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_flipud>& in)
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(in.m);
+    const plain_unwrap<T1> U(in.m);
     
     if(&out == &(U.M))  { op_flipud::apply_mat_inplace(out); return; }
     
@@ -166,7 +166,7 @@ op_fliplr::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_fliplr>& in)
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(in.m);
+    const plain_unwrap<T1> U(in.m);
     
     if(&out == &(U.M))  { op_fliplr::apply_mat_inplace(out); return; }
     

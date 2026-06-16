@@ -1257,7 +1257,7 @@ void
 subview_cube<eT>::fill(const eT val)
   {
   arma_debug_sigprint();
-
+  
   const uword local_n_rows   = n_rows;
   const uword local_n_cols   = n_cols;
   const uword local_n_slices = n_slices;
@@ -1287,6 +1287,13 @@ subview_cube<eT>::zeros()
   const uword local_n_slices = n_slices;
   
   if( (local_n_rows == 0) || (local_n_cols == 0) )  { return; }
+  
+  if( (aux_row1 == 0) && (local_n_rows == m.n_rows) && (aux_col1 == 0) && (local_n_cols == m.n_cols) )
+    {
+    arrayops::fill_zeros( slice_colptr(0,0), n_elem );
+    
+    return;
+    }
   
   for(uword slice = 0; slice < local_n_slices; ++slice)
     {

@@ -50,6 +50,8 @@ class subview_cube : public BaseCube< eT, subview_cube<eT> >
   
   public:
   
+  static constexpr bool has_subview = true;
+  
   inline ~subview_cube();
   inline  subview_cube() = delete;
   

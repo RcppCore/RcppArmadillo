@@ -64,8 +64,33 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
   
-  const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
-  const umat& aa = tmp.M;
+  if(strip_op_find_default<T1>::do_op_find_default)
+    {
+    const strip_op_find_default<T1> strip(a.get_ref());
+    
+    constexpr bool has_sv = strip_op_find_default<T1>::stored_type::has_subview;
+    
+    if( (has_sv == false) || ((has_sv == true) && (strip.M.is_alias(m_local) == false)) )
+      {
+      if(has_sv == false)  { arma_debug_print("op_find_default optimisation; has_sv = false"); }
+      if(has_sv == true )  { arma_debug_print("op_find_default optimisation; has_sv = true" ); }
+      
+      bool mi_bad = false;
+      
+      if(is_same_type<op_type, op_internal_equ  >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { m_mem[mi] =  val; } else { mi_bad = true; } }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_plus >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { m_mem[mi] += val; } else { mi_bad = true; } }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_minus>::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { m_mem[mi] -= val; } else { mi_bad = true; } }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_schur>::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { m_mem[mi] *= val; } else { mi_bad = true; } }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_div  >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { m_mem[mi] /= val; } else { mi_bad = true; } }; op_find_aux::apply(modifier, strip.M); }
+      
+      arma_conform_check_bounds( mi_bad, "Mat::elem(): index out of bounds" );
+      
+      return;
+      }
+    }
+  
+  const unwrap_check_mixed<T1> U(a.get_ref(), m_local);
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -75,33 +100,47 @@ subview_elem1<eT,T1>::inplace_op(const eT val)
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
+  bool ii_jj_bad = false;
+  
   uword iq,jq;
   for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
     {
     const uword ii = aa_mem[iq];
     const uword jj = aa_mem[jq];
     
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-    
-    if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  val; m_mem[jj] =  val; }
-    if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += val; m_mem[jj] += val; }
-    if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= val; m_mem[jj] -= val; }
-    if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= val; m_mem[jj] *= val; }
-    if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= val; m_mem[jj] /= val; }
+    if( (ii < m_n_elem) && (jj < m_n_elem) )
+      {
+      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  val; m_mem[jj] =  val; }
+      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += val; m_mem[jj] += val; }
+      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= val; m_mem[jj] -= val; }
+      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= val; m_mem[jj] *= val; }
+      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= val; m_mem[jj] /= val; }
+      }
+    else
+      {
+      ii_jj_bad = true;
+      }
     }
   
   if(iq < aa_n_elem)
     {
     const uword ii = aa_mem[iq];
     
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" ); 
-    
-    if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  val; }
-    if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += val; }
-    if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= val; }
-    if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= val; }
-    if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= val; }
+    if(ii < m_n_elem)
+      {
+      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  val; }
+      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += val; }
+      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= val; }
+      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= val; }
+      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= val; }
+      }
+    else
+      {
+      ii_jj_bad = true;
+      }
     }
+  
+  arma_conform_check_bounds( ii_jj_bad, "Mat::elem(): index out of bounds" );
   }
 
 
@@ -110,104 +149,7 @@ template<typename eT, typename T1>
 template<typename op_type, typename T2>
 inline
 void
-subview_elem1<eT,T1>::inplace_op(const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
-  
-  subview_elem1<eT,T1>& s = *this;
-  
-  if(&(s.m) == &(x.m))
-    {
-    arma_debug_print("subview_elem1::inplace_op(): aliasing detected");
-    
-    const Mat<eT> tmp(x);
-    
-    if(is_same_type<op_type, op_internal_equ  >::yes) { s.operator= (tmp); }
-    if(is_same_type<op_type, op_internal_plus >::yes) { s.operator+=(tmp); }
-    if(is_same_type<op_type, op_internal_minus>::yes) { s.operator-=(tmp); }
-    if(is_same_type<op_type, op_internal_schur>::yes) { s.operator%=(tmp); }
-    if(is_same_type<op_type, op_internal_div  >::yes) { s.operator/=(tmp); }
-    }
-  else
-    {
-          Mat<eT>& s_m_local = const_cast< Mat<eT>& >(s.m);
-    const Mat<eT>& x_m_local = x.m;
-    
-    const unwrap_check_mixed<T1> s_tmp(s.a.get_ref(), s_m_local);
-    const unwrap_check_mixed<T2> x_tmp(x.a.get_ref(), s_m_local);
-    
-    const umat& s_aa = s_tmp.M;
-    const umat& x_aa = x_tmp.M;
-    
-    arma_conform_check
-      (
-      ( ((s_aa.is_vec() == false) && (s_aa.is_empty() == false)) || ((x_aa.is_vec() == false) && (x_aa.is_empty() == false)) ),
-      "Mat::elem(): given object must be a vector"
-      );
-    
-    const uword* s_aa_mem = s_aa.memptr();
-    const uword* x_aa_mem = x_aa.memptr();
-    
-    const uword s_aa_n_elem = s_aa.n_elem;
-    
-    arma_conform_check( (s_aa_n_elem != x_aa.n_elem), "Mat::elem(): size mismatch" );
-    
-    
-          eT*   s_m_mem    = s_m_local.memptr();
-    const uword s_m_n_elem = s_m_local.n_elem;
-    
-    const eT*   x_m_mem    = x_m_local.memptr();
-    const uword x_m_n_elem = x_m_local.n_elem;
-    
-    uword iq,jq;
-    for(iq=0, jq=1; jq < s_aa_n_elem; iq+=2, jq+=2)
-      {
-      const uword s_ii = s_aa_mem[iq];
-      const uword s_jj = s_aa_mem[jq];
-      
-      const uword x_ii = x_aa_mem[iq];
-      const uword x_jj = x_aa_mem[jq];
-      
-      arma_conform_check_bounds
-        (
-        (s_ii >= s_m_n_elem) || (s_jj >= s_m_n_elem) || (x_ii >= x_m_n_elem) || (x_jj >= x_m_n_elem),
-        "Mat::elem(): index out of bounds"
-        );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { s_m_mem[s_ii]  = x_m_mem[x_ii]; s_m_mem[s_jj]  = x_m_mem[x_jj]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { s_m_mem[s_ii] += x_m_mem[x_ii]; s_m_mem[s_jj] += x_m_mem[x_jj]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { s_m_mem[s_ii] -= x_m_mem[x_ii]; s_m_mem[s_jj] -= x_m_mem[x_jj]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { s_m_mem[s_ii] *= x_m_mem[x_ii]; s_m_mem[s_jj] *= x_m_mem[x_jj]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { s_m_mem[s_ii] /= x_m_mem[x_ii]; s_m_mem[s_jj] /= x_m_mem[x_jj]; }
-      }
-    
-    if(iq < s_aa_n_elem)
-      {
-      const uword s_ii = s_aa_mem[iq];
-      const uword x_ii = x_aa_mem[iq];
-      
-      arma_conform_check_bounds
-        (
-        ( (s_ii >= s_m_n_elem) || (x_ii >= x_m_n_elem) ),
-        "Mat::elem(): index out of bounds"
-        );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { s_m_mem[s_ii]  = x_m_mem[x_ii]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { s_m_mem[s_ii] += x_m_mem[x_ii]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { s_m_mem[s_ii] -= x_m_mem[x_ii]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { s_m_mem[s_ii] *= x_m_mem[x_ii]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { s_m_mem[s_ii] /= x_m_mem[x_ii]; }
-      }
-    }
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename op_type, typename T2>
-inline
-void
-subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
+subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& expr)
   {
   arma_debug_sigprint();
   
@@ -216,8 +158,45 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
   
-  const unwrap_check_mixed<T1> aa_tmp(a.get_ref(), m_local);
-  const umat& aa = aa_tmp.M;
+  typedef typename quasi_unwrap<T2>::stored_type U1_M_type;
+  
+  const quasi_unwrap<T2       > U1(expr.get_ref());
+  const unwrap_check<U1_M_type> U2(U1.M, U1.is_alias(m_local));
+  
+  const eT*   X_mem    = U2.M.memptr();
+  const uword X_n_elem = U2.M.n_elem;
+  
+  if(strip_op_find_default<T1>::do_op_find_default)
+    {
+    const strip_op_find_default<T1> strip(a.get_ref());
+    
+    constexpr bool has_sv = strip_op_find_default<T1>::stored_type::has_subview;
+    
+    if( (has_sv == false) || ((has_sv == true) && (strip.M.is_alias(m_local) == false)) )
+      {
+      if(has_sv == false)  { arma_debug_print("op_find_default optimisation; has_sv = false"); }
+      if(has_sv == true )  { arma_debug_print("op_find_default optimisation; has_sv = true" ); }
+      
+      bool mi_bad = false;
+      
+      uword Xi = 0;
+      
+      if(is_same_type<op_type, op_internal_equ  >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { if(Xi < X_n_elem) { m_mem[mi] =  X_mem[Xi]; } } else { mi_bad = true; } ++Xi; }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_plus >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { if(Xi < X_n_elem) { m_mem[mi] += X_mem[Xi]; } } else { mi_bad = true; } ++Xi; }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_minus>::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { if(Xi < X_n_elem) { m_mem[mi] -= X_mem[Xi]; } } else { mi_bad = true; } ++Xi; }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_schur>::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { if(Xi < X_n_elem) { m_mem[mi] *= X_mem[Xi]; } } else { mi_bad = true; } ++Xi; }; op_find_aux::apply(modifier, strip.M); }
+      if(is_same_type<op_type, op_internal_div  >::yes)  { auto modifier = [&](const uword mi) { if(mi < m_n_elem) { if(Xi < X_n_elem) { m_mem[mi] /= X_mem[Xi]; } } else { mi_bad = true; } ++Xi; }; op_find_aux::apply(modifier, strip.M); }
+      
+      arma_conform_check_bounds( mi_bad, "Mat::elem(): index out of bounds" );
+      
+      arma_conform_check( (Xi != X_n_elem), "Mat::elem(): size mismatch" );
+      
+      return;
+      }
+    }
+  
+  const unwrap_check_mixed<T1> U(a.get_ref(), m_local);
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -227,81 +206,49 @@ subview_elem1<eT,T1>::inplace_op(const Base<eT,T2>& x)
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
-  const Proxy<T2> P(x.get_ref());
+  arma_conform_check( (aa_n_elem != X_n_elem), "Mat::elem(): size mismatch" );
   
-  arma_conform_check( (aa_n_elem != P.get_n_elem()), "Mat::elem(): size mismatch" );
+  bool ii_jj_bad = false;
   
-  const bool have_alias = P.is_alias(m);
-  
-  if( (have_alias == false) && (Proxy<T2>::use_at == false) )
+  uword iq,jq;
+  for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
     {
-    typename Proxy<T2>::ea_type X = P.get_ea();
+    const uword ii = aa_mem[iq];
+    const uword jj = aa_mem[jq];
     
-    uword iq,jq;
-    for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
+    if( (ii < m_n_elem) && (jj < m_n_elem) )
       {
-      const uword ii = aa_mem[iq];
-      const uword jj = aa_mem[jq];
-      
-      arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X[iq]; m_mem[jj]  = X[jq]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X[iq]; m_mem[jj] += X[jq]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X[iq]; m_mem[jj] -= X[jq]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X[iq]; m_mem[jj] *= X[jq]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X[iq]; m_mem[jj] /= X[jq]; }
+      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X_mem[iq]; m_mem[jj]  = X_mem[jq]; }
+      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X_mem[iq]; m_mem[jj] += X_mem[jq]; }
+      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X_mem[iq]; m_mem[jj] -= X_mem[jq]; }
+      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X_mem[iq]; m_mem[jj] *= X_mem[jq]; }
+      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X_mem[iq]; m_mem[jj] /= X_mem[jq]; }
       }
-    
-    if(iq < aa_n_elem)
+    else
       {
-      const uword ii = aa_mem[iq];
-      
-      arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X[iq]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X[iq]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X[iq]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X[iq]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X[iq]; }
+      ii_jj_bad = true;
       }
     }
-  else
+  
+  if(iq < aa_n_elem)
     {
-    arma_debug_print("subview_elem1::inplace_op(): aliasing or use_at detected");
+    const uword ii = aa_mem[iq];
     
-    const unwrap_check<typename Proxy<T2>::stored_type> tmp(P.Q, have_alias);
-    const Mat<eT>& M = tmp.M;
-    
-    const eT* X = M.memptr();
-    
-    uword iq,jq;
-    for(iq=0, jq=1; jq < aa_n_elem; iq+=2, jq+=2)
+    if(ii < m_n_elem)
       {
-      const uword ii = aa_mem[iq];
-      const uword jj = aa_mem[jq];
-      
-      arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X[iq]; m_mem[jj]  = X[jq]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X[iq]; m_mem[jj] += X[jq]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X[iq]; m_mem[jj] -= X[jq]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X[iq]; m_mem[jj] *= X[jq]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X[iq]; m_mem[jj] /= X[jq]; }
+      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X_mem[iq]; }
+      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X_mem[iq]; }
+      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X_mem[iq]; }
+      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X_mem[iq]; }
+      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X_mem[iq]; }
       }
-    
-    if(iq < aa_n_elem)
+    else
       {
-      const uword ii = aa_mem[iq];
-      
-      arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
-      
-      if(is_same_type<op_type, op_internal_equ  >::yes) { m_mem[ii] =  X[iq]; }
-      if(is_same_type<op_type, op_internal_plus >::yes) { m_mem[ii] += X[iq]; }
-      if(is_same_type<op_type, op_internal_minus>::yes) { m_mem[ii] -= X[iq]; }
-      if(is_same_type<op_type, op_internal_schur>::yes) { m_mem[ii] *= X[iq]; }
-      if(is_same_type<op_type, op_internal_div  >::yes) { m_mem[ii] /= X[iq]; }
+      ii_jj_bad = true;
       }
     }
+  
+  arma_conform_check_bounds( ii_jj_bad, "Mat::elem(): index out of bounds" );
   }
 
 
@@ -353,8 +300,8 @@ subview_elem1<eT,T1>::replace(const eT old_val, const eT new_val)
         eT*   m_mem    = m_local.memptr();
   const uword m_n_elem = m_local.n_elem;
   
-  const unwrap_check_mixed<T1> tmp(a.get_ref(), m_local);
-  const umat& aa = tmp.M;
+  const unwrap_check_mixed<T1> U(a.get_ref(), m_local);
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -601,30 +548,17 @@ template<typename eT, typename T1>
 template<typename T2>
 inline
 void
-subview_elem1<eT,T1>::operator_equ(const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_equ>(x);
-  }
-
-
-
-
-template<typename eT, typename T1>
-template<typename T2>
-inline
-void
 subview_elem1<eT,T1>::operator= (const subview_elem1<eT,T2>& x)
   {
   arma_debug_sigprint();
   
-  (*this).operator_equ(x);
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_equ>(tmp);
   }
 
 
 
-//! work around compiler bugs
 template<typename eT, typename T1>
 inline
 void
@@ -632,59 +566,9 @@ subview_elem1<eT,T1>::operator= (const subview_elem1<eT,T1>& x)
   {
   arma_debug_sigprint();
   
-  (*this).operator_equ(x);
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename T2>
-inline
-void
-subview_elem1<eT,T1>::operator+= (const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
+  const Mat<eT> tmp(x);
   
-  inplace_op<op_internal_plus>(x);
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename T2>
-inline
-void
-subview_elem1<eT,T1>::operator-= (const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_minus>(x);
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename T2>
-inline
-void
-subview_elem1<eT,T1>::operator%= (const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_schur>(x);
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename T2>
-inline
-void
-subview_elem1<eT,T1>::operator/= (const subview_elem1<eT,T2>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_div>(x);
+  inplace_op<op_internal_equ>(tmp);
   }
 
 
@@ -766,57 +650,36 @@ subview_elem1<eT,T1>::extract_noalias(Mat<eT>& out, const subview_elem1<eT,T1>& 
   {
   arma_debug_sigprint();
   
-  const quasi_unwrap<T1> tmp1(in.a.get_ref());
-  const umat& aa = tmp1.M;
-  
-  if(resolves_to_vector<T1>::no)
-    {
-    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
-    }
-  
-  const uword* aa_mem    = aa.memptr();
-  const uword  aa_n_elem = aa.n_elem;
-  
   const eT*   m_mem    = in.m.memptr();
   const uword m_n_elem = in.m.n_elem;
   
-  out.set_size(aa_n_elem, 1);
-  
-  eT* out_mem = out.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
+  if(strip_op_find_default<T1>::do_op_find_default)
     {
-    const uword ii = aa_mem[i];
-    const uword jj = aa_mem[j];
+    arma_debug_print("op_find_default optimisation");
     
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
+    const strip_op_find_default<T1> strip(in.a.get_ref());
     
-    out_mem[i] = m_mem[ii];
-    out_mem[j] = m_mem[jj];
+    Mat<eT> tmp(m_n_elem, 1, arma_nozeros_indicator());  // worst-case scenario
+    
+    eT* tmp_mem = tmp.memptr();
+    
+    uword count = 0;
+    
+    bool mi_bad = false;
+    
+    auto element_extractor = [&](const uword mi) { if((mi < m_n_elem) && (count < m_n_elem)) { tmp_mem[count] = m_mem[mi]; ++count; } else { mi_bad = true; } };
+    
+    op_find_aux::apply(element_extractor, strip.M);
+    
+    arma_conform_check_bounds( mi_bad, "Mat::elem(): index out of bounds" );
+    
+    out.steal_mem_col(tmp, count);
+    
+    return;
     }
   
-  if(i < aa_n_elem)
-    {
-    const uword ii = aa_mem[i];
-    
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
-    
-    out_mem[i] = m_mem[ii];
-    }
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-void
-subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& in)
-  {
-  arma_debug_sigprint();
-  
-  const unwrap_check_mixed<T1> tmp1(in.a.get_ref(), actual_out);
-  const umat& aa = tmp1.M;
+  const quasi_unwrap<T1> U(in.a.get_ref());
+  const umat& aa = U.M;
   
   if(resolves_to_vector<T1>::no)
     {
@@ -826,80 +689,11 @@ subview_elem1<eT,T1>::extract(Mat<eT>& actual_out, const subview_elem1<eT,T1>& i
   const uword* aa_mem    = aa.memptr();
   const uword  aa_n_elem = aa.n_elem;
   
-  const Mat<eT>& m = in.m;
-  
-  const eT*   m_mem    = m.memptr();
-  const uword m_n_elem = m.n_elem;
-  
-  const bool alias = (&actual_out == &m);
-  
-  if(alias)  { arma_debug_print("subview_elem1::extract(): aliasing detected"); }
-  
-  Mat<eT>* tmp_out = alias ? new Mat<eT>() : nullptr;
-  Mat<eT>& out     = alias ? *tmp_out      : actual_out;
-  
   out.set_size(aa_n_elem, 1);
   
   eT* out_mem = out.memptr();
   
-  uword i,j;
-  for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
-    {
-    const uword ii = aa_mem[i];
-    const uword jj = aa_mem[j];
-    
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
-    
-    out_mem[i] = m_mem[ii];
-    out_mem[j] = m_mem[jj];
-    }
-  
-  if(i < aa_n_elem)
-    {
-    const uword ii = aa_mem[i];
-    
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
-    
-    out_mem[i] = m_mem[ii];
-    }
-  
-  if(alias)
-    {
-    actual_out.steal_mem(out);
-    delete tmp_out;
-    }
-  }
-
-
-
-template<typename eT, typename T1>
-template<typename op_type>
-inline
-void
-subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
-  {
-  arma_debug_sigprint();
-  
-  const unwrap<T1> tmp1(in.a.get_ref());
-  const umat& aa = tmp1.M;
-  
-  if(resolves_to_vector<T1>::no)
-    {
-    arma_conform_check( ( (aa.is_vec() == false) && (aa.is_empty() == false) ), "Mat::elem(): given object must be a vector" );
-    }
-  
-  const uword* aa_mem    = aa.memptr();
-  const uword  aa_n_elem = aa.n_elem;
-  
-  const unwrap_check< Mat<eT> > tmp2(in.m, out);
-  const Mat<eT>& m_local      = tmp2.M;
-  
-  const eT*   m_mem    = m_local.memptr();
-  const uword m_n_elem = m_local.n_elem;
-  
-  arma_conform_check( (out.n_elem != aa_n_elem), "Mat::elem(): size mismatch" );
-  
-  eT* out_mem = out.memptr();
+  bool ii_jj_bad = false;
   
   uword i,j;
   for(i=0, j=1; j<aa_n_elem; i+=2, j+=2)
@@ -907,25 +701,47 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
     const uword ii = aa_mem[i];
     const uword jj = aa_mem[j];
     
-    arma_conform_check_bounds( ( (ii >= m_n_elem) || (jj >= m_n_elem) ), "Mat::elem(): index out of bounds" );
+    eT m_ii_val;
+    eT m_jj_val;
     
-    if(is_same_type<op_type, op_internal_plus >::yes) { out_mem[i] += m_mem[ii]; out_mem[j] += m_mem[jj]; }
-    if(is_same_type<op_type, op_internal_minus>::yes) { out_mem[i] -= m_mem[ii]; out_mem[j] -= m_mem[jj]; }
-    if(is_same_type<op_type, op_internal_schur>::yes) { out_mem[i] *= m_mem[ii]; out_mem[j] *= m_mem[jj]; }
-    if(is_same_type<op_type, op_internal_div  >::yes) { out_mem[i] /= m_mem[ii]; out_mem[j] /= m_mem[jj]; }
+    if( (ii < m_n_elem) && (jj < m_n_elem) )
+      {
+      m_ii_val = m_mem[ii];
+      m_jj_val = m_mem[jj];
+      }
+    else
+      {
+      ii_jj_bad = true;
+      
+      m_ii_val = eT(0);
+      m_jj_val = eT(0);
+      }
+    
+    out_mem[i] = m_ii_val;
+    out_mem[j] = m_jj_val;
     }
   
   if(i < aa_n_elem)
     {
     const uword ii = aa_mem[i];
     
-    arma_conform_check_bounds( (ii >= m_n_elem) , "Mat::elem(): index out of bounds" );
+    eT m_ii_val;
     
-    if(is_same_type<op_type, op_internal_plus >::yes) { out_mem[i] += m_mem[ii]; }
-    if(is_same_type<op_type, op_internal_minus>::yes) { out_mem[i] -= m_mem[ii]; }
-    if(is_same_type<op_type, op_internal_schur>::yes) { out_mem[i] *= m_mem[ii]; }
-    if(is_same_type<op_type, op_internal_div  >::yes) { out_mem[i] /= m_mem[ii]; }
+    if(ii < m_n_elem)
+      {
+      m_ii_val = m_mem[ii];
+      }
+    else
+      {
+      ii_jj_bad = true;
+      
+      m_ii_val = eT(0);
+      }
+    
+    out_mem[i] = m_ii_val;
     }
+  
+  arma_conform_check_bounds( ii_jj_bad, "Mat::elem(): index out of bounds" );
   }
 
 
@@ -933,47 +749,22 @@ subview_elem1<eT,T1>::mat_inplace_op(Mat<eT>& out, const subview_elem1& in)
 template<typename eT, typename T1>
 inline
 void
-subview_elem1<eT,T1>::plus_inplace(Mat<eT>& out, const subview_elem1& in)
+subview_elem1<eT,T1>::extract(Mat<eT>& out, const subview_elem1<eT,T1>& in)
   {
   arma_debug_sigprint();
   
-  mat_inplace_op<op_internal_plus>(out, in);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-void
-subview_elem1<eT,T1>::minus_inplace(Mat<eT>& out, const subview_elem1& in)
-  {
-  arma_debug_sigprint();
-  
-  mat_inplace_op<op_internal_minus>(out, in);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-void
-subview_elem1<eT,T1>::schur_inplace(Mat<eT>& out, const subview_elem1& in)
-  {
-  arma_debug_sigprint();
-  
-  mat_inplace_op<op_internal_schur>(out, in);
-  }
-
-
-
-template<typename eT, typename T1>
-inline
-void
-subview_elem1<eT,T1>::div_inplace(Mat<eT>& out, const subview_elem1& in)
-  {
-  arma_debug_sigprint();
-  
-  mat_inplace_op<op_internal_div>(out, in);
+  if(in.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    subview_elem1<eT,T1>::extract_noalias(tmp, in);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    subview_elem1<eT,T1>::extract_noalias(out, in);
+    }
   }
 
 
