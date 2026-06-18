@@ -399,9 +399,10 @@ diskio::gen_tmp_name(const std::string& x)
   
   for(std::size_t i=0; i < suffix1_length; ++i, ++count)  { out[count] = suffix1[i]; }
   
-  local_distr(local_engine);  // ignore first random number
+  const std::size_t junk = local_distr(local_engine);  // ignore first random number
+  arma_ignore(junk);
   
-  for(std::size_t i=0; i < suffix2_length; ++i, ++count)  { out[count] = charlist[ local_distr(local_engine)]; }
+  for(std::size_t i=0; i < suffix2_length; ++i, ++count)  { out[count] = charlist[ local_distr(local_engine) ]; }
   
   return out;
   }
