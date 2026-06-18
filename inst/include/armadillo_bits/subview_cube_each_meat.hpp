@@ -101,8 +101,8 @@ subview_cube_each1<eT>::operator= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
@@ -128,8 +128,8 @@ subview_cube_each1<eT>::operator+= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
@@ -155,8 +155,8 @@ subview_cube_each1<eT>::operator-= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
@@ -182,8 +182,8 @@ subview_cube_each1<eT>::operator%= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
@@ -209,8 +209,8 @@ subview_cube_each1<eT>::operator/= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
@@ -287,12 +287,12 @@ subview_cube_each2<eT,TB>::operator= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const unwrap<TB> U( base_indices.get_ref() );
+  const plain_unwrap<TB> U( base_indices.get_ref() );
   
   check_indices(U.M);
   
@@ -328,12 +328,12 @@ subview_cube_each2<eT,TB>::operator+= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const unwrap<TB> U( base_indices.get_ref() );
+  const plain_unwrap<TB> U( base_indices.get_ref() );
   
   check_indices(U.M);
   
@@ -369,12 +369,12 @@ subview_cube_each2<eT,TB>::operator-= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const unwrap<TB> U( base_indices.get_ref() );
+  const plain_unwrap<TB> U( base_indices.get_ref() );
   
   check_indices(U.M);
   
@@ -410,12 +410,12 @@ subview_cube_each2<eT,TB>::operator%= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const unwrap<TB> U( base_indices.get_ref() );
+  const plain_unwrap<TB> U( base_indices.get_ref() );
   
   check_indices(U.M);
   
@@ -451,12 +451,12 @@ subview_cube_each2<eT,TB>::operator/= (const Base<eT,T1>& in)
   
   Cube<eT>& p = access::rw(subview_cube_each_common<eT>::P);
   
-  const unwrap<T1>   tmp( in.get_ref() );
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp( in.get_ref() );
+  const Mat<eT>& A     = tmp.M;
   
   subview_cube_each_common<eT>::check_size(A);
   
-  const unwrap<TB> U( base_indices.get_ref() );
+  const plain_unwrap<TB> U( base_indices.get_ref() );
   
   check_indices(U.M);
   
@@ -507,8 +507,8 @@ subview_cube_each1_aux::operator_plus
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   X.check_size(A);
   
@@ -547,8 +547,8 @@ subview_cube_each1_aux::operator_minus
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   X.check_size(A);
   
@@ -587,8 +587,8 @@ subview_cube_each1_aux::operator_minus
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   Y.check_size(A);
   
@@ -627,8 +627,8 @@ subview_cube_each1_aux::operator_schur
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   X.check_size(A);
   
@@ -667,8 +667,8 @@ subview_cube_each1_aux::operator_div
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   X.check_size(A);
   
@@ -707,8 +707,8 @@ subview_cube_each1_aux::operator_div
   
   Cube<eT> out(p_n_rows, p_n_cols, p_n_slices, arma_nozeros_indicator());
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
   Y.check_size(A);
   
@@ -741,8 +741,8 @@ subview_cube_each1_aux::operator_times
   
   const Cube<eT>& C = X.P;
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& M = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& M     = tmp.M;
   
   if(arma_config::check_conform)
     {
@@ -782,8 +782,8 @@ subview_cube_each1_aux::operator_times
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& M = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& M     = tmp.M;
   
   const Cube<eT>& C = Y.P;
   
@@ -838,10 +838,10 @@ subview_cube_each2_aux::operator_plus
   
   Cube<eT> out = p;
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -885,10 +885,10 @@ subview_cube_each2_aux::operator_minus
   
   Cube<eT> out = p;
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -933,10 +933,10 @@ subview_cube_each2_aux::operator_minus
   
   Cube<eT> out = p;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(Y.base_indices.get_ref());
+  const plain_unwrap<TB> U(Y.base_indices.get_ref());
   
   Y.check_size(A);
   Y.check_indices(U.M);
@@ -981,10 +981,10 @@ subview_cube_each2_aux::operator_schur
   
   Cube<eT> out = p;
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1028,10 +1028,10 @@ subview_cube_each2_aux::operator_div
   
   Cube<eT> out = p;
   
-  const unwrap<T2>   tmp(Y.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T2> tmp(Y.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1076,10 +1076,10 @@ subview_cube_each2_aux::operator_div
   
   Cube<eT> out = p;
   
-  const unwrap<T1>   tmp(X.get_ref());
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(X.get_ref());
+  const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(Y.base_indices.get_ref());
+  const plain_unwrap<TB> U(Y.base_indices.get_ref());
   
   Y.check_size(A);
   Y.check_indices(U.M);

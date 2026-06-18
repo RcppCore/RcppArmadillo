@@ -78,7 +78,7 @@ pow
 
 
 template<typename eT, typename T2>
-[[deprecated]]
+[[deprecated("refactor your code to use pow() in conjunction with repcube()")]]
 inline
 Cube<eT>
 pow
@@ -160,7 +160,7 @@ pow
 
 
 template<typename T, typename T2>
-[[deprecated]]
+[[deprecated("refactor your code to use pow() in conjunction with repcube()")]]
 inline
 Cube< std::complex<T> >
 pow

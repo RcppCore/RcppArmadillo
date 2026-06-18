@@ -33,8 +33,8 @@ op_cov::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_cov>& in)
   
   const uword norm_type = in.aux_uword_a;
   
-  const unwrap<T1>   U(in.m);
-  const Mat<eT>& A = U.M;
+  const plain_unwrap<T1> U(in.m);
+  const Mat<eT>& A     = U.M;
   
   if(A.n_elem == 0)
     {
@@ -76,8 +76,8 @@ op_cov::apply(Mat<typename T1::elem_type>& out, const Op< Op<T1,op_htrans>, op_c
     }
   else
     {
-    const unwrap<T1>   U(in.m.m);
-    const Mat<eT>& A = U.M;
+    const plain_unwrap<T1> U(in.m.m);
+    const Mat<eT>& A     = U.M;
     
     if(A.n_elem == 0)
       {

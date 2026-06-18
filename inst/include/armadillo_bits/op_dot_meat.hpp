@@ -601,8 +601,8 @@ op_cdot::apply_unwrap(const T1& X, const T2& Y)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp1(X);
-  const unwrap<T2> tmp2(Y);
+  const plain_unwrap<T1> tmp1(X);
+  const plain_unwrap<T2> tmp2(Y);
   
   const Mat<eT>& A = tmp1.M;
   const Mat<eT>& B = tmp2.M;

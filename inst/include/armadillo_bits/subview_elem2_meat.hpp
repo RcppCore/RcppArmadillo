@@ -29,7 +29,7 @@ subview_elem2<eT,T1,T2>::~subview_elem2()
 
 
 template<typename eT, typename T1, typename T2>
-arma_inline
+inline
 subview_elem2<eT,T1,T2>::subview_elem2
   (
   const Mat<eT>&        in_m,
@@ -64,11 +64,11 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
   
   if( (all_rows == false) && (all_cols == false) )
     {
-    const unwrap_check_mixed<T1> tmp1(base_ri.get_ref(), m_local);
-    const unwrap_check_mixed<T2> tmp2(base_ci.get_ref(), m_local);
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
     
-    const umat& ri = tmp1.M;
-    const umat& ci = tmp2.M;
+    const umat& ri = U1.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -105,9 +105,9 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
   else
   if( (all_rows == true) && (all_cols == false) )
     {
-    const unwrap_check_mixed<T2> tmp2(base_ci.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
     
-    const umat& ci = tmp2.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -136,9 +136,9 @@ subview_elem2<eT,T1,T2>::inplace_op(const eT val)
   else
   if( (all_rows == false) && (all_cols == true) )
     {
-    const unwrap_check_mixed<T1> tmp1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
     
-    const umat& ri = tmp1.M;
+    const umat& ri = U1.M;
     
     arma_conform_check
       (
@@ -182,16 +182,16 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
   const uword m_n_rows = m_local.n_rows;
   const uword m_n_cols = m_local.n_cols;
   
-  const unwrap_check<expr> tmp(x.get_ref(), m_local);
-  const Mat<eT>& X       = tmp.M;
+  const unwrap_check<expr> U(x.get_ref(), m_local);
+  const Mat<eT>& X       = U.M;
   
   if( (all_rows == false) && (all_cols == false) )
     {
-    const unwrap_check_mixed<T1> tmp1(base_ri.get_ref(), m_local);
-    const unwrap_check_mixed<T2> tmp2(base_ci.get_ref(), m_local);
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
     
-    const umat& ri = tmp1.M;
-    const umat& ci = tmp2.M;
+    const umat& ri = U1.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -230,9 +230,9 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
   else
   if( (all_rows == true) && (all_cols == false) )
     {
-    const unwrap_check_mixed<T2> tmp2(base_ci.get_ref(), m_local);
+    const unwrap_check_mixed<T2> U2(base_ci.get_ref(), m_local);
     
-    const umat& ci = tmp2.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -264,9 +264,9 @@ subview_elem2<eT,T1,T2>::inplace_op(const Base<eT,expr>& x)
   else
   if( (all_rows == false) && (all_cols == true) )
     {
-    const unwrap_check_mixed<T1> tmp1(base_ri.get_ref(), m_local);
+    const unwrap_check_mixed<T1> U1(base_ri.get_ref(), m_local);
     
-    const umat& ri = tmp1.M;
+    const umat& ri = U1.M;
     
     arma_conform_check
       (
@@ -679,30 +679,17 @@ template<typename eT, typename T1, typename T2>
 template<typename T3, typename T4>
 inline
 void
-subview_elem2<eT,T1,T2>::operator_equ(const subview_elem2<eT,T3,T4>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_equ>(x);
-  }
-
-
-
-
-template<typename eT, typename T1, typename T2>
-template<typename T3, typename T4>
-inline
-void
 subview_elem2<eT,T1,T2>::operator= (const subview_elem2<eT,T3,T4>& x)
   {
   arma_debug_sigprint();
   
-  (*this).operator_equ(x);
+  const Mat<eT> tmp(x);
+  
+  inplace_op<op_internal_equ>(tmp);
   }
 
 
 
-//! work around compiler bugs
 template<typename eT, typename T1, typename T2>
 inline
 void
@@ -710,59 +697,9 @@ subview_elem2<eT,T1,T2>::operator= (const subview_elem2<eT,T1,T2>& x)
   {
   arma_debug_sigprint();
   
-  (*this).operator_equ(x);
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-template<typename T3, typename T4>
-inline
-void
-subview_elem2<eT,T1,T2>::operator+= (const subview_elem2<eT,T3,T4>& x)
-  {
-  arma_debug_sigprint();
+  const Mat<eT> tmp(x);
   
-  inplace_op<op_internal_plus>(x);
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-template<typename T3, typename T4>
-inline
-void
-subview_elem2<eT,T1,T2>::operator-= (const subview_elem2<eT,T3,T4>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_minus>(x);
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-template<typename T3, typename T4>
-inline
-void
-subview_elem2<eT,T1,T2>::operator%= (const subview_elem2<eT,T3,T4>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_schur>(x);
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-template<typename T3, typename T4>
-inline
-void
-subview_elem2<eT,T1,T2>::operator/= (const subview_elem2<eT,T3,T4>& x)
-  {
-  arma_debug_sigprint();
-  
-  inplace_op<op_internal_div>(x);
+  inplace_op<op_internal_equ>(tmp);
   }
 
 
@@ -931,133 +868,11 @@ subview_elem2<eT,T1,T2>::extract_noalias(Mat<eT>& out, const subview_elem2<eT,T1
   
   if( (in.all_rows == false) && (in.all_cols == false) )
     {
-    const quasi_unwrap<T1> tmp1(in.base_ri.get_ref());
-    const quasi_unwrap<T2> tmp2(in.base_ci.get_ref());
+    const quasi_unwrap<T1> U1(in.base_ri.get_ref());
+    const quasi_unwrap<T2> U2(in.base_ci.get_ref());
     
-    const umat& ri = tmp1.M;
-    const umat& ci = tmp2.M;
-    
-    arma_conform_check
-      (
-      ( ((ri.is_vec() == false) && (ri.is_empty() == false)) || ((ci.is_vec() == false) && (ci.is_empty() == false)) ),
-      "Mat::elem(): given object must be a vector"
-      );
-    
-    const uword* ri_mem    = ri.memptr();
-    const uword  ri_n_elem = ri.n_elem;
-    
-    const uword* ci_mem    = ci.memptr();
-    const uword  ci_n_elem = ci.n_elem;
-    
-    out.set_size(ri_n_elem, ci_n_elem);
-    
-    eT*   out_mem   = out.memptr();
-    uword out_count = 0;
-    
-    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
-      {
-      const uword col = ci_mem[ci_count];
-      
-      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
-      
-      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
-        {
-        const uword row = ri_mem[ri_count];
-        
-        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
-        
-        out_mem[out_count] = m.at(row,col);
-        ++out_count;
-        }
-      }
-    }
-  else
-  if( (in.all_rows == true) && (in.all_cols == false) )
-    {
-    const quasi_unwrap<T2> tmp2(in.base_ci.get_ref());
-    
-    const umat& ci = tmp2.M;
-    
-    arma_conform_check
-      (
-      ( (ci.is_vec() == false) && (ci.is_empty() == false) ),
-      "Mat::elem(): given object must be a vector"
-      );
-    
-    const uword* ci_mem    = ci.memptr();
-    const uword  ci_n_elem = ci.n_elem;
-    
-    out.set_size(m_n_rows, ci_n_elem);
-    
-    for(uword ci_count=0; ci_count < ci_n_elem; ++ci_count)
-      {
-      const uword col = ci_mem[ci_count];
-      
-      arma_conform_check_bounds( (col >= m_n_cols), "Mat::elem(): index out of bounds" );
-      
-      arrayops::copy( out.colptr(ci_count), m.colptr(col), m_n_rows );
-      }
-    }
-  else
-  if( (in.all_rows == false) && (in.all_cols == true) )
-    {
-    const quasi_unwrap<T1> tmp1(in.base_ri.get_ref());
-    
-    const umat& ri = tmp1.M;
-    
-    arma_conform_check
-      (
-      ( (ri.is_vec() == false) && (ri.is_empty() == false) ),
-      "Mat::elem(): given object must be a vector"
-      );
-    
-    const uword* ri_mem    = ri.memptr();
-    const uword  ri_n_elem = ri.n_elem;
-    
-    out.set_size(ri_n_elem, m_n_cols);
-    
-    for(uword col=0; col < m_n_cols; ++col)
-      {
-      for(uword ri_count=0; ri_count < ri_n_elem; ++ri_count)
-        {
-        const uword row = ri_mem[ri_count];
-        
-        arma_conform_check_bounds( (row >= m_n_rows), "Mat::elem(): index out of bounds" );
-        
-        out.at(ri_count,col) = m.at(row,col);
-        }
-      }
-    }
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-inline
-void
-subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,T2>& in)
-  {
-  arma_debug_sigprint();
-  
-  const Mat<eT>& m = in.m;
-  
-  const uword m_n_rows = m.n_rows;
-  const uword m_n_cols = m.n_cols;
-  
-  const bool alias = (&actual_out == &m);
-  
-  if(alias)  { arma_debug_print("subview_elem2::extract(): aliasing detected"); }
-  
-  Mat<eT>* tmp_out = alias ? new Mat<eT>() : nullptr;
-  Mat<eT>& out     = alias ? *tmp_out      : actual_out;
-  
-  if( (in.all_rows == false) && (in.all_cols == false) )
-    {
-    const unwrap_check_mixed<T1> tmp1(in.base_ri.get_ref(), actual_out);
-    const unwrap_check_mixed<T2> tmp2(in.base_ci.get_ref(), actual_out);
-    
-    const umat& ri = tmp1.M;
-    const umat& ci = tmp2.M;
+    const umat& ri = U1.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -1096,9 +911,9 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
   else
   if( (in.all_rows == true) && (in.all_cols == false) )
     {
-    const unwrap_check_mixed<T2> tmp2(in.base_ci.get_ref(), m);
+    const quasi_unwrap<T2> U2(in.base_ci.get_ref());
     
-    const umat& ci = tmp2.M;
+    const umat& ci = U2.M;
     
     arma_conform_check
       (
@@ -1123,9 +938,9 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
   else
   if( (in.all_rows == false) && (in.all_cols == true) )
     {
-    const unwrap_check_mixed<T1> tmp1(in.base_ri.get_ref(), m);
+    const quasi_unwrap<T1> U1(in.base_ri.get_ref());
     
-    const umat& ri = tmp1.M;
+    const umat& ri = U1.M;
     
     arma_conform_check
       (
@@ -1150,71 +965,29 @@ subview_elem2<eT,T1,T2>::extract(Mat<eT>& actual_out, const subview_elem2<eT,T1,
         }
       }
     }
+  }
+
+
+
+template<typename eT, typename T1, typename T2>
+inline
+void
+subview_elem2<eT,T1,T2>::extract(Mat<eT>& out, const subview_elem2<eT,T1,T2>& in)
+  {
+  arma_debug_sigprint();
   
-  
-  if(alias)
+  if(in.is_alias(out))
     {
-    actual_out.steal_mem(out);
+    Mat<eT> tmp;
     
-    delete tmp_out;
+    subview_elem2<eT,T1,T2>::extract_noalias(tmp, in);
+    
+    out.steal_mem(tmp);
     }
-  }
-
-
-
-// TODO: implement a dedicated function instead of creating a temporary (but lots of potential aliasing issues)
-template<typename eT, typename T1, typename T2>
-inline
-void
-subview_elem2<eT,T1,T2>::plus_inplace(Mat<eT>& out, const subview_elem2& in)
-  {
-  arma_debug_sigprint();
-  
-  const Mat<eT> tmp(in);
-  
-  out += tmp;
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-inline
-void
-subview_elem2<eT,T1,T2>::minus_inplace(Mat<eT>& out, const subview_elem2& in)
-  {
-  arma_debug_sigprint();
-  
-  const Mat<eT> tmp(in);
-  
-  out -= tmp;
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-inline
-void
-subview_elem2<eT,T1,T2>::schur_inplace(Mat<eT>& out, const subview_elem2& in)
-  {
-  arma_debug_sigprint();
-  
-  const Mat<eT> tmp(in);
-  
-  out %= tmp;
-  }
-
-
-
-template<typename eT, typename T1, typename T2>
-inline
-void
-subview_elem2<eT,T1,T2>::div_inplace(Mat<eT>& out, const subview_elem2& in)
-  {
-  arma_debug_sigprint();
-  
-  const Mat<eT> tmp(in);
-  
-  out /= tmp;
+  else
+    {
+    subview_elem2<eT,T1,T2>::extract_noalias(out, in);
+    }
   }
 
 

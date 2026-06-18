@@ -22,7 +22,7 @@
 
 
 
-template<typename eT, const bool use_smaller_thresh = false>
+template<typename eT, const bool use_half_threshold = false>
 struct mp_gate
   {
   arma_inline
@@ -32,7 +32,7 @@ struct mp_gate
     {
     #if defined(ARMA_USE_OPENMP)
       {
-      const bool length_ok = (is_cx<eT>::yes || use_smaller_thresh) ? (n_elem >= (arma_config::mp_threshold/uword(2))) : (n_elem >= arma_config::mp_threshold);
+      const bool length_ok = (is_cx<eT>::yes || use_half_threshold) ? (n_elem >= (arma_config::mp_threshold/uword(2))) : (n_elem >= arma_config::mp_threshold);
       
       return (length_ok) ? (bool(omp_in_parallel()) == false) : false;
       }

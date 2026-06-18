@@ -48,7 +48,7 @@ trimatl(const Base<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_trimat>
 trimatu(const SpBase<typename T1::elem_type,T1>& X)
   {
@@ -61,7 +61,7 @@ trimatu(const SpBase<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_trimat>
 trimatl(const SpBase<typename T1::elem_type,T1>& X)
   {
@@ -78,7 +78,7 @@ trimatl(const SpBase<typename T1::elem_type,T1>& X)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const Op<T1, op_trimatl_ext>
 trimatl(const Base<typename T1::elem_type,T1>& X, const sword k)
   {
@@ -94,7 +94,7 @@ trimatl(const Base<typename T1::elem_type,T1>& X, const sword k)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const Op<T1, op_trimatu_ext>
 trimatu(const Base<typename T1::elem_type,T1>& X, const sword k)
   {
@@ -110,7 +110,7 @@ trimatu(const Base<typename T1::elem_type,T1>& X, const sword k)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_trimatu_ext>
 trimatu(const SpBase<typename T1::elem_type,T1>& X, const sword k)
   {
@@ -126,7 +126,7 @@ trimatu(const SpBase<typename T1::elem_type,T1>& X, const sword k)
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 const SpOp<T1, spop_trimatl_ext>
 trimatl(const SpBase<typename T1::elem_type,T1>& X, const sword k)
   {

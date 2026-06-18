@@ -1078,7 +1078,7 @@ subview_each2_aux::operator_plus
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1142,7 +1142,7 @@ subview_each2_aux::operator_minus
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1206,7 +1206,7 @@ subview_each2_aux::operator_minus
   const quasi_unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(Y.base_indices.get_ref());
+  const plain_unwrap<TB> U(Y.base_indices.get_ref());
   
   Y.check_size(A);
   Y.check_indices(U.M);
@@ -1276,7 +1276,7 @@ subview_each2_aux::operator_schur
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1340,7 +1340,7 @@ subview_each2_aux::operator_div
   const quasi_unwrap<T2> tmp(Y.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(X.base_indices.get_ref());
+  const plain_unwrap<TB> U(X.base_indices.get_ref());
   
   X.check_size(A);
   X.check_indices(U.M);
@@ -1404,7 +1404,7 @@ subview_each2_aux::operator_div
   const quasi_unwrap<T1> tmp(X.get_ref());
   const Mat<eT>& A     = tmp.M;
   
-  const unwrap<TB> U(Y.base_indices.get_ref());
+  const plain_unwrap<TB> U(Y.base_indices.get_ref());
   
   Y.check_size(A);
   Y.check_indices(U.M);

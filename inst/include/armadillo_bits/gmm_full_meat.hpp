@@ -137,9 +137,9 @@ gmm_full<eT>::set_params(const Base<eT,T1>& in_means_expr, const BaseCube<eT,T2>
   {
   arma_debug_sigprint();
   
-  const unwrap     <T1> tmp1(in_means_expr.get_ref());
-  const unwrap_cube<T2> tmp2(in_fcovs_expr.get_ref());
-  const unwrap     <T3> tmp3(in_hefts_expr.get_ref());
+  const plain_unwrap     <T1> tmp1(in_means_expr.get_ref());
+  const       unwrap_cube<T2> tmp2(in_fcovs_expr.get_ref());
+  const plain_unwrap     <T3> tmp3(in_hefts_expr.get_ref());
   
   const Mat <eT>& in_means = tmp1.M;
   const Cube<eT>& in_fcovs = tmp2.M;
@@ -183,7 +183,7 @@ gmm_full<eT>::set_means(const Base<eT,T1>& in_means_expr)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1> tmp(in_means_expr.get_ref());
+  const plain_unwrap<T1> tmp(in_means_expr.get_ref());
   
   const Mat<eT>& in_means = tmp.M;
   
@@ -230,7 +230,7 @@ gmm_full<eT>::set_hefts(const Base<eT,T1>& in_hefts_expr)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1> tmp(in_hefts_expr.get_ref());
+  const plain_unwrap<T1> tmp(in_hefts_expr.get_ref());
   
   const Mat<eT>& in_hefts = tmp.M;
   
@@ -641,8 +641,8 @@ gmm_full<eT>::raw_hist(const Base<eT,T1>& expr, const gmm_dist_mode& dist_mode) 
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(expr.get_ref());
-  const Mat<eT>& X = tmp.M;
+  const plain_unwrap<T1> tmp(expr.get_ref());
+  const Mat<eT>& X     = tmp.M;
   
   arma_conform_check( (X.n_rows != means.n_rows), "gmm_full::raw_hist(): incompatible dimensions" );
   
@@ -665,8 +665,8 @@ gmm_full<eT>::norm_hist(const Base<eT,T1>& expr, const gmm_dist_mode& dist_mode)
   {
   arma_debug_sigprint();
   
-  const unwrap<T1>   tmp(expr.get_ref());
-  const Mat<eT>& X = tmp.M;
+  const plain_unwrap<T1> tmp(expr.get_ref());
+  const Mat<eT>& X     = tmp.M;
   
   arma_conform_check( (X.n_rows != means.n_rows), "gmm_full::norm_hist(): incompatible dimensions" );
   
@@ -726,8 +726,8 @@ gmm_full<eT>::learn
   arma_conform_check( (seed_mode_ok         == false), "gmm_full::learn(): unknown seed_mode"                        );
   arma_conform_check( ((var_floor >= eT(0)) == false), "gmm_full::learn(): variance floor must be > 0"               );
   
-  const unwrap<T1>   tmp_X(data.get_ref());
-  const Mat<eT>& X = tmp_X.M;
+  const plain_unwrap<T1> tmp_X(data.get_ref());
+  const Mat<eT>& X     = tmp_X.M;
   
   if(X.is_empty()              )  { arma_warn(3, "gmm_full::learn(): given matrix is empty"             ); return false; }
   if(X.internal_has_nonfinite())  { arma_warn(3, "gmm_full::learn(): given matrix has non-finite values"); return false; }

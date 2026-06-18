@@ -21,17 +21,17 @@
 
 
 // TODO: document the conditions and restrictions for the use of each unwrap variant:
-// TODO: unwrap, unwrap_check, quasi_unwrap, partial_unwrap
+// TODO: plain_unwrap, quasi_unwrap, unwrap_check, partial_unwrap, ...
 
 
 template<typename T1>
-struct unwrap_default
+struct plain_unwrap_default
   {
   typedef typename T1::elem_type eT;
   typedef Mat<eT>                stored_type;
   
   inline
-  unwrap_default(const T1& A)
+  plain_unwrap_default(const T1& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -46,12 +46,13 @@ struct unwrap_default
 
 
 template<typename T1>
-struct unwrap_fixed
+struct plain_unwrap_fixed
   {
-  typedef T1 stored_type;
+  typedef typename T1::elem_type eT;
+  typedef T1                     stored_type;
   
   inline explicit
-  unwrap_fixed(const T1& A)
+  plain_unwrap_fixed(const T1& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -60,27 +61,27 @@ struct unwrap_fixed
   const T1& M;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
 
 template<typename T1, bool condition>
-struct unwrap_redirect {};
+struct plain_unwrap_redirect {};
 
 template<typename T1>
-struct unwrap_redirect<T1, false> { typedef unwrap_default<T1> result; };
+struct plain_unwrap_redirect<T1, false> { typedef plain_unwrap_default<T1> result; };
 
 template<typename T1>
-struct unwrap_redirect<T1, true>  { typedef unwrap_fixed<T1>   result; };
+struct plain_unwrap_redirect<T1, true>  { typedef plain_unwrap_fixed<T1>   result; };
 
 
 template<typename T1>
-struct unwrap : public unwrap_redirect<T1, is_Mat_fixed<T1>::value>::result
+struct plain_unwrap : public plain_unwrap_redirect<T1, is_Mat_fixed<T1>::value>::result
   {
   inline
-  unwrap(const T1& A)
-    : unwrap_redirect<T1, is_Mat_fixed<T1>::value>::result(A)
+  plain_unwrap(const T1& A)
+    : plain_unwrap_redirect<T1, is_Mat_fixed<T1>::value>::result(A)
     {
     }
   };
@@ -88,12 +89,12 @@ struct unwrap : public unwrap_redirect<T1, is_Mat_fixed<T1>::value>::result
 
 
 template<typename eT>
-struct unwrap< Mat<eT> >
+struct plain_unwrap< Mat<eT> >
   {
   typedef Mat<eT> stored_type;
   
   inline
-  unwrap(const Mat<eT>& A)
+  plain_unwrap(const Mat<eT>& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -108,12 +109,12 @@ struct unwrap< Mat<eT> >
 
 
 template<typename eT>
-struct unwrap< Row<eT> >
+struct plain_unwrap< Row<eT> >
   {
   typedef Row<eT> stored_type;
   
   inline
-  unwrap(const Row<eT>& A)
+  plain_unwrap(const Row<eT>& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -128,12 +129,12 @@ struct unwrap< Row<eT> >
 
 
 template<typename eT>
-struct unwrap< Col<eT> >
+struct plain_unwrap< Col<eT> >
   {
   typedef Col<eT> stored_type;
 
   inline
-  unwrap(const Col<eT>& A)
+  plain_unwrap(const Col<eT>& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -148,12 +149,12 @@ struct unwrap< Col<eT> >
 
 
 template<typename eT>
-struct unwrap< subview_col<eT> >
+struct plain_unwrap< subview_col<eT> >
   {
   typedef Col<eT> stored_type;
 
   inline
-  unwrap(const subview_col<eT>& A)
+  plain_unwrap(const subview_col<eT>& A)
     : M(A.colmem, A.n_rows)
     {
     arma_debug_sigprint();
@@ -168,12 +169,12 @@ struct unwrap< subview_col<eT> >
 
 
 template<typename eT>
-struct unwrap< subview_cols<eT> >
+struct plain_unwrap< subview_cols<eT> >
   {
   typedef Mat<eT> stored_type;
   
   inline
-  unwrap(const subview_cols<eT>& A)
+  plain_unwrap(const subview_cols<eT>& A)
     : M(A.colptr(0), A.n_rows, A.n_cols)
     {
     arma_debug_sigprint();
@@ -188,12 +189,12 @@ struct unwrap< subview_cols<eT> >
 
 
 template<typename out_eT, typename T1, typename T2, typename glue_type>
-struct unwrap< mtGlue<out_eT, T1, T2, glue_type> >
+struct plain_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {
   typedef Mat<out_eT> stored_type;
   
   inline
-  unwrap(const mtGlue<out_eT, T1, T2, glue_type>& A)
+  plain_unwrap(const mtGlue<out_eT, T1, T2, glue_type>& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -208,12 +209,12 @@ struct unwrap< mtGlue<out_eT, T1, T2, glue_type> >
 
 
 template<typename out_eT, typename T1, typename op_type>
-struct unwrap< mtOp<out_eT, T1, op_type> >
+struct plain_unwrap< mtOp<out_eT, T1, op_type> >
   {
   typedef Mat<out_eT> stored_type;
   
   inline
-  unwrap(const mtOp<out_eT, T1, op_type>& A)
+  plain_unwrap(const mtOp<out_eT, T1, op_type>& A)
     : M(A)
     {
     arma_debug_sigprint();
@@ -237,6 +238,7 @@ template<typename T1>
 struct quasi_unwrap_default
   {
   typedef typename T1::elem_type eT;
+  typedef Mat<eT>                stored_type;
   
   inline
   quasi_unwrap_default(const T1& A)
@@ -262,6 +264,7 @@ template<typename T1>
 struct quasi_unwrap_fixed
   {
   typedef typename T1::elem_type eT;
+  typedef T1                     stored_type;
   
   inline explicit
   quasi_unwrap_fixed(const T1& A)
@@ -277,7 +280,7 @@ struct quasi_unwrap_fixed
   static constexpr bool has_orig_mem = true;
   
   template<typename eT2>
-  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&M) == void_ptr(&X)); }
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::yes) && (void_ptr(&M) == void_ptr(&X)); }
   };
 
 
@@ -316,6 +319,8 @@ struct quasi_unwrap : public quasi_unwrap_redirect<T1, is_Mat_fixed<T1>::value>:
 template<typename eT>
 struct quasi_unwrap< Mat<eT> >
   {
+  typedef Mat<eT> stored_type;
+  
   inline
   quasi_unwrap(const Mat<eT>& A)
     : M(A)
@@ -338,6 +343,8 @@ struct quasi_unwrap< Mat<eT> >
 template<typename eT>
 struct quasi_unwrap< Row<eT> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap(const Row<eT>& A)
     : M(A)
@@ -360,6 +367,8 @@ struct quasi_unwrap< Row<eT> >
 template<typename eT>
 struct quasi_unwrap< Col<eT> >
   {
+  typedef Col<eT> stored_type;
+  
   inline
   quasi_unwrap(const Col<eT>& A)
     : M(A)
@@ -382,6 +391,8 @@ struct quasi_unwrap< Col<eT> >
 template<typename eT>
 struct quasi_unwrap< subview<eT> >
   {
+  typedef Mat<eT> stored_type;
+  
   inline
   quasi_unwrap(const subview<eT>& A)
     : sv( A                                                  )
@@ -406,6 +417,8 @@ struct quasi_unwrap< subview<eT> >
 template<typename eT>
 struct quasi_unwrap< subview_row<eT> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap(const subview_row<eT>& A)
     : sv( A                    )
@@ -430,6 +443,8 @@ struct quasi_unwrap< subview_row<eT> >
 template<typename eT>
 struct quasi_unwrap< subview_col<eT> >
   {
+  typedef Col<eT> stored_type;
+  
   inline
   quasi_unwrap(const subview_col<eT>& A)
     : orig( A.m )
@@ -454,6 +469,8 @@ struct quasi_unwrap< subview_col<eT> >
 template<typename eT>
 struct quasi_unwrap< subview_cols<eT> >
   {
+  typedef Mat<eT> stored_type;
+  
   inline
   quasi_unwrap(const subview_cols<eT>& A)
     : orig( A.m )
@@ -478,6 +495,8 @@ struct quasi_unwrap< subview_cols<eT> >
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {
+  typedef Mat<out_eT> stored_type;
+  
   inline
   quasi_unwrap(const mtGlue<out_eT, T1, T2, glue_type>& A)
     : M(A)
@@ -500,6 +519,8 @@ struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
 template<typename out_eT, typename T1, typename op_type>
 struct quasi_unwrap< mtOp<out_eT, T1, op_type> >
   {
+  typedef Mat<out_eT> stored_type;
+  
   inline
   quasi_unwrap(const mtOp<out_eT, T1, op_type>& A)
     : M(A)
@@ -523,6 +544,7 @@ template<typename T1>
 struct quasi_unwrap< Op<T1, op_vectorise_col> >
   {
   typedef typename T1::elem_type eT;
+  typedef Mat<eT>                stored_type;
   
   inline
   quasi_unwrap(const Op<T1, op_vectorise_col>& A)
@@ -548,6 +570,8 @@ struct quasi_unwrap< Op<T1, op_vectorise_col> >
 template<typename eT>
 struct quasi_unwrap< Op<Col<eT>, op_strans> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap(const Op<Col<eT>, op_strans>& A)
     : orig(A.m)
@@ -572,6 +596,8 @@ struct quasi_unwrap< Op<Col<eT>, op_strans> >
 template<typename eT>
 struct quasi_unwrap< Op<Row<eT>, op_strans> >
   {
+  typedef Col<eT> stored_type;
+  
   inline
   quasi_unwrap(const Op<Row<eT>, op_strans>& A)
     : orig(A.m)
@@ -596,6 +622,8 @@ struct quasi_unwrap< Op<Row<eT>, op_strans> >
 template<typename eT>
 struct quasi_unwrap< Op<subview_col<eT>, op_strans> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap(const Op<subview_col<eT>, op_strans>& A)
     : orig( A.m.m )
@@ -628,6 +656,8 @@ struct quasi_unwrap_Col_htrans
 template<typename eT>
 struct quasi_unwrap_Col_htrans< Op<Col<eT>, op_htrans> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap_Col_htrans(const Op<Col<eT>, op_htrans>& A)
     : orig(A.m)
@@ -692,6 +722,8 @@ struct quasi_unwrap_Row_htrans
 template<typename eT>
 struct quasi_unwrap_Row_htrans< Op<Row<eT>, op_htrans> >
   {
+  typedef Col<eT> stored_type;
+  
   inline
   quasi_unwrap_Row_htrans(const Op<Row<eT>, op_htrans>& A)
     : orig(A.m)
@@ -756,6 +788,8 @@ struct quasi_unwrap_subview_col_htrans
 template<typename eT>
 struct quasi_unwrap_subview_col_htrans< Op<subview_col<eT>, op_htrans> >
   {
+  typedef Row<eT> stored_type;
+  
   inline
   quasi_unwrap_subview_col_htrans(const Op<subview_col<eT>, op_htrans>& A)
     : orig(A.m.m)
@@ -813,6 +847,7 @@ template<typename T1>
 struct quasi_unwrap< CubeToMatOp<T1, op_vectorise_cube_col> >
   {
   typedef typename T1::elem_type eT;
+  typedef Mat<eT>                stored_type;
   
   inline
   quasi_unwrap(const CubeToMatOp<T1, op_vectorise_cube_col>& A)
@@ -838,6 +873,8 @@ struct quasi_unwrap< CubeToMatOp<T1, op_vectorise_cube_col> >
 template<typename eT>
 struct quasi_unwrap< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   {
+  typedef Mat<eT> stored_type;
+  
   inline
   quasi_unwrap(const SpToDOp<SpMat<eT>, op_sp_nonzeros>& A)
     : orig( A.m )

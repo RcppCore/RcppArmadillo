@@ -431,64 +431,6 @@ Row<eT>::operator=(Row<eT>&& X)
 
 
 
-// template<typename eT>
-// inline
-// Row<eT>::Row(Mat<eT>&& X)
-//   : Mat<eT>(arma_vec_indicator(), 2)
-//   {
-//   arma_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
-//   
-//   if(X.n_rows != 1)  { const Mat<eT>& XX = X; Mat<eT>::operator=(XX); return; }
-//   
-//   access::rw(Mat<eT>::n_rows)  = 1;
-//   access::rw(Mat<eT>::n_cols)  = X.n_cols;
-//   access::rw(Mat<eT>::n_elem)  = X.n_elem;
-//   access::rw(Mat<eT>::n_alloc) = X.n_alloc;
-//   
-//   if( (X.n_alloc > arma_config::mat_prealloc) || (X.mem_state == 1) || (X.mem_state == 2) )
-//     {
-//     access::rw(Mat<eT>::mem_state) = X.mem_state;
-//     access::rw(Mat<eT>::mem)       = X.mem;
-//     
-//     access::rw(X.n_cols)    = 0;
-//     access::rw(X.n_elem)    = 0;
-//     access::rw(X.n_alloc)   = 0;
-//     access::rw(X.mem_state) = 0;
-//     access::rw(X.mem)       = nullptr;
-//     }
-//   else  // condition: (X.n_alloc <= arma_config::mat_prealloc) || (X.mem_state == 0) || (X.mem_state == 3)
-//     {
-//     (*this).init_cold();
-//     
-//     arrayops::copy( (*this).memptr(), X.mem, X.n_elem );
-//     
-//     if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) )
-//       {
-//       access::rw(X.n_cols)  = 0;
-//       access::rw(X.n_elem)  = 0;
-//       access::rw(X.mem)     = nullptr;
-//       }
-//     }
-//   }
-// 
-// 
-// 
-// template<typename eT>
-// inline
-// Row<eT>&
-// Row<eT>::operator=(Mat<eT>&& X)
-//   {
-//   arma_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
-//   
-//   if(X.n_rows != 1)  { const Mat<eT>& XX = X; Mat<eT>::operator=(XX); return *this; }
-//   
-//   (*this).steal_mem(X, true);
-//   
-//   return *this;
-//   }
-
-
-
 template<typename eT>
 inline
 Row<eT>&
@@ -1204,6 +1146,25 @@ const eT&
 Row<eT>::at(const uword, const uword in_col) const
   {
   return Mat<eT>::mem[in_col];
+  }
+
+
+
+template<typename eT>
+inline
+void
+Row<eT>::push_back(const eT val)
+  {
+  arma_debug_sigprint();
+  
+  if(Mat<eT>::mem_state != 0)
+    {
+    arma_conform_check(true, "Row::push_back(): unsupported operation as auxiliary memory is in use");
+    
+    return;
+    }
+  
+  Mat<eT>::vec_push_back(val, arma_rowvec_indicator());
   }
 
 

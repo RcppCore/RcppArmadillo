@@ -34,6 +34,8 @@ class SpSubview : public SpBase< eT, SpSubview<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   const uword aux_row1;
   const uword aux_col1;
   const uword n_rows;
@@ -351,6 +353,8 @@ class SpSubview_col : public SpSubview<eT>
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   inline void operator= (const SpSubview<eT>& x);
   inline void operator= (const SpSubview_col& x);
   
@@ -390,6 +394,8 @@ class SpSubview_row : public SpSubview<eT>
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  
+  static constexpr bool has_subview = true;
   
   inline void operator= (const SpSubview<eT>& x);
   inline void operator= (const SpSubview_row& x);

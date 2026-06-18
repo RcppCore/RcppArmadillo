@@ -3449,7 +3449,7 @@ subview_col<eT>::operator=(const Base<eT,T1>& expr)
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(expr.get_ref());  // deliberately not using quasi_unwrap
+    const plain_unwrap<T1> U(expr.get_ref());  // deliberately not using quasi_unwrap
     
     arma_conform_assert_same_size(subview<eT>::n_rows, uword(1), U.M.n_rows, U.M.n_cols, "copy into submatrix");
     
@@ -4511,7 +4511,7 @@ subview_row<eT>::operator=(const Base<eT,T1>& X)
   
   if(is_Mat<T1>::value)
     {
-    const unwrap<T1> U(X.get_ref());  // deliberately not using quasi_unwrap
+    const plain_unwrap<T1> U(X.get_ref());  // deliberately not using quasi_unwrap
     
     arma_conform_assert_same_size(uword(1), subview<eT>::n_cols, U.M.n_rows, U.M.n_cols, "copy into submatrix");
     

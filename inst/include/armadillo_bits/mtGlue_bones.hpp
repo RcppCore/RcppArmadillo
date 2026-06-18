@@ -31,6 +31,8 @@ struct mtGlue : public Base< out_eT, mtGlue<out_eT, T1, T2, glue_type> >
   static constexpr bool is_col  = glue_type::template traits<T1,T2>::is_col;
   static constexpr bool is_xvec = glue_type::template traits<T1,T2>::is_xvec;
   
+  static constexpr bool has_subview  = T1::has_subview || T2::has_subview;
+  
   arma_inline  mtGlue(const T1& in_A, const T2& in_B);
   arma_inline  mtGlue(const T1& in_A, const T2& in_B, const uword in_aux_uword);
   arma_inline ~mtGlue();

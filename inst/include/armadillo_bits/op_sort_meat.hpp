@@ -264,8 +264,8 @@ op_sort_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sort_vec>& i
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   U(in.m);  // not using quasi_unwrap, to ensure there is no aliasing with subviews
-  const Mat<eT>& X = U.M;
+  const plain_unwrap<T1> U(in.m);  // not using quasi_unwrap, to ensure there is no aliasing with subviews
+  const Mat<eT>& X     = U.M;
   
   const uword sort_mode = in.aux_uword_a;
   

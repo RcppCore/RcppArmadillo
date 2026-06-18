@@ -21,6 +21,276 @@
 
 
 
+template<typename in_eT>
+struct conv_to_helper_Mat_same_type
+  {
+  template<typename T1>
+  inline
+  static
+  Mat<in_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    return Mat<in_eT>(in.get_ref());
+    }
+  
+  inline
+  static
+  Mat<in_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    const in_eT* in_memptr = (N > 0) ? &(in[0]) : nullptr;
+    
+    return Mat<in_eT>(in_memptr, N, 1); 
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Mat_diff_type
+  {
+  template<typename T1>
+  inline
+  static
+  Mat<out_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    const quasi_unwrap<T1> tmp(in.get_ref());
+    const Mat<in_eT>& X  = tmp.M;
+    
+    Mat<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
+    
+    arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
+    
+    return out;
+    }
+  
+  inline
+  static
+  Mat<out_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    Mat<out_eT> out(N, 1, arma_nozeros_indicator());
+    
+    if(N > 0)  { arrayops::convert( out.memptr(), &(in[0]), N ); }
+    
+    return out;
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT, bool condition>
+struct conv_to_helper_Mat_redirect {};
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Mat_redirect<out_eT, in_eT, true > { typedef conv_to_helper_Mat_same_type<in_eT>         result; };
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Mat_redirect<out_eT, in_eT, false> { typedef conv_to_helper_Mat_diff_type<out_eT, in_eT> result; };
+
+
+
+template<typename in_eT>
+struct conv_to_helper_Row_same_type
+  {
+  template<typename T1>
+  inline
+  static
+  Row<in_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    Mat<in_eT> X(in.get_ref());
+    
+    arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+    
+    access::rw(X.n_rows   ) = uword(1);
+    access::rw(X.n_cols   ) = X.n_elem;
+    access::rw(X.vec_state) = uword(2);
+    
+    Row<in_eT> out;  out.steal_mem(X);
+    
+    return out;
+    }
+  
+  inline
+  static
+  Row<in_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    const in_eT* in_memptr = (N > 0) ? &(in[0]) : nullptr;
+    
+    return Row<in_eT>(in_memptr, N);
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Row_diff_type
+  {
+  template<typename T1>
+  inline
+  static
+  Row<out_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    const quasi_unwrap<T1> tmp(in.get_ref());
+    const Mat<in_eT>& X  = tmp.M;
+    
+    arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+    
+    Row<out_eT> out(X.n_elem, arma_nozeros_indicator());
+    
+    arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
+    
+    return out;
+    }
+  
+  inline
+  static
+  Row<out_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    Row<out_eT> out(N, arma_nozeros_indicator());
+    
+    if(N > 0)  { arrayops::convert( out.memptr(), &(in[0]), N ); }
+    
+    return out;
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT, bool condition>
+struct conv_to_helper_Row_redirect {};
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Row_redirect<out_eT, in_eT, true > { typedef conv_to_helper_Row_same_type<in_eT>         result; };
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Row_redirect<out_eT, in_eT, false> { typedef conv_to_helper_Row_diff_type<out_eT, in_eT> result; };
+
+
+
+template<typename in_eT>
+struct conv_to_helper_Col_same_type
+  {
+  template<typename T1>
+  inline
+  static
+  Col<in_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    Mat<in_eT> X(in.get_ref());
+    
+    arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+    
+    access::rw(X.n_rows   ) = X.n_elem;
+    access::rw(X.n_cols   ) = uword(1);
+    access::rw(X.vec_state) = uword(1);
+    
+    Col<in_eT> out;  out.steal_mem(X);
+    
+    return out;
+    }
+  
+  inline
+  static
+  Col<in_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    const in_eT* in_memptr = (N > 0) ? &(in[0]) : nullptr;
+    
+    return Col<in_eT>(in_memptr, N);
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Col_diff_type
+  {
+  template<typename T1>
+  inline
+  static
+  Col<out_eT>
+  apply(const Base<in_eT, T1>& in)
+    {
+    arma_debug_sigprint();
+    
+    const quasi_unwrap<T1> tmp(in.get_ref());
+    const Mat<in_eT>& X  = tmp.M;
+    
+    arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
+    
+    Col<out_eT> out(X.n_elem, arma_nozeros_indicator());
+    
+    arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
+    
+    return out;
+    }
+  
+  inline
+  static
+  Col<out_eT>
+  apply(const std::vector<in_eT>& in)
+    {
+    arma_debug_sigprint();
+    
+    const uword N = uword( in.size() );
+    
+    Col<out_eT> out(N, arma_nozeros_indicator());
+    
+    if(N > 0)  { arrayops::convert( out.memptr(), &(in[0]), N ); }
+    
+    return out;
+    }
+  };
+
+
+
+template<typename out_eT, typename in_eT, bool condition>
+struct conv_to_helper_Col_redirect {};
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Col_redirect<out_eT, in_eT, true > { typedef conv_to_helper_Col_same_type<in_eT>         result; };
+
+template<typename out_eT, typename in_eT>
+struct conv_to_helper_Col_redirect<out_eT, in_eT, false> { typedef conv_to_helper_Col_diff_type<out_eT, in_eT> result; };
+
+
+
 //! conversion from Armadillo Base and BaseCube objects to scalars
 //! NOTE: use as_scalar() instead; this functionality is kept only for compatibility with old user code
 template<typename out_eT>
@@ -195,14 +465,9 @@ conv_to< Mat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const quasi_unwrap<T1> tmp(in.get_ref());
-  const Mat<in_eT>& X  = tmp.M;
+  typedef typename conv_to_helper_Mat_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  Mat<out_eT> out(X.n_rows, X.n_cols, arma_nozeros_indicator());
-  
-  arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
-  
-  return out;
+  return helper_type::apply(in.get_ref());
   }
 
 
@@ -297,16 +562,9 @@ conv_to< Mat<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_n
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const uword N = uword( in.size() );
+  typedef typename conv_to_helper_Mat_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  Mat<out_eT> out(N, 1, arma_nozeros_indicator());
-  
-  if(N > 0)
-    {
-    arrayops::convert( out.memptr(), &(in[0]), N );
-    }
-  
-  return out;
+  return helper_type::apply(in);
   }
 
 
@@ -366,16 +624,9 @@ conv_to< Row<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const quasi_unwrap<T1> tmp(in.get_ref());
-  const Mat<in_eT>& X  = tmp.M;
+  typedef typename conv_to_helper_Row_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
-  
-  Row<out_eT> out(X.n_elem, arma_nozeros_indicator());
-  
-  arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
-  
-  return out;
+  return helper_type::apply(in.get_ref());
   }
 
 
@@ -414,16 +665,9 @@ conv_to< Row<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_n
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const uword N = uword( in.size() );
+  typedef typename conv_to_helper_Row_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  Row<out_eT> out(N, arma_nozeros_indicator());
-  
-  if(N > 0)
-    {
-    arrayops::convert( out.memptr(), &(in[0]), N );
-    }
-  
-  return out;
+  return helper_type::apply(in);
   }
 
 
@@ -483,16 +727,9 @@ conv_to< Col<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_not_
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const quasi_unwrap<T1> tmp(in.get_ref());
-  const Mat<in_eT>& X  = tmp.M;
+  typedef typename conv_to_helper_Col_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  arma_conform_check( ( (X.is_vec() == false) && (X.is_empty() == false) ), "conv_to(): given object cannot be interpreted as a vector" );
-  
-  Col<out_eT> out(X.n_elem, arma_nozeros_indicator());
-  
-  arrayops::convert( out.memptr(), X.memptr(), X.n_elem );
-  
-  return out;
+  return helper_type::apply(in.get_ref());
   }
 
 
@@ -531,16 +768,9 @@ conv_to< Col<out_eT> >::from(const std::vector<in_eT>& in, const typename arma_n
   arma_debug_sigprint();
   arma_ignore(junk);
   
-  const uword N = uword( in.size() );
+  typedef typename conv_to_helper_Col_redirect<out_eT, in_eT, is_same_type<out_eT, in_eT>::value>::result helper_type;
   
-  Col<out_eT> out(N, arma_nozeros_indicator());
-  
-  if(N > 0)
-    {
-    arrayops::convert( out.memptr(), &(in[0]), N );
-    }
-  
-  return out;
+  return helper_type::apply(in);
   }
 
 

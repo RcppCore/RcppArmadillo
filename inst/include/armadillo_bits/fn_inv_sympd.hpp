@@ -63,7 +63,7 @@ inv_sympd
 
 template<typename T1>
 arma_warn_unused
-arma_inline
+inline
 typename enable_if2< is_blas_type<typename T1::elem_type>::value, const Op<T1, op_inv_spd_full> >::result
 inv_sympd
   (

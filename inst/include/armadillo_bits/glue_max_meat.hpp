@@ -75,13 +75,41 @@ glue_max::apply(Mat<eT>& out, const Proxy<T1>& PA, const Proxy<T2>& PB)
     
     const uword N = PA.get_n_elem();
     
-    for(uword i=0; i<N; ++i)
+    #if defined(ARMA_SIMPLE_LOOPS)
       {
-      const eT Ai = A[i];
-      const eT Bi = B[i];
-      
-      out_mem[i] = comparator(Ai,Bi) ? Ai : Bi;
+      for(uword i=0; i<N; ++i)
+        {
+        const eT Ai = A[i];
+        const eT Bi = B[i];
+        
+        out_mem[i] = comparator(Ai,Bi) ? Ai : Bi;
+        }
       }
+    #else
+      {
+      uword i,j;
+      
+      for(i=0, j=1; j < N; i+=2, j+=2)
+        {
+        const eT Ai = A[i];
+        const eT Aj = A[j];
+        
+        const eT Bi = B[i];
+        const eT Bj = B[j];
+        
+        (*out_mem) = comparator(Ai,Bi) ? Ai : Bi;  ++out_mem;
+        (*out_mem) = comparator(Aj,Bj) ? Aj : Bj;  ++out_mem;
+        }
+      
+      if(i < N)
+        {
+        const eT Ai = A[i];
+        const eT Bi = B[i];
+        
+        (*out_mem) = comparator(Ai,Bi) ? Ai : Bi;
+        }
+      }
+    #endif
     }
   else
     {

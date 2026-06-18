@@ -17,17 +17,17 @@
 
 
 
-//! \addtogroup op_find
+//! \addtogroup op_find_aux
 //! @{
 
 
 
-template<typename T1>
+template<typename functor, typename T1>
 inline
-uword
-op_find_generic::helper
+void
+op_find_aux::apply
   (
-  Mat<uword>& indices,
+  functor element_processor,
   const Base<typename T1::elem_type, T1>& X
   )
   {
@@ -39,18 +39,13 @@ op_find_generic::helper
   
   const uword n_elem = A.get_n_elem();
   
-  indices.set_size(n_elem, 1);
-  
-  uword* indices_mem = indices.memptr();
-  uword  n_nz        = 0;
-  
   if(Proxy<T1>::use_at == false)
     {
     typename Proxy<T1>::ea_type PA = A.get_ea();
     
     for(uword i=0; i<n_elem; ++i)
       {
-      if(PA[i] != eT(0))  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(PA[i] != eT(0))  { element_processor(i); }
       }
     }
   else
@@ -63,23 +58,21 @@ op_find_generic::helper
     for(uword col=0; col < n_cols; ++col)
     for(uword row=0; row < n_rows; ++row)
       {
-      if(A.at(row,col) != eT(0))  { indices_mem[n_nz] = i; ++n_nz; }
+      if(A.at(row,col) != eT(0))  { element_processor(i); }
       
       ++i;
       }
     }
-  
-  return n_nz;
   }
 
 
 
-template<typename T1, typename op_type>
+template<typename functor, typename T1, typename op_type>
 inline
-uword
-op_find_generic::helper
+void
+op_find_aux::apply
   (
-  Mat<uword>& indices,
+  functor element_processor,
   const mtOp<uword, T1, op_type>& X,
   const typename arma_op_rel_only<op_type>::result*           junk1,
   const typename arma_not_cx<typename T1::elem_type>::result* junk2
@@ -101,11 +94,6 @@ op_find_generic::helper
   const Proxy<T1> A(X.m);
   
   const uword n_elem = A.get_n_elem();
-  
-  indices.set_size(n_elem, 1);
-  
-  uword* indices_mem = indices.memptr();
-  uword  n_nz        = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -144,8 +132,8 @@ op_find_generic::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero_j = (tpj != val); }
       else { not_zero_j = false; }
       
-      if(not_zero_i)  { indices_mem[n_nz] = i;  ++n_nz; }
-      if(not_zero_j)  { indices_mem[n_nz] = j;  ++n_nz; }
+      if(not_zero_i)  { element_processor(i); }
+      if(not_zero_j)  { element_processor(j); }
       }
     
     if(i < n_elem)
@@ -166,7 +154,7 @@ op_find_generic::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       }
     }
   else
@@ -195,23 +183,21 @@ op_find_generic::helper
       else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       
       ++i;
       }
     }
-  
-  return n_nz;
   }
 
 
 
-template<typename T1, typename op_type>
+template<typename functor, typename T1, typename op_type>
 inline
-uword
-op_find_generic::helper
+void
+op_find_aux::apply
   (
-  Mat<uword>& indices,
+  functor element_processor,
   const mtOp<uword, T1, op_type>& X,
   const typename arma_op_rel_only<op_type>::result*            junk1,
   const typename arma_cx_only<typename T1::elem_type>::result* junk2
@@ -235,12 +221,6 @@ op_find_generic::helper
   
   const uword n_elem = A.get_n_elem();
   
-  indices.set_size(n_elem, 1);
-  
-  uword* indices_mem = indices.memptr();
-  uword  n_nz        = 0;
-  
-  
   if(Proxy<T1>::use_at == false)
     {
     ea_type PA = A.get_ea();
@@ -255,7 +235,7 @@ op_find_generic::helper
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero) { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero) { element_processor(i); }
       }
     }
   else
@@ -276,23 +256,21 @@ op_find_generic::helper
       else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (tmp != val); }
       else { not_zero = false; }
       
-      if(not_zero) { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero) { element_processor(i); }
       
       i++;
       }
     }
-  
-  return n_nz;
   }
 
 
 
-template<typename T1, typename T2, typename glue_type>
+template<typename functor, typename T1, typename T2, typename glue_type>
 inline
-uword
-op_find_generic::helper
+void
+op_find_aux::apply
   (
-  Mat<uword>& indices,
+  functor element_processor,
   const mtGlue<uword, T1, T2, glue_type>& X,
   const typename arma_glue_rel_only<glue_type>::result*       junk1,
   const typename arma_not_cx<typename T1::elem_type>::result* junk2,
@@ -317,11 +295,6 @@ op_find_generic::helper
   
   const uword n_elem = A.get_n_elem();
   
-  indices.set_size(n_elem, 1);
-  
-  uword* indices_mem = indices.memptr();
-  uword  n_nz        = 0;
-  
   if((Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false))
     {
     ea_type1 PA = A.get_ea();
@@ -344,7 +317,7 @@ op_find_generic::helper
       else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       }
     }
   else
@@ -372,23 +345,21 @@ op_find_generic::helper
       else if(is_same_type<glue_type, glue_rel_or    >::yes)  { not_zero = (tmp1 || tmp2); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       
       i++;
       }
     }
-  
-  return n_nz;
   }
 
 
 
-template<typename T1, typename T2, typename glue_type>
+template<typename functor, typename T1, typename T2, typename glue_type>
 inline
-uword
-op_find_generic::helper
+void
+op_find_aux::apply
   (
-  Mat<uword>& indices,
+  functor element_processor,
   const mtGlue<uword, T1, T2, glue_type>& X,
   const typename arma_glue_rel_only<glue_type>::result*        junk1,
   const typename arma_cx_only<typename T1::elem_type>::result* junk2,
@@ -410,11 +381,6 @@ op_find_generic::helper
   
   const uword n_elem = A.get_n_elem();
   
-  indices.set_size(n_elem, 1);
-  
-  uword* indices_mem = indices.memptr();
-  uword  n_nz        = 0;
-  
   if((Proxy<T1>::use_at == false) && (Proxy<T2>::use_at == false))
     {
     ea_type1 PA = A.get_ea();
@@ -428,7 +394,7 @@ op_find_generic::helper
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (PA[i] != PB[i]); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       }
     }
   else
@@ -447,260 +413,11 @@ op_find_generic::helper
       else if(is_same_type<glue_type, glue_rel_noteq >::yes)  { not_zero = (A.at(row,col) != B.at(row,col)); }
       else { not_zero = false; }
       
-      if(not_zero)  { indices_mem[n_nz] = i;  ++n_nz; }
+      if(not_zero)  { element_processor(i); }
       
       i++;
       }
     }
-  
-  return n_nz;
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_find_generic::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_generic>& X)
-  {
-  arma_debug_sigprint();
-  
-  const uword k    = X.aux_uword_a;
-  const uword type = X.aux_uword_b;
-  
-  Mat<uword> indices;
-  const uword n_nz = op_find_generic::helper(indices, X.m);
-  
-  if(n_nz > 0)
-    {
-    if(type == 0)   // "first"
-      {
-      out = (k > 0 && k <= n_nz) ? indices.rows(0,      k-1   ) : indices.rows(0, n_nz-1);
-      }
-    else   // "last"
-      {
-      out = (k > 0 && k <= n_nz) ? indices.rows(n_nz-k, n_nz-1) : indices.rows(0, n_nz-1);
-      }
-    }
-  else
-    {
-    out.set_size(0,1);  // empty column vector
-    }
-  }
-
-
-
-//
-
-
-
-template<typename T1>
-inline
-void
-op_find_default::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_default>& X)
-  {
-  arma_debug_sigprint();
-  
-  Mat<uword> indices;
-  const uword n_nz = op_find_generic::helper(indices, X.m);
-  
-  out.steal_mem_col(indices, n_nz);
-  }
-
-
-
-//
-
-
-
-template<typename T1>
-inline
-void
-op_find_finite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_finite>& X)
-  {
-  arma_debug_sigprint();
-  
-  if(arma_config::fast_math_warn)  { arma_warn(1, "find_finite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  const Proxy<T1> P(X.m);
-  
-  const uword n_elem = P.get_n_elem();
-  
-  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
-  
-  uword* indices_mem = indices.memptr();
-  uword  count       = 0;
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    const typename Proxy<T1>::ea_type Pea = P.get_ea();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if( arma_isfinite(Pea[i]) )  { indices_mem[count] = i; count++; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows(); 
-    const uword n_cols = P.get_n_cols(); 
-    
-    uword i = 0;
-    
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
-      {
-      if( arma_isfinite(P.at(row,col)) )  { indices_mem[count] = i; count++; }
-      
-      i++;
-      }
-    }
-  
-  out.steal_mem_col(indices, count);
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_find_nonfinite::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonfinite>& X)
-  {
-  arma_debug_sigprint();
-  
-  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  const Proxy<T1> P(X.m);
-  
-  const uword n_elem = P.get_n_elem();
-  
-  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
-  
-  uword* indices_mem = indices.memptr();
-  uword  count       = 0;
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    const typename Proxy<T1>::ea_type Pea = P.get_ea();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if( arma_isnonfinite(Pea[i]) )  { indices_mem[count] = i; count++; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows(); 
-    const uword n_cols = P.get_n_cols(); 
-    
-    uword i = 0;
-    
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
-      {
-      if( arma_isnonfinite(P.at(row,col)) )  { indices_mem[count] = i; count++; }
-      
-      i++;
-      }
-    }
-  
-  out.steal_mem_col(indices, count);
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_find_nan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nan>& X)
-  {
-  arma_debug_sigprint();
-  
-  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nan(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  const Proxy<T1> P(X.m);
-  
-  const uword n_elem = P.get_n_elem();
-  
-  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
-  
-  uword* indices_mem = indices.memptr();
-  uword  count       = 0;
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    const typename Proxy<T1>::ea_type Pea = P.get_ea();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if( arma_isnan(Pea[i]) )  { indices_mem[count] = i; count++; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows(); 
-    const uword n_cols = P.get_n_cols(); 
-    
-    uword i = 0;
-    
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
-      {
-      if( arma_isnan(P.at(row,col)) )  { indices_mem[count] = i; count++; }
-      
-      i++;
-      }
-    }
-  
-  out.steal_mem_col(indices, count);
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_find_nonnan::apply(Mat<uword>& out, const mtOp<uword, T1, op_find_nonnan>& X)
-  {
-  arma_debug_sigprint();
-  
-  if(arma_config::fast_math_warn)  { arma_warn(1, "find_nonnan(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  const Proxy<T1> P(X.m);
-  
-  const uword n_elem = P.get_n_elem();
-  
-  Mat<uword> indices(n_elem, 1, arma_nozeros_indicator());
-  
-  uword* indices_mem = indices.memptr();
-  uword  count       = 0;
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    const typename Proxy<T1>::ea_type Pea = P.get_ea();
-    
-    for(uword i=0; i < n_elem; ++i)
-      {
-      if( arma_isnan(Pea[i]) == false )  { indices_mem[count] = i; ++count; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    uword i = 0;
-    
-    for(uword col=0; col < n_cols; ++col)
-    for(uword row=0; row < n_rows; ++row)
-      {
-      if( arma_isnan(P.at(row,col)) == false )  { indices_mem[count] = i; ++count; }
-      
-      ++i;
-      }
-    }
-  
-  out.steal_mem_col(indices, count);
   }
 
 

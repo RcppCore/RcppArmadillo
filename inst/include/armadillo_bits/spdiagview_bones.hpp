@@ -35,6 +35,8 @@ class spdiagview : public SpBase< eT, spdiagview<eT> >
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = true;
+  
   const uword row_offset;
   const uword col_offset;
   

@@ -97,9 +97,9 @@ sylvester
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1> tmp_A( in_A.get_ref() );
-  const unwrap<T2> tmp_B( in_B.get_ref() );
-  const unwrap<T3> tmp_C( in_C.get_ref() );
+  const plain_unwrap<T1> tmp_A( in_A.get_ref() );
+  const plain_unwrap<T2> tmp_B( in_B.get_ref() );
+  const plain_unwrap<T3> tmp_C( in_C.get_ref() );
   
   const Mat<eT>& A = tmp_A.M;
   const Mat<eT>& B = tmp_B.M;

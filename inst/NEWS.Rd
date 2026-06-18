@@ -3,6 +3,21 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.3.91-1 (2026-06-19)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.3.91 (15.4-rc1)
+    \itemize{
+      \item Added \code{fill::nan}, \code{fill::pos_inf},
+      \code{fill::neg_inf} as optional fill forms for the Mat class
+      \item Added \code{.push_back()} for appending elements to vectors
+      \item Faster handling of \code{find()} within \code{.elem()}
+      \item Faster element-wise \code{min()} and \code{max()}
+      \item Faster \code{conv_to} when element types of input and output
+      objects are the same
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.2.7-1 (2026-05-29)}{
   \itemize{
     \item Upgraded to Armadillo release 15.2.7 (Medium Roast Deluxe)

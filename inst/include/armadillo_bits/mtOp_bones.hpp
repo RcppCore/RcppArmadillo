@@ -35,6 +35,8 @@ struct mtOp : public Base< out_eT, mtOp<out_eT, T1, op_type> >
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   
+  static constexpr bool has_subview = T1::has_subview;
+  
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);
   inline          mtOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);

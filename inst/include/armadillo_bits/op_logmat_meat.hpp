@@ -500,8 +500,8 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     typedef typename T1::pod_type   T;
     typedef typename T1::elem_type eT;
     
-    const unwrap<T1>   U(expr.get_ref());
-    const Mat<eT>& X = U.M;
+    const plain_unwrap<T1> U(expr.get_ref());
+    const Mat<eT>& X     = U.M;
     
     arma_conform_check( (X.is_square() == false), "logmat_sympd(): given matrix must be square sized" );
     

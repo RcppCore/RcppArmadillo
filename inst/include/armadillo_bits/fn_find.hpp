@@ -28,13 +28,13 @@ typename
 enable_if2
   <
   is_arma_type<T1>::value,
-  const mtOp<uword, T1, op_find_simple>
+  const mtOp<uword, T1, op_find_default>
   >::result
 find(const T1& X)
   {
   arma_debug_sigprint();
   
-  return mtOp<uword, T1, op_find_simple>(X);
+  return mtOp<uword, T1, op_find_default>(X);
   }
 
 
@@ -42,7 +42,7 @@ find(const T1& X)
 template<typename T1>
 arma_warn_unused
 inline
-const mtOp<uword, T1, op_find>
+const mtOp<uword, T1, op_find_generic>
 find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direction = "first")
   {
   arma_debug_sigprint();
@@ -57,7 +57,7 @@ find(const Base<typename T1::elem_type,T1>& X, const uword k, const char* direct
   
   const uword type = ( (sig == 'f') || (sig == 'F') ) ? 0 : 1;
   
-  return mtOp<uword, T1, op_find>(X.get_ref(), k, type);
+  return mtOp<uword, T1, op_find_generic>(X.get_ref(), k, type);
   }
 
 

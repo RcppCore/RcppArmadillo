@@ -30,8 +30,8 @@ op_symmatu::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu>& in)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(in.m);
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
   
@@ -81,8 +81,8 @@ op_symmatl::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl>& in)
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(in.m);
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
   
@@ -136,8 +136,8 @@ op_symmatu_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatu_cx
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(in.m);
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_check( (A.is_square() == false), "symmatu(): given matrix must be square sized" );
   
@@ -210,8 +210,8 @@ op_symmatl_cx::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_symmatl_cx
   
   typedef typename T1::elem_type eT;
   
-  const unwrap<T1>   tmp(in.m);
-  const Mat<eT>& A = tmp.M;
+  const plain_unwrap<T1> tmp(in.m);
+  const Mat<eT>& A     = tmp.M;
   
   arma_conform_check( (A.is_square() == false), "symmatl(): given matrix must be square sized" );
   

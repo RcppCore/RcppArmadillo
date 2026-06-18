@@ -33,6 +33,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
   
+  static constexpr bool has_subview = false;
+  
   const uword n_rows;    //!< number of rows             (read-only)
   const uword n_cols;    //!< number of columns          (read-only)
   const uword n_elem;    //!< number of elements         (read-only)

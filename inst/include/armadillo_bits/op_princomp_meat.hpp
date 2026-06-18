@@ -268,8 +268,8 @@ op_princomp::direct_princomp
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
   
-  const unwrap<T1>    Y( X.get_ref() );
-  const Mat<eT>& in = Y.M;
+  const plain_unwrap<T1> Y( X.get_ref() );
+  const Mat<eT>& in    = Y.M;
   
   if(in.n_elem != 0)
     {

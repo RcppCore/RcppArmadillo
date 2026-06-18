@@ -286,8 +286,9 @@ template<typename T1> struct ProxyCube;
 
 template<typename T1> struct diagmat_proxy;
 
-template<typename T1> struct unwrap;
+template<typename T1> struct plain_unwrap;
 template<typename T1> struct quasi_unwrap;
+
 template<typename T1> struct unwrap_cube;
 template<typename T1> struct unwrap_spmat;
 
@@ -363,6 +364,12 @@ template<bool do_zeros> struct arma_initmode_indicator {};
 
 struct arma_zeros_indicator   : public arma_initmode_indicator<true > {};
 struct arma_nozeros_indicator : public arma_initmode_indicator<false> {};
+
+
+template<int vec_mode> struct arma_vec_mode_indicator {};
+
+struct arma_colvec_indicator : public arma_vec_mode_indicator<1> {};
+struct arma_rowvec_indicator : public arma_vec_mode_indicator<2> {};
 
 
 
