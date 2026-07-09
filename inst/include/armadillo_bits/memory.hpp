@@ -22,9 +22,8 @@
 
 struct memory
   {
-  template<typename eT> arma_malloc inline static eT* acquire(const uword n_elem);
-  
-  template<typename eT> arma_inline static void release(eT* mem);
+  template<typename eT> arma_inline static eT*  acquire(const uword n_elem);
+  template<typename eT> arma_inline static void release(      eT*   mem   );
   
   template<typename eT> arma_inline static bool      is_aligned(const eT*  mem);
   template<typename eT> arma_inline static void mark_as_aligned(      eT*& mem);
@@ -33,9 +32,10 @@ struct memory
 
 
 
+// NOTE: arma_inline is used as a partial workaround for bugs in GCC 15:
+// NOTE: false positive warnings from -Wmismatched-new-delete and -Wmaybe-uninitialized
 template<typename eT>
-arma_malloc
-inline
+arma_inline
 eT*
 memory::acquire(const uword n_elem)
   {

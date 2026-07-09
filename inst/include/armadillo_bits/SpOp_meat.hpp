@@ -64,9 +64,10 @@ SpOp<T1, op_type>::~SpOp()
 
 
 template<typename T1, typename op_type>
+template<typename eT2>
 arma_inline
 bool
-SpOp<T1, op_type>::is_alias(const SpMat<typename T1::elem_type>& X) const
+SpOp<T1, op_type>::is_alias(const SpMat<eT2>& X) const
   {
   return m.is_alias(X);
   }

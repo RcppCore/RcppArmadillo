@@ -107,6 +107,20 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
 template<typename T1>
 inline
 void
+op_diagmat::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Proxy<T1> P(X.m);
+  
+  op_diagmat::apply(out, P);
+  }
+
+
+
+template<typename T1>
+inline
+void
 op_diagmat::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   {
   arma_debug_sigprint();
@@ -697,6 +711,23 @@ op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat2>& 
     {
     op_diagmat2::apply(out, P, row_offset, col_offset);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_diagmat2::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_diagmat2>& X)
+  {
+  arma_debug_sigprint();
+  
+  const uword row_offset = X.aux_uword_a;
+  const uword col_offset = X.aux_uword_b;
+  
+  const Proxy<T1> P(X.m);
+  
+  op_diagmat2::apply(out, P, row_offset, col_offset);
   }
 
 

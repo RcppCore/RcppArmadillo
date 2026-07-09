@@ -49,6 +49,18 @@ spop_diagmat::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diag
 template<typename T1>
 inline
 void
+spop_diagmat::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in)
+  {
+  arma_debug_sigprint();
+  
+  spop_diagmat::apply_noalias(out, in.m);
+  }
+
+
+
+template<typename T1>
+inline
+void
 spop_diagmat::apply_noalias(SpMat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type, T1>& expr)
   {
   arma_debug_sigprint();
@@ -370,6 +382,23 @@ spop_diagmat2::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_dia
     {
     spop_diagmat2::apply_noalias(out, U.M, row_offset, col_offset);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+spop_diagmat2::apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat2>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword row_offset = in.aux_uword_a;
+  const uword col_offset = in.aux_uword_b;
+  
+  const unwrap_spmat<T1> U(in.m);
+  
+  spop_diagmat2::apply_noalias(out, U.M, row_offset, col_offset);
   }
 
 

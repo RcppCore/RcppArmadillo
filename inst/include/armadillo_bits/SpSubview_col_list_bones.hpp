@@ -89,6 +89,8 @@ class SpSubview_col_list : public SpBase< eT, SpSubview_col_list<eT,T1> >
   inline static void schur_inplace(SpMat<eT>& out, const SpSubview_col_list& in);
   inline static void   div_inplace(SpMat<eT>& out, const SpSubview_col_list& in);
   
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
   
   friend class SpMat<eT>;
   };

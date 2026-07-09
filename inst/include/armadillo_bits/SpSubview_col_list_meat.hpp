@@ -714,4 +714,15 @@ SpSubview_col_list<eT,T1>::div_inplace(SpMat<eT>& out, const SpSubview_col_list&
 
 
 
+template<typename eT, typename T1>
+template<typename eT2>
+arma_inline
+bool
+SpSubview_col_list<eT,T1>::is_alias(const SpMat<eT2>& X) const
+  {
+  return m.is_alias(X);
+  }
+
+
+
 //! @}

@@ -1865,7 +1865,7 @@ diskio::load_csv_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg, const 
   
   try { x.zeros(f_n_rows, f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
   
-  if(strict)  { x.fill(Datum<eT>::nan); }   // take into account that each row may have a unique number of columns
+  if(strict && is_real<eT>::yes)  { x.fill(Datum<eT>::nan); }   // take into account that each row may have a unique number of columns
   
   const bool use_mp = (arma_config::openmp) && (f_n_rows >= 2) && (f_n_cols >= 64);
   

@@ -30,6 +30,11 @@ jobs:
       - name: Setup
         uses: eddelbuettel/github-actions/r-ci@master
 
+      - name: Setup ccache for R
+        uses: eddelbuettel/github-actions/ccache-with-R@master
+        with:
+          key: ${{ matrix.name }}-${{ matrix.openmp }}
+
       - name: Configure
         run: ./configure; cat src/Makevars
 
