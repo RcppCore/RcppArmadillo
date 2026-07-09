@@ -38,7 +38,8 @@ struct SpOp : public SpBase< typename T1::elem_type, SpOp<T1, op_type> >
   inline          SpOp(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
   inline         ~SpOp();
   
-  arma_inline bool is_alias(const SpMat<elem_type>& X) const;
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
   
   const T1&       m;            //!< the operand; must be derived from SpBase
         elem_type aux;          //!< auxiliary data, using the element type as used by T1

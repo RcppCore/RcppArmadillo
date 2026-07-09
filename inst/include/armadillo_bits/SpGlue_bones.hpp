@@ -37,7 +37,8 @@ struct SpGlue : public SpBase< typename T1::elem_type, SpGlue<T1, T2, spglue_typ
   inline  SpGlue(const T1& in_A, const T2& in_B, const elem_type in_aux);
   inline ~SpGlue();
   
-  arma_inline bool is_alias(const SpMat<elem_type>& X) const;
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
   
   const T1&       A;    //!< first operand;  must be derived from SpBase
   const T2&       B;    //!< second operand; must be derived from SpBase

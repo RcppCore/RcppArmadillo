@@ -938,6 +938,12 @@ class Mat<eT>::fixed : public Mat<eT>
   arma_warn_unused arma_inline       eT* memptr();
   arma_warn_unused arma_inline const eT* memptr() const;
   
+  arma_inline       subview_row<eT> row(const uword row_num);
+  arma_inline const subview_row<eT> row(const uword row_num) const;
+  
+  arma_inline       subview_col<eT> col(const uword col_num);
+  arma_inline const subview_col<eT> col(const uword col_num) const;
+  
   arma_warn_unused arma_inline bool is_vec() const;
   
   inline const Mat<eT>& fill(const eT val);

@@ -1786,9 +1786,10 @@ SpSubview<eT>::end_row(const uword row_num) const
 
 
 template<typename eT>
+template<typename eT2>
 arma_inline
 bool
-SpSubview<eT>::is_alias(const SpMat<eT>& X) const
+SpSubview<eT>::is_alias(const SpMat<eT2>& X) const
   {
   return m.is_alias(X);
   }

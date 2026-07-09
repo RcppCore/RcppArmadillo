@@ -10749,6 +10749,66 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::memptr() const
 template<typename eT>
 template<uword fixed_n_rows, uword fixed_n_cols>
 arma_inline
+subview_row<eT>
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::row(const uword row_num)
+  {
+  arma_debug_sigprint();
+  
+  arma_conform_check_bounds( row_num >= fixed_n_rows, "Mat::row(): index out of bounds" );
+  
+  return subview_row<eT>(*this, row_num);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const subview_row<eT>
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::row(const uword row_num) const
+  {
+  arma_debug_sigprint();
+  
+  arma_conform_check_bounds( row_num >= fixed_n_rows, "Mat::row(): index out of bounds" );
+  
+  return subview_row<eT>(*this, row_num);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+subview_col<eT>
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::col(const uword col_num)
+  {
+  arma_debug_sigprint();
+  
+  arma_conform_check_bounds( col_num >= fixed_n_cols, "Mat::col(): index out of bounds" );
+  
+  return subview_col<eT>(*this, col_num);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
+const subview_col<eT>
+Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::col(const uword col_num) const
+  {
+  arma_debug_sigprint();
+  
+  arma_conform_check_bounds( col_num >= fixed_n_cols, "Mat::col(): index out of bounds" );
+  
+  return subview_col<eT>(*this, col_num);
+  }
+
+
+
+template<typename eT>
+template<uword fixed_n_rows, uword fixed_n_cols>
+arma_inline
 bool
 Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::is_vec() const
   {

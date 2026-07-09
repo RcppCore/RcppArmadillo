@@ -52,4 +52,15 @@ mtSpReduceOp<out_eT, T1, op_type>::~mtSpReduceOp()
 
 
 
+template<typename out_eT, typename T1, typename op_type>
+template<typename eT2>
+arma_inline
+bool
+mtSpReduceOp<out_eT, T1, op_type>::is_alias(const SpMat<eT2>& X) const
+  {
+  return m.is_alias(X);
+  }
+
+
+
 //! @}

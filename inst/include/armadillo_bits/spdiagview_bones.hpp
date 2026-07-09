@@ -107,6 +107,9 @@ class spdiagview : public SpBase< eT, spdiagview<eT> >
   inline static void extract(SpMat<eT>& out, const spdiagview& in);
   inline static void extract(  Mat<eT>& out, const spdiagview& in);
   
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
+  
   
   friend class SpMat<eT>;
   };

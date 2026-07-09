@@ -94,7 +94,7 @@ arma_inline
 bool
 mtSpOp<out_eT, T1, op_type>::is_alias(const SpMat<eT2>& X) const
   {
-  return (void_ptr(&X) == void_ptr(&m));
+  return m.is_alias(X);
   }
 
 

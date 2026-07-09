@@ -80,39 +80,12 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
       }
     }
   else
-  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
     {
-    const quasi_unwrap<T1> U(expr);
+    Mat<eT> tmp = expr;
     
-    if(U.is_alias(out))
-      {
-      Mat<eT> tmp(U.M.memptr(), U.M.n_elem, 1);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      out.set_size(U.M.n_elem, 1);
-      
-      arrayops::copy(out.memptr(), U.M.memptr(), U.M.n_elem);
-      }
-    }
-  else
-    {
-    const Proxy<T1> P(expr);
+    tmp.set_size(tmp.n_elem, 1);
     
-    if(P.is_alias(out))
-      {
-      Mat<eT> tmp;
-      
-      op_vectorise_col::apply_proxy(tmp, P);
-      
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_vectorise_col::apply_proxy(out, P);
-      }
+    out.steal_mem(tmp);
     }
   }
 
@@ -133,11 +106,16 @@ op_vectorise_col::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op
 template<typename T1>
 inline
 void
-op_vectorise_col::apply_direct(Mat_noalias<typename T1::elem_type>& out, const T1& expr)
+op_vectorise_col::apply_direct(Mat_noalias<typename T1::elem_type>& actual_out, const T1& expr)
   {
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
+  
+  Mat<eT>& out = actual_out;
+  
+  // no special handling for T1 = Mat, as that currently can't happen;
+  // the Mat class uses the Mat_noalias type only for delayed expressions
   
   if(is_subview<T1>::value)
     {
@@ -146,19 +124,12 @@ op_vectorise_col::apply_direct(Mat_noalias<typename T1::elem_type>& out, const T
     op_vectorise_col::apply_subview(out, sv);
     }
   else
-  if( (quasi_unwrap<T1>::has_orig_mem) || (is_Mat<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp) )
     {
-    const quasi_unwrap<T1> U(expr);
+    Mat<eT> tmp = expr;
     
-    out.set_size(U.M.n_elem, 1);
+    tmp.set_size(tmp.n_elem, 1);
     
-    arrayops::copy(out.memptr(), U.M.memptr(), U.M.n_elem);
-    }
-  else
-    {
-    const Proxy<T1> P(expr);
-    
-    op_vectorise_col::apply_proxy(out, P);
+    out.steal_mem(tmp);
     }
   }
 
@@ -185,71 +156,6 @@ op_vectorise_col::apply_subview(Mat<eT>& out, const subview<eT>& sv)
     arrayops::copy(out_mem, sv.colptr(col), sv_n_rows);
     
     out_mem += sv_n_rows;
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_vectorise_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const uword N = P.get_n_elem();
-  
-  out.set_size(N, 1);
-  
-  if(N == 0)  { return; }
-  
-  eT* outmem = out.memptr();
-  
-  if(Proxy<T1>::use_at == false)
-    {
-    // TODO: add handling of aligned access ?
-    
-    typename Proxy<T1>::ea_type A = P.get_ea();
-    
-    uword i,j;
-    
-    for(i=0, j=1; j < N; i+=2, j+=2)
-      {
-      const eT tmp_i = A[i];
-      const eT tmp_j = A[j];
-      
-      outmem[i] = tmp_i;
-      outmem[j] = tmp_j;
-      }
-    
-    if(i < N)
-      {
-      outmem[i] = A[i];
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    if(n_rows == 1)
-      {
-      for(uword i=0; i < n_cols; ++i)
-        {
-        outmem[i] = P.at(0,i);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < n_cols; ++col)
-      for(uword row=0; row < n_rows; ++row)
-        {
-        *outmem = P.at(row,col);
-        outmem++;
-        }
-      }
     }
   }
 

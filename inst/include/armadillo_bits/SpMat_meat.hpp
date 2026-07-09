@@ -6015,11 +6015,14 @@ SpMat<eT>::init_xform_mt(const SpBase<eT2,T1>& A, const Functor& func)
 
 
 template<typename eT>
+template<typename eT2>
 arma_inline
 bool
-SpMat<eT>::is_alias(const SpMat<eT>& X) const
+SpMat<eT>::is_alias(const SpMat<eT2>& X) const
   {
-  return (&X == this);
+  arma_debug_sigprint();
+  
+  return (is_same_type<eT,eT2>::yes) && (void_ptr(this) == void_ptr(&X));
   }
 
 

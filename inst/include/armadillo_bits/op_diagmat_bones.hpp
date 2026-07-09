@@ -28,6 +28,9 @@ struct op_diagmat
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagmat>& X);
   
   template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_diagmat>& X);
+  
+  template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P);
   
   template<typename T1, typename T2>
@@ -47,6 +50,9 @@ struct op_diagmat2
   {
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagmat2>& X);
+  
+  template<typename T1>
+  inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_diagmat2>& X);
   
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset);

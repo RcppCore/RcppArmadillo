@@ -51,6 +51,20 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
 template<typename T1>
 inline
 void
+op_diagvec::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Proxy<T1> P(X.m);
+  
+  op_diagvec::apply_proxy(out, P);
+  }
+
+
+
+template<typename T1>
+inline
+void
 op_diagvec::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
   {
   arma_debug_sigprint();
@@ -487,6 +501,26 @@ op_diagvec2::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec2>& 
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_diagvec2::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1, op_diagvec2>& X)
+  {
+  arma_debug_sigprint();
+  
+  const uword a = X.aux_uword_a;
+  const uword b = X.aux_uword_b;
+  
+  const uword row_offset = (b >  0) ? a : 0;
+  const uword col_offset = (b == 0) ? a : 0;
+  
+  const Proxy<T1> P(X.m);
+  
+  op_diagvec2::apply_proxy(out, P, row_offset, col_offset);
   }
 
 

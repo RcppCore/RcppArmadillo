@@ -27,6 +27,9 @@ struct spop_diagmat
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in);
   
   template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat>& in);
+  
+  template<typename T1>
   inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpBase<typename T1::elem_type, T1>& expr);
   
   template<typename T1, typename T2>
@@ -40,7 +43,6 @@ struct spop_diagmat
   
   template<typename T1, typename T2>
   inline static void apply_noalias(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_times>& expr);
-  
   };
 
 
@@ -50,6 +52,9 @@ struct spop_diagmat2
   {
   template<typename T1>
   inline static void apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat2>& in);
+  
+  template<typename T1>
+  inline static void apply(SpMat_noalias<typename T1::elem_type>& out, const SpOp<T1, spop_diagmat2>& in);
   
   template<typename eT>
   inline static void apply_noalias(SpMat<eT>& out, const SpMat<eT>& X, const uword row_offset, const uword col_offset);

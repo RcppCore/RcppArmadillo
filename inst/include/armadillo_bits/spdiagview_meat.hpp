@@ -1076,4 +1076,15 @@ spdiagview<eT>::randn()
 
 
 
+template<typename eT>
+template<typename eT2>
+arma_inline
+bool
+spdiagview<eT>::is_alias(const SpMat<eT2>& X) const
+  {
+  return m.is_alias(X);
+  }
+
+
+
 //! @}
