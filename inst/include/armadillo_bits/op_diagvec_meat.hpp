@@ -101,30 +101,62 @@ op_diagvec::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
 template<typename T1, typename T2>
 inline
 void
-op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(X.m.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_diagvec::apply_glue_times(tmp, X.m);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_diagvec::apply_glue_times(out, X.m);
+    }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+op_diagvec::apply(Mat_noalias<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X)
+  {
+  arma_debug_sigprint();
+  
+  op_diagvec::apply_glue_times(out, X.m);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+op_diagvec::apply_glue_times(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
   {
   arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
-  const partial_unwrap<T1> UA(X.m.A);
-  const partial_unwrap<T2> UB(X.m.B);
+  const partial_unwrap<T1> UA(X.A);
+  const partial_unwrap<T2> UB(X.B);
   
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
   arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
+  if( (A.n_elem == 0) || (B.n_elem == 0) )  { out.reset(); return; }
   
   constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
   const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
-  
-  const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
-  
-  Mat<eT>  tmp;
-  Mat<eT>& out = (is_alias) ? tmp : actual_out;
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
@@ -251,8 +283,6 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
       out_mem[k] = (use_alpha) ? eT(alpha * acc) : eT(acc);
       }
     }
-  
-  if(is_alias)  { actual_out.steal_mem(tmp); }
   }
 
 
@@ -260,7 +290,7 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
 template<typename T1, typename T2>
 inline
 void
-op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagvec>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+op_diagvec::apply_glue_times(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_times>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
   {
   arma_debug_sigprint();
   arma_ignore(junk);
@@ -268,23 +298,18 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  const partial_unwrap<T1> UA(X.m.A);
-  const partial_unwrap<T2> UB(X.m.B);
+  const partial_unwrap<T1> UA(X.A);
+  const partial_unwrap<T2> UB(X.B);
   
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
   arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
+  if( (A.n_elem == 0) || (B.n_elem == 0) )  { out.reset(); return; }
   
   constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
   const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
-  
-  const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
-  
-  Mat<eT>  tmp;
-  Mat<eT>& out = (is_alias) ? tmp : actual_out;
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
@@ -460,8 +485,6 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
       out_mem[k] = (use_alpha) ? eT(alpha * acc) : eT(acc);
       }
     }
-  
-  if(is_alias)  { actual_out.steal_mem(tmp); }
   }
 
 
