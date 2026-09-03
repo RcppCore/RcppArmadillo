@@ -30,17 +30,11 @@ struct glue_powext
   
   template<typename eT> inline static void apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B);
   
-  // TODO: deprecated; remove in next major version
-  template<typename parent, unsigned int mode, typename T2> inline static Mat<typename parent::elem_type> apply(const subview_each1<parent,mode>& X, const Base<typename parent::elem_type,T2>& Y);
-  
   //
   
   template<typename T1, typename T2> inline static void apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_powext>& X);
   
   template<typename eT> inline static void apply(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B);
-  
-  // TODO: deprecated; remove in next major version
-  template<typename eT, typename T2> inline static Cube<eT> apply(const subview_cube_each1<eT>& X, const Base<eT,T2>& Y);
   };
 
 
@@ -52,17 +46,11 @@ struct glue_powext_cx
   
   template<typename T> inline static void apply(Mat< std::complex<T> >& out, const Mat< std::complex<T> >& A, const Mat<T>& B);
   
-  // TODO: deprecated; remove in next major version
-  template<typename parent, unsigned int mode, typename T2> inline static Mat<typename parent::elem_type> apply(const subview_each1<parent,mode>& X, const Base<typename T2::elem_type,T2>& Y);
-  
   //
   
   template<typename T1, typename T2> inline static void apply(Cube<typename T1::elem_type>& out, const mtGlueCube<typename T1::elem_type,T1,T2,glue_powext_cx>& X);
   
   template<typename T> inline static void apply(Cube< std::complex<T> >& out, const Cube< std::complex<T> >& A, const Cube<T>& B);
-  
-  // TODO: deprecated; remove in next major version
-  template<typename T, typename T2> inline static Cube< std::complex<T> > apply(const subview_cube_each1< std::complex<T> >& X, const Base<T,T2>& Y);
   };
 
 

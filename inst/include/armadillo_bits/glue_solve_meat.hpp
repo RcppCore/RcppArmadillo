@@ -100,6 +100,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   const bool no_trimat    = has_user_flags && bool(flags & solve_opts::flag_no_trimat   );
   const bool force_approx = has_user_flags && bool(flags & solve_opts::flag_force_approx);
   const bool force_sym    = has_user_flags && bool(flags & solve_opts::flag_force_sym   );
+  const bool scale_thresh = has_user_flags && bool(flags & solve_opts::flag_scale_thresh);
   
   if(has_user_flags)
     {
@@ -116,6 +117,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     if(no_trimat   )  { arma_debug_print("no_trimat");    }
     if(force_approx)  { arma_debug_print("force_approx"); }
     if(force_sym   )  { arma_debug_print("force_sym");    }
+    if(scale_thresh)  { arma_debug_print("scale_thresh"); }
     
     arma_conform_check( (fast      && equilibrate ), "solve(): options 'fast' and 'equilibrate' are mutually exclusive"      );
     arma_conform_check( (fast      && refine      ), "solve(): options 'fast' and 'refine' are mutually exclusive"           );
@@ -135,6 +137,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     if(refine)        { arma_warn(2, "solve(): option 'refine' ignored for forced approximate solution"       ); }
     if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
     if(force_sym)     { arma_warn(2, "solve(): option 'force_sym' ignored for forced approximate solution"    ); }
+    if(scale_thresh)  { arma_warn(2, "solve(): option 'scale_thresh' ignored for forced approximate solution" ); }
     
     return auxlib::solve_approx_svd(actual_out, A, B_expr.get_ref());  // A is overwritten
     }
@@ -161,6 +164,10 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   
   Mat<eT>  tmp;
   Mat<eT>& out = (is_alias) ? tmp : actual_out;
+  
+  const T rcond_threshold = (scale_thresh) ? T(std::numeric_limits<T>::epsilon() * (std::max)(uword(1), (std::max)(A.n_rows, A.n_cols))) : T(std::numeric_limits<T>::epsilon());
+  
+  arma_debug_print("glue_solve_gen_full::apply(): rcond_threshold: ", rcond_threshold);
   
   T    rcond  = T(0);
   bool status = false;
@@ -364,7 +371,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     }
   
   
-  if( (status == true) && (fast == false) && (allow_ugly == false) && ((rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(rcond)) )
+  if( (status == true) && (fast == false) && (allow_ugly == false) && ((rcond < rcond_threshold) || arma_isnan(rcond)) )
     {
     status = false;
     }
@@ -380,7 +387,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       }
     else
       {
-      arma_warn(2, "solve(): system is singular; rcond: ", rcond, "; attempting approx solution");
+      arma_warn(2, "solve(): system is close to singular; rcond: ", rcond, "; attempting approx solution");
       }
     
     // TODO: conditionally recreate A: have a separate state flag which indicates whether A was previously overwritten
@@ -472,7 +479,7 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
       }
     else
       {
-      arma_warn(2, "solve(): system is singular; rcond: ", rcond, "; attempting approx solution");
+      arma_warn(2, "solve(): system is close to singular; rcond: ", rcond, "; attempting approx solution");
       }
     
     Mat<eT> triA = (triu) ? trimatu(A) : trimatl(A);  // trimatu() and trimatl() return the same type
@@ -530,6 +537,7 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
   const bool force_approx = bool(flags & solve_opts::flag_force_approx);
   const bool force_sym    = bool(flags & solve_opts::flag_force_sym   );
+  const bool scale_thresh = bool(flags & solve_opts::flag_scale_thresh);
   
   arma_debug_print("glue_solve_tri_full::apply(): enabled flags:");
   
@@ -544,6 +552,7 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   if(no_trimat   )  { arma_debug_print("no_trimat");    }
   if(force_approx)  { arma_debug_print("force_approx"); }
   if(force_sym   )  { arma_debug_print("force_sym");    }
+  if(scale_thresh)  { arma_debug_print("scale_thresh"); }
   
   arma_conform_check( (likely_sympd), "solve(): option 'likely_sympd' not applicable to triangular matrix" );
   arma_conform_check( (force_sym   ), "solve(): option 'force_sym' not applicable to triangular matrix"    );
@@ -566,6 +575,10 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   
   if(is_alias)  { arma_debug_print("glue_solve_tri_full::apply(): aliasing detected"); }
   
+  const T rcond_threshold = (scale_thresh) ? T(std::numeric_limits<T>::epsilon() * (std::max)(uword(1), (std::max)(A.n_rows, A.n_cols))) : T(std::numeric_limits<T>::epsilon());
+  
+  arma_debug_print("glue_solve_tri_full::apply(): rcond_threshold: ", rcond_threshold);
+  
   T    rcond  = T(0);
   bool status = false;
   
@@ -582,7 +595,7 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     }
   
   
-  if( (status == true) && (fast == false) && (allow_ugly == false) && ((rcond < std::numeric_limits<T>::epsilon()) || arma_isnan(rcond)) )
+  if( (status == true) && (fast == false) && (allow_ugly == false) && ((rcond < rcond_threshold) || arma_isnan(rcond)) )
     {
     status = false;
     }
@@ -598,7 +611,7 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       }
     else
       {
-      arma_warn(2, "solve(): system is singular; rcond: ", rcond, "; attempting approx solution");
+      arma_warn(2, "solve(): system is close to singular; rcond: ", rcond, "; attempting approx solution");
       }
     
     Mat<eT> triA = (triu) ? trimatu(A) : trimatl(A);  // trimatu() and trimatl() return the same type

@@ -53,6 +53,10 @@ struct BaseCube
   {
   arma_inline const derived& get_ref() const;
   
+  arma_warn_unused inline const OpCube<derived,op_htrans>  t() const;
+  arma_warn_unused inline const OpCube<derived,op_htrans> ht() const;
+  arma_warn_unused inline const OpCube<derived,op_strans> st() const;
+  
   arma_cold inline void print(                           const std::string extra_text = "") const;
   arma_cold inline void print(std::ostream& user_stream, const std::string extra_text = "") const;
   

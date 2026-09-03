@@ -5000,54 +5000,6 @@ SpMat<eT>::load(std::istream& is, const file_type type)
 
 
 
-template<typename eT>
-inline
-bool
-SpMat<eT>::quiet_save(const std::string name, const file_type type) const
-  {
-  arma_debug_sigprint();
-  
-  return (*this).save(name, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::quiet_save(std::ostream& os, const file_type type) const
-  {
-  arma_debug_sigprint();
-  
-  return (*this).save(os, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::quiet_load(const std::string name, const file_type type)
-  {
-  arma_debug_sigprint();
-  
-  return (*this).load(name, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::quiet_load(std::istream& is, const file_type type)
-  {
-  arma_debug_sigprint();
-  
-  return (*this).load(is, type);
-  }
-
-
-
 /**
  * Initialize the matrix to the specified size.  Data is not preserved, so the matrix is assumed to be entirely sparse (empty).
  */

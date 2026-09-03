@@ -416,6 +416,92 @@ op_htrans::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_htrans
 
 
 //
+  
+
+
+template<typename eT>
+inline
+void
+op_htrans::apply_cube_noalias(Cube<eT>& Y, const Cube<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  const uword X_nr = X.n_rows;
+  const uword X_nc = X.n_cols;
+  const uword X_ns = X.n_slices;
+  
+  Y.set_size(X_nc, X_nr, X_ns);
+  
+  if(Y.is_empty())  { return; }
+  
+  for(uword s=0; s < X_ns; ++s)
+    {
+    const Mat<eT> X_slice_s(const_cast<eT*>(X.slice_memptr(s)), X_nr, X_nc, false, true);
+          Mat<eT> Y_slice_s(                Y.slice_memptr(s) , X_nc, X_nr, false, true);
+    
+    op_htrans::apply_mat_noalias(Y_slice_s, X_slice_s);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_htrans::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Cube<eT> tmp;
+    
+    op_strans::apply_cube_noalias(tmp, U.M);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_strans::apply_cube_noalias(out, U.M);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_htrans::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  if(U.is_alias(out))
+    {
+    Cube<eT> tmp;
+    
+    op_htrans::apply_cube_noalias(tmp, U.M);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_htrans::apply_cube_noalias(out, U.M);
+    }
+  }
+
+
+
+//
 // op_htrans2
 
 

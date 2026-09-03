@@ -211,6 +211,110 @@ struct strip_op_find_default< mtOp<uword, T1, op_find_default> >
 
 
 template<typename T1>
+struct strip_trans
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_trans(const T1& X)
+    : M(X)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = false;
+  static constexpr bool do_strans = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct strip_trans< Op<T1, op_htrans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_trans(const Op<T1, op_htrans>& X)
+    : M(X.m)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = true;
+  static constexpr bool do_strans = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct strip_trans< Op<T1, op_strans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_trans(const Op<T1, op_strans>& X)
+    : M(X.m)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = false;
+  static constexpr bool do_strans = true;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct strip_trans< OpCube<T1, op_htrans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_trans(const OpCube<T1, op_htrans>& X)
+    : M(X.m)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = true;
+  static constexpr bool do_strans = false;
+  
+  const T1& M;
+  };
+
+
+
+template<typename T1>
+struct strip_trans< OpCube<T1, op_strans> >
+  {
+  typedef T1 stored_type;
+  
+  inline
+  strip_trans(const OpCube<T1, op_strans>& X)
+    : M(X.m)
+    {
+    arma_debug_sigprint();
+    }
+  
+  static constexpr bool do_htrans = false;
+  static constexpr bool do_strans = true;
+  
+  const T1& M;
+  };
+
+
+
+//
+
+
+
+template<typename T1>
 struct sp_strip_trans
   {
   typedef T1 stored_type;

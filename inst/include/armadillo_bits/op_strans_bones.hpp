@@ -72,14 +72,14 @@ struct op_strans
   
   template<typename T1>
   inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_strans>& in);
-  };
-
-
-
-struct op_strans_cube
-  {
+  
+  //
+  
   template<typename eT>
-  inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& X);
+  inline static void apply_cube_noalias(Cube<eT>& Y, const Cube<eT>& X);
+  
+  template<typename T1>
+  inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_strans>& in);
   };
 
 

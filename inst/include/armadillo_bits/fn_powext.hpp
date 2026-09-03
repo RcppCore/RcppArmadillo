@@ -43,23 +43,6 @@ pow
 
 
 
-template<typename parent, unsigned int mode, typename T2>
-[[deprecated("refactor your code to use pow() in conjunction with repmat()")]]
-inline
-Mat<typename parent::elem_type>
-pow
-  (
-  const subview_each1<parent,mode>&          X,
-  const Base<typename parent::elem_type,T2>& Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  return glue_powext::apply(X,Y);
-  }
-
-
-
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -73,23 +56,6 @@ pow
   arma_debug_sigprint();
   
   return GlueCube<T1, T2, glue_powext>(X.get_ref(), Y.get_ref());
-  }
-
-
-
-template<typename eT, typename T2>
-[[deprecated("refactor your code to use pow() in conjunction with repcube()")]]
-inline
-Cube<eT>
-pow
-  (
-  const subview_cube_each1<eT>& X,
-  const Base<eT,T2>&            Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  return glue_powext::apply(X,Y);
   }
 
 
@@ -120,28 +86,6 @@ pow
 
 
 
-template<typename parent, unsigned int mode, typename T2>
-[[deprecated("refactor your code to use pow() in conjunction with repmat()")]]
-inline
-typename
-enable_if2
-  <
-  is_cx<typename parent::elem_type>::yes,
-  Mat<typename parent::elem_type>
-  >::result
-pow
-  (
-  const subview_each1<parent,mode>&         X,
-  const Base<typename parent::pod_type,T2>& Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  return glue_powext_cx::apply(X,Y);
-  }
-
-
-
 template<typename T1, typename T2>
 arma_warn_unused
 inline
@@ -155,23 +99,6 @@ pow
   arma_debug_sigprint();
   
   return mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>(X.get_ref(), Y.get_ref());
-  }
-
-
-
-template<typename T, typename T2>
-[[deprecated("refactor your code to use pow() in conjunction with repcube()")]]
-inline
-Cube< std::complex<T> >
-pow
-  (
-  const subview_cube_each1< std::complex<T> >& X,
-  const Base<T,T2>&                            Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  return glue_powext_cx::apply(X,Y);
   }
 
 

@@ -16,45 +16,21 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup fn_permute
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 15
-#define ARMA_VERSION_MINOR 5
-#define ARMA_VERSION_PATCH 90
-#define ARMA_VERSION_NAME  "experimental"
-
-
-
-struct arma_version
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_permute>
+permute(const BaseCube<typename T1::elem_type, T1>& expr, const uword dim0_map, const uword dim1_map, const uword dim2_map)
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  arma_debug_sigprint();
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
-  };
+  return OpCube<T1, op_permute>(expr.get_ref(), dim0_map, dim1_map, dim2_map);
+  }
 
 
 
