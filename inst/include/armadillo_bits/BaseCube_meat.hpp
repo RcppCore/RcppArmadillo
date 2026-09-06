@@ -33,6 +33,36 @@ BaseCube<elem_type,derived>::get_ref() const
 
 template<typename elem_type, typename derived>
 inline
+const OpCube<derived,op_htrans>
+BaseCube<elem_type,derived>::t() const
+  {
+  return OpCube<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const OpCube<derived,op_htrans>
+BaseCube<elem_type,derived>::ht() const
+  {
+  return OpCube<derived,op_htrans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+const OpCube<derived,op_strans>
+BaseCube<elem_type,derived>::st() const
+  {
+  return OpCube<derived,op_strans>( static_cast<const derived&>(*this) );
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
 void
 BaseCube<elem_type,derived>::print(const std::string extra_text) const
   {

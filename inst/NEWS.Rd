@@ -3,6 +3,20 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.5.90-1 (2026-09-03)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.5.90 (experimental)
+    \itemize{
+      \item Expanded \code{solve()} with \code{solve_opts::scale_thresh}
+      option to widen detection of poorly conditioned systems
+      \item Expanded \code{trans()} and \code{.t()} to handle cubes
+      \item Added \code{permute()} to rearrange dimensions of cubes
+      (generalised transpose)
+      \item Added \code{cubemul()} for batched matrix multiplication of cube slices
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.4.2-1 (2026-07-25)}{
   \itemize{
     \item Upgraded to Armadillo release 15.4.2 (Medium Roast Agave)

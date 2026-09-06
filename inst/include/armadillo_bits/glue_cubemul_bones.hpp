@@ -16,44 +16,27 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+
+//! \addtogroup glue_cubemul
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 15
-#define ARMA_VERSION_MINOR 5
-#define ARMA_VERSION_PATCH 90
-#define ARMA_VERSION_NAME  "experimental"
-
-
-
-struct arma_version
+struct glue_cubemul
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  template<typename T1, typename T2>
+  inline static void apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_cubemul>& X);
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
+  inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B);
+  
+  //
+  
+  template<typename T1, typename T2>
+  inline static Cube<typename T1::elem_type> apply(const BaseCube<typename T1::elem_type,T1>& expr_A, const Base<typename T1::elem_type,T2>& expr_B);
+  
+  template<typename T1, typename T2>
+  inline static Cube<typename T1::elem_type> apply(const Base<typename T1::elem_type,T1>& expr_A, const BaseCube<typename T1::elem_type,T2>& expr_B);
   };
 
 

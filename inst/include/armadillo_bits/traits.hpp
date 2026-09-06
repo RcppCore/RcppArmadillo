@@ -30,45 +30,26 @@ struct get_pod_type< std::complex<T2> >
 
 
 
-template<typename T>
-struct is_Mat_fixed_only
-  {
-  using yes = char[1];
-  using no  = char[2];
-  
-  template<typename X> static yes& check(typename X::Mat_fixed_type*);
-  template<typename>   static  no& check(...);
-  
-  static constexpr bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
-  };
+template<typename...>
+using arma_void_type = void;
 
+template<typename T, typename = void>
+struct is_Mat_fixed_only { static constexpr bool value = false; };
 
+template<typename T, typename = void>
+struct is_Row_fixed_only { static constexpr bool value = false; };
+
+template<typename T, typename = void>
+struct is_Col_fixed_only { static constexpr bool value = false; };
 
 template<typename T>
-struct is_Row_fixed_only
-  {
-  using yes = char[1];
-  using no  = char[2];
-  
-  template<typename X> static yes& check(typename X::Row_fixed_type*);
-  template<typename>   static  no& check(...);
-  
-  static constexpr bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
-  };
-
-
+struct is_Mat_fixed_only< T, arma_void_type<typename T::Mat_fixed_type> > { static constexpr bool value = true; };
 
 template<typename T>
-struct is_Col_fixed_only
-  {
-  using yes = char[1];
-  using no  = char[2];
-  
-  template<typename X> static yes& check(typename X::Col_fixed_type*);
-  template<typename>   static  no& check(...);
-  
-  static constexpr bool value = ( sizeof(check<T>(0)) == sizeof(yes) );
-  };
+struct is_Row_fixed_only< T, arma_void_type<typename T::Row_fixed_type> > { static constexpr bool value = true; };
+
+template<typename T>
+struct is_Col_fixed_only< T, arma_void_type<typename T::Col_fixed_type> > { static constexpr bool value = true; };
 
 
 

@@ -221,13 +221,6 @@ class field
   arma_cold inline bool load(      std::istream& is,   const file_type type = auto_detect);
   
   
-  [[deprecated]] inline bool quiet_save(const std::string   name, const file_type type = arma_binary) const;
-  [[deprecated]] inline bool quiet_save(      std::ostream& os,   const file_type type = arma_binary) const;
-  
-  [[deprecated]] inline bool quiet_load(const std::string   name, const file_type type = auto_detect);
-  [[deprecated]] inline bool quiet_load(      std::istream& is,   const file_type type = auto_detect);
-  
-  
   // for container-like functionality
   
   typedef oT    value_type;

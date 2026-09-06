@@ -83,6 +83,17 @@ struct op_htrans
   
   template<typename T1>
   inline static void apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
+  
+  //
+  
+  template<typename eT>
+  inline static void apply_cube_noalias(Cube<eT>& Y, const Cube<eT>& X);
+
+  template<typename T1>
+  inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_htrans>& in, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
+  
+  template<typename T1>
+  inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_htrans>& in, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   };
 
 

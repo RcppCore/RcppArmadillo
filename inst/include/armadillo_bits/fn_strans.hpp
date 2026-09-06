@@ -64,6 +64,26 @@ strans
 
 
 //
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_strans>
+strans
+  (
+  const BaseCube<typename T1::elem_type, T1>& expr
+  )
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_strans>(expr.get_ref());
+  }
+
+
+
+//
 // handling of sparse matrices
 
 

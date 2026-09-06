@@ -4716,7 +4716,7 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type) const
     {
     Cube<eT> tmp;
     
-    op_strans_cube::apply_noalias(tmp, (*this));
+    op_strans::apply_cube_noalias(tmp, (*this));
     
     save_okay = diskio::save_hdf5_binary(tmp, spec, err_msg);
     }
@@ -4879,7 +4879,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type)
     
     load_okay = diskio::load_hdf5_binary(tmp, spec, err_msg);
     
-    if(load_okay)  { op_strans_cube::apply_noalias((*this), tmp); }
+    if(load_okay)  { op_strans::apply_cube_noalias((*this), tmp); }
     }
   else
     {
@@ -4963,78 +4963,6 @@ Cube<eT>::load(std::istream& is, const file_type type)
     }
   
   return load_okay;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_save(const std::string name, const file_type type) const
-  {
-  arma_debug_sigprint();
-  
-  return (*this).save(name, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_save(const hdf5_name& spec, const file_type type) const
-  {
-  arma_debug_sigprint();
-  
-  return (*this).save(spec, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_save(std::ostream& os, const file_type type) const
-  {
-  arma_debug_sigprint();
-  
-  return (*this).save(os, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_load(const std::string name, const file_type type)
-  {
-  arma_debug_sigprint();
-  
-  return (*this).load(name, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_load(const hdf5_name& spec, const file_type type)
-  {
-  arma_debug_sigprint();
-  
-  return (*this).load(spec, type);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::quiet_load(std::istream& is, const file_type type)
-  {
-  arma_debug_sigprint();
-  
-  return (*this).load(is, type);
   }
 
 

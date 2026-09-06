@@ -16,44 +16,17 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+
+//! \addtogroup op_permute
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 15
-#define ARMA_VERSION_MINOR 5
-#define ARMA_VERSION_PATCH 90
-#define ARMA_VERSION_NAME  "experimental"
-
-
-
-struct arma_version
+struct op_permute
   {
-  static constexpr unsigned int major = ARMA_VERSION_MAJOR;
-  static constexpr unsigned int minor = ARMA_VERSION_MINOR;
-  static constexpr unsigned int patch = ARMA_VERSION_PATCH;
+  template<typename T1> inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_permute>& in);
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::ostringstream ss;
-    
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename eT> inline static void apply_noalias(Cube<eT>& Y, const Cube<eT>& X, const uword d0, const uword d1, const uword d2);
   };
 
 

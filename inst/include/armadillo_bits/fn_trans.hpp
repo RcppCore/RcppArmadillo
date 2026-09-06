@@ -57,6 +57,42 @@ htrans
 
 
 //
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_htrans>
+trans
+  (
+  const BaseCube<typename T1::elem_type, T1>& expr
+  )
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_htrans>(expr.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_htrans>
+htrans
+  (
+  const BaseCube<typename T1::elem_type, T1>& expr
+  )
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_htrans>(expr.get_ref());
+  }
+
+
+
+//
 // handling of sparse matrices
 
 
