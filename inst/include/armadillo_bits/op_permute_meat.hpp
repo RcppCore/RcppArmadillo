@@ -68,7 +68,7 @@ op_permute::apply_noalias(Cube<eT>& Y, const Cube<eT>& X, const uword d0, const 
   const uword X_nr = X.n_rows;
   const uword X_nc = X.n_cols;
   const uword X_ns = X.n_slices;
-
+  
   const uword Y_nr = (d0 == uword(0)) ? X_nr : ((d0 == uword(1)) ? X_nc : X_ns);
   const uword Y_nc = (d1 == uword(0)) ? X_nr : ((d1 == uword(1)) ? X_nc : X_ns);
   const uword Y_ns = (d2 == uword(0)) ? X_nr : ((d2 == uword(1)) ? X_nc : X_ns);

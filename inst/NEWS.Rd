@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.5.90-1 (2026-09-03)}{
+\section{Changes in RcppArmadillo version 15.5.91-1 (2026-09-06)}{
   \itemize{
-    \item Upgraded to Armadillo release 15.5.90 (experimental)
+    \item Upgraded to Armadillo release 15.5.91 (experimental)
     \itemize{
       \item Expanded \code{solve()} with \code{solve_opts::scale_thresh}
       option to widen detection of poorly conditioned systems

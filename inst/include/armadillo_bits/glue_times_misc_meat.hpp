@@ -329,11 +329,11 @@ glue_times_sparse_dense::apply(Mat<typename T1::elem_type>& out, const SpToDGlue
   
   const quasi_unwrap<T2> UB(expr.B);
   
-  if((sp_strip_trans<T1>::do_htrans && is_cx<eT>::no) || (sp_strip_trans<T1>::do_strans))
+  if((sp_strip_xtrans<T1>::do_htrans && is_cx<eT>::no) || (sp_strip_xtrans<T1>::do_strans))
     {
     arma_debug_print("detected non-conjugate transpose of A");
     
-    const sp_strip_trans<T1> x_strip(expr.A);
+    const sp_strip_xtrans<T1> x_strip(expr.A);
     
     if(UB.is_alias(out))
       {

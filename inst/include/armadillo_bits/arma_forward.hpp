@@ -97,6 +97,7 @@ struct op_vectorise_col;
 struct op_symmatu;
 struct op_symmatl;
 struct op_omit;
+struct op_permute;
 
 struct op_row_as_mat;
 struct op_col_as_mat;

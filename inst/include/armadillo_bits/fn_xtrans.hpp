@@ -16,8 +16,43 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_strans
+//! \addtogroup fn_xtrans
 //! @{
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const Op<T1, op_htrans>
+trans
+  (
+  const T1& X,
+  const typename enable_if< is_arma_type<T1>::value >::result* junk = nullptr
+  )
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const Op<T1, op_htrans>
+htrans
+  (
+  const T1& X,
+  const typename enable_if< is_arma_type<T1>::value >::result* junk = nullptr
+  )
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  return Op<T1, op_htrans>(X);
+  }
 
 
 
@@ -70,6 +105,38 @@ strans
 template<typename T1>
 arma_warn_unused
 inline
+const OpCube<T1, op_htrans>
+trans
+  (
+  const BaseCube<typename T1::elem_type, T1>& expr
+  )
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_htrans>(expr.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+const OpCube<T1, op_htrans>
+htrans
+  (
+  const BaseCube<typename T1::elem_type, T1>& expr
+  )
+  {
+  arma_debug_sigprint();
+  
+  return OpCube<T1, op_htrans>(expr.get_ref());
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
 const OpCube<T1, op_strans>
 strans
   (
@@ -84,7 +151,43 @@ strans
 
 
 //
-// handling of sparse matrices
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const SpOp<T1, spop_htrans>
+trans
+  (
+  const T1& X,
+  const typename enable_if< is_arma_sparse_type<T1>::value >::result* junk = nullptr
+  )
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  return SpOp<T1, spop_htrans>(X);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+arma_inline
+const SpOp<T1, spop_htrans>
+htrans
+  (
+  const T1& X,
+  const typename enable_if< is_arma_sparse_type<T1>::value >::result* junk = nullptr
+  )
+  {
+  arma_debug_sigprint();
+  arma_ignore(junk);
+  
+  return SpOp<T1, spop_htrans>(X);
+  }
+
 
 
 template<typename T1>

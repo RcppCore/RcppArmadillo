@@ -30,32 +30,126 @@ glue_cubemul::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue
   
   typedef typename T1::elem_type eT;
   
-  const strip_trans<T1> SA(X.A);
-  const strip_trans<T2> SB(X.B);
+  const bool XA_is_permute_equiv_to_strans = is_permute_equiv_to_strans_expr<T1>::eval(X.A);
+  const bool XB_is_permute_equiv_to_strans = is_permute_equiv_to_strans_expr<T2>::eval(X.B);
   
-  constexpr bool do_strans_A = strip_trans<T1>::do_strans;
-  constexpr bool do_htrans_A = strip_trans<T1>::do_htrans;
-  
-  constexpr bool do_strans_B = strip_trans<T2>::do_strans;
-  constexpr bool do_htrans_B = strip_trans<T2>::do_htrans;
-  
-  const unwrap_cube<typename strip_trans<T1>::stored_type> UA(SA.M);
-  const unwrap_cube<typename strip_trans<T2>::stored_type> UB(SB.M);
-  
-  const Cube<eT>& A = UA.M;
-  const Cube<eT>& B = UB.M;
-  
-  if(UA.is_alias(out) || UB.is_alias(out))
+  if(XA_is_permute_equiv_to_strans && XB_is_permute_equiv_to_strans)
     {
-    Cube<eT> tmp;
+    arma_debug_print("case: X.A and X.B permute is equivalent to strans");
     
-    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(tmp, A, B);
+    const strip_permute<T1> SA(X.A);
+    const strip_permute<T2> SB(X.B);
     
-    out.steal_mem(tmp);
+    constexpr bool do_strans_A = true;
+    constexpr bool do_htrans_A = false;
+    
+    constexpr bool do_strans_B = true;
+    constexpr bool do_htrans_B = false;
+    
+    const unwrap_cube<typename strip_permute<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_permute<T2>::stored_type> UB(SB.M);
+    
+    if(UA.is_alias(out) || UB.is_alias(out))
+      {
+      Cube<eT> tmp;
+      
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(tmp, UA.M, UB.M);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+      }
+    }
+  else
+  if(XA_is_permute_equiv_to_strans)
+    {
+    arma_debug_print("case: X.A permute is equivalent to strans");
+    
+    const strip_permute<T1> SA(X.A);
+    const  strip_xtrans<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = true;
+    constexpr bool do_htrans_A = false;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const unwrap_cube<typename strip_permute<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename  strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    if(UA.is_alias(out) || UB.is_alias(out))
+      {
+      Cube<eT> tmp;
+      
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(tmp, UA.M, UB.M);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+      }
+    }
+  else
+  if(XB_is_permute_equiv_to_strans)
+    {
+    arma_debug_print("case: X.B permute is equivalent to strans");
+    
+    const  strip_xtrans<T1> SA(X.A);
+    const strip_permute<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = true;
+    constexpr bool do_htrans_B = false;
+    
+    const unwrap_cube<typename  strip_xtrans<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_permute<T2>::stored_type> UB(SB.M);
+    
+    if(UA.is_alias(out) || UB.is_alias(out))
+      {
+      Cube<eT> tmp;
+      
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(tmp, UA.M, UB.M);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+      }
     }
   else
     {
-    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, A, B);
+    arma_debug_print("case: default operation");
+    
+    const strip_xtrans<T1> SA(X.A);
+    const strip_xtrans<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const unwrap_cube<typename strip_xtrans<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    if(UA.is_alias(out) || UB.is_alias(out))
+      {
+      Cube<eT> tmp;
+      
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(tmp, UA.M, UB.M);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+      }
     }
   }
 
@@ -143,20 +237,56 @@ glue_cubemul::apply(const BaseCube<typename T1::elem_type,T1>& expr_A, const Bas
   
   typedef typename T1::elem_type eT;
   
-  const strip_trans<T1> SA(expr_A.get_ref());
-  const strip_trans<T2> SB(expr_B.get_ref());
+  Cube<eT> out;
   
-  constexpr bool do_strans_A = strip_trans<T1>::do_strans;
-  constexpr bool do_htrans_A = strip_trans<T1>::do_htrans;
+  if(is_permute_equiv_to_strans_expr<T1>::eval(expr_A.get_ref()))
+    {
+    arma_debug_print("case: permute is equivalent to strans");
+    
+    const strip_permute<T1> SA(expr_A.get_ref());
+    const  strip_xtrans<T2> SB(expr_B.get_ref());
+    
+    constexpr bool do_strans_A = true;
+    constexpr bool do_htrans_A = false;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const  unwrap_cube<typename strip_permute<T1>::stored_type> UA(SA.M);
+    const quasi_unwrap<typename  strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  else
+    {
+    arma_debug_print("case: default operation");
+    
+    const strip_xtrans<T1> SA(expr_A.get_ref());
+    const strip_xtrans<T2> SB(expr_B.get_ref());
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const  unwrap_cube<typename strip_xtrans<T1>::stored_type> UA(SA.M);
+    const quasi_unwrap<typename strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
   
-  constexpr bool do_strans_B = strip_trans<T2>::do_strans;
-  constexpr bool do_htrans_B = strip_trans<T2>::do_htrans;
-  
-  const  unwrap_cube<typename strip_trans<T1>::stored_type> UA(SA.M);
-  const quasi_unwrap<typename strip_trans<T2>::stored_type> UB(SB.M);
-  
-  const Cube<eT>& A = UA.M;
-  const  Mat<eT>& B = UB.M;
+  return out;
+  }
+
+
+
+template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
+inline
+void
+glue_cubemul::apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Mat<eT>& B)
+  {
+  arma_debug_sigprint();
   
   constexpr bool do_xtrans_A = (do_strans_A || do_htrans_A);
   constexpr bool do_xtrans_B = (do_strans_B || do_htrans_B);
@@ -176,45 +306,46 @@ glue_cubemul::apply(const BaseCube<typename T1::elem_type,T1>& expr_A, const Bas
     arma_stop_logic_error(tmp.str());
     }
   
-  Cube<eT> out(final_A_n_rows, final_B_n_cols, A.n_slices, arma_nozeros_indicator());
+  out.set_size(final_A_n_rows, final_B_n_cols, A.n_slices);
   
-  if(out.is_empty() == false)
+  if(out.is_empty())  { return; }
+  
+  for(uword s=0; s < A.n_slices; ++s)
     {
-    for(uword s=0; s < A.n_slices; ++s)
+    const Mat<eT> A_slice_s(const_cast<eT*>(A.slice_memptr(s)), A.n_rows, A.n_cols, false, true);
+    
+    Mat<eT> out_slice_s(out.slice_memptr(s), final_A_n_rows, final_B_n_cols, false, true);
+    
+    if( (do_xtrans_A == false) && (do_xtrans_B == false) )
       {
-      const Mat<eT> A_slice_s(const_cast<eT*>(A.slice_memptr(s)), A.n_rows, A.n_cols, false, true);
-      
-      Mat<eT> out_slice_s(out.slice_memptr(s), final_A_n_rows, final_B_n_cols, false, true);
-      
-      if( (do_xtrans_A == false) && (do_xtrans_B == false) )
-        {
-        out_slice_s = A_slice_s * B;
-        }
-      else
-      if( (do_xtrans_A == false) && (do_xtrans_B == true ) )
-        {
-             if(do_strans_B)  { out_slice_s = A_slice_s * strans(B); }
-        else if(do_htrans_B)  { out_slice_s = A_slice_s * htrans(B); }
-        }
-      else
-      if( (do_xtrans_A == true ) && (do_xtrans_B == false) )
-        {
-             if(do_strans_A)  { out_slice_s = strans(A_slice_s) * B; }
-        else if(do_htrans_A)  { out_slice_s = htrans(A_slice_s) * B; }
-        }
-      else
-      if( (do_xtrans_A == true ) && (do_xtrans_B == true ) )
-        {
-             if( (do_strans_A) && (do_strans_B) )  { out_slice_s = strans(A_slice_s) * strans(B); }
-        else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A_slice_s) * htrans(B); }
-        else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A_slice_s) * strans(B); }
-        else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A_slice_s) * htrans(B); }
-        }
+      out_slice_s = A_slice_s * B;
+      }
+    else
+    if( (do_xtrans_A == false) && (do_xtrans_B == true ) )
+      {
+           if(do_strans_B)  { out_slice_s = A_slice_s * strans(B); }
+      else if(do_htrans_B)  { out_slice_s = A_slice_s * htrans(B); }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == false) )
+      {
+           if(do_strans_A)  { out_slice_s = strans(A_slice_s) * B; }
+      else if(do_htrans_A)  { out_slice_s = htrans(A_slice_s) * B; }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == true ) )
+      {
+           if( (do_strans_A) && (do_strans_B) )  { out_slice_s = strans(A_slice_s) * strans(B); }
+      else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A_slice_s) * htrans(B); }
+      else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A_slice_s) * strans(B); }
+      else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A_slice_s) * htrans(B); }
       }
     }
-  
-  return out;
   }
+
+
+
+//
 
 
 
@@ -227,20 +358,56 @@ glue_cubemul::apply(const Base<typename T1::elem_type,T1>& expr_A, const BaseCub
   
   typedef typename T1::elem_type eT;
   
-  const strip_trans<T1> SA(expr_A.get_ref());
-  const strip_trans<T2> SB(expr_B.get_ref());
+  Cube<eT> out;
   
-  constexpr bool do_strans_A = strip_trans<T1>::do_strans;
-  constexpr bool do_htrans_A = strip_trans<T1>::do_htrans;
+  if(is_permute_equiv_to_strans_expr<T2>::eval(expr_B.get_ref()))
+    {
+    arma_debug_print("case: permute is equivalent to strans");
+    
+    const  strip_xtrans<T1> SA(expr_A.get_ref());
+    const strip_permute<T2> SB(expr_B.get_ref());
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = true;
+    constexpr bool do_htrans_B = false;
+    
+    const quasi_unwrap<typename  strip_xtrans<T1>::stored_type> UA(SA.M);
+    const  unwrap_cube<typename strip_permute<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  else
+    {
+    arma_debug_print("case: default operation");
+    
+    const strip_xtrans<T1> SA(expr_A.get_ref());
+    const strip_xtrans<T2> SB(expr_B.get_ref());
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const quasi_unwrap<typename strip_xtrans<T1>::stored_type> UA(SA.M);
+    const  unwrap_cube<typename strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
   
-  constexpr bool do_strans_B = strip_trans<T2>::do_strans;
-  constexpr bool do_htrans_B = strip_trans<T2>::do_htrans;
-  
-  const quasi_unwrap<typename strip_trans<T1>::stored_type> UA(SA.M);
-  const  unwrap_cube<typename strip_trans<T2>::stored_type> UB(SB.M);
-  
-  const  Mat<eT>& A = UA.M;
-  const Cube<eT>& B = UB.M;
+  return out;
+  }
+
+
+
+template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
+inline
+void
+glue_cubemul::apply_noalias(Cube<eT>& out, const Mat<eT>& A, const Cube<eT>& B)
+  {
+  arma_debug_sigprint();
   
   constexpr bool do_xtrans_A = (do_strans_A || do_htrans_A);
   constexpr bool do_xtrans_B = (do_strans_B || do_htrans_B);
@@ -260,44 +427,41 @@ glue_cubemul::apply(const Base<typename T1::elem_type,T1>& expr_A, const BaseCub
     arma_stop_logic_error(tmp.str());
     }
   
-  Cube<eT> out(final_A_n_rows, final_B_n_cols, B.n_slices, arma_nozeros_indicator());
+  out.set_size(final_A_n_rows, final_B_n_cols, B.n_slices);
   
-  if(out.is_empty() == false)
+  if(out.is_empty())  { return; }
+  
+  for(uword s=0; s < B.n_slices; ++s)
     {
-    for(uword s=0; s < B.n_slices; ++s)
+    const Mat<eT> B_slice_s(const_cast<eT*>(B.slice_memptr(s)), B.n_rows, B.n_cols, false, true);
+    
+    Mat<eT> out_slice_s(out.slice_memptr(s), final_A_n_rows, final_B_n_cols, false, true);
+    
+    if( (do_xtrans_A == false) && (do_xtrans_B == false) )
       {
-      const Mat<eT> B_slice_s(const_cast<eT*>(B.slice_memptr(s)), B.n_rows, B.n_cols, false, true);
-      
-      Mat<eT> out_slice_s(out.slice_memptr(s), final_A_n_rows, final_B_n_cols, false, true);
-      
-      if( (do_xtrans_A == false) && (do_xtrans_B == false) )
-        {
-        out_slice_s = A * B_slice_s;
-        }
-      else
-      if( (do_xtrans_A == false) && (do_xtrans_B == true ) )
-        {
-             if(do_strans_B)  { out_slice_s = A * strans(B_slice_s); }
-        else if(do_htrans_B)  { out_slice_s = A * htrans(B_slice_s); }
-        }
-      else
-      if( (do_xtrans_A == true ) && (do_xtrans_B == false) )
-        {
-             if(do_strans_A)  { out_slice_s = strans(A) * B_slice_s; }
-        else if(do_htrans_A)  { out_slice_s = htrans(A) * B_slice_s; }
-        }
-      else
-      if( (do_xtrans_A == true ) && (do_xtrans_B == true ) )
-        {
-             if( (do_strans_A) && (do_strans_B) )  { out_slice_s = strans(A) * strans(B_slice_s); }
-        else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A) * htrans(B_slice_s); }
-        else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A) * strans(B_slice_s); }
-        else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A) * htrans(B_slice_s); }
-        }
+      out_slice_s = A * B_slice_s;
+      }
+    else
+    if( (do_xtrans_A == false) && (do_xtrans_B == true ) )
+      {
+           if(do_strans_B)  { out_slice_s = A * strans(B_slice_s); }
+      else if(do_htrans_B)  { out_slice_s = A * htrans(B_slice_s); }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == false) )
+      {
+           if(do_strans_A)  { out_slice_s = strans(A) * B_slice_s; }
+      else if(do_htrans_A)  { out_slice_s = htrans(A) * B_slice_s; }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == true ) )
+      {
+           if( (do_strans_A) && (do_strans_B) )  { out_slice_s = strans(A) * strans(B_slice_s); }
+      else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A) * htrans(B_slice_s); }
+      else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A) * strans(B_slice_s); }
+      else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A) * htrans(B_slice_s); }
       }
     }
-  
-  return out;
   }
 
 

@@ -23,7 +23,7 @@
 
 #define ARMA_VERSION_MAJOR 15
 #define ARMA_VERSION_MINOR 5
-#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_PATCH 91
 #define ARMA_VERSION_NAME  "experimental"
 
 
