@@ -188,6 +188,8 @@ glue_cubemul::apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
   
   if(out.is_empty())  { return; }
   
+  if(A.is_empty() || B.is_empty())  { out.zeros(); return; }
+  
   for(uword s=0; s < A_n_slices; ++s)
     {
     const Mat<eT> A_slice_s(const_cast<eT*>(A.slice_memptr(s)), A.n_rows, A.n_cols, false, true);
@@ -310,6 +312,8 @@ glue_cubemul::apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Mat<eT>& B)
   
   if(out.is_empty())  { return; }
   
+  if(A.is_empty() || B.is_empty())  { out.zeros(); return; }
+  
   for(uword s=0; s < A.n_slices; ++s)
     {
     const Mat<eT> A_slice_s(const_cast<eT*>(A.slice_memptr(s)), A.n_rows, A.n_cols, false, true);
@@ -430,6 +434,8 @@ glue_cubemul::apply_noalias(Cube<eT>& out, const Mat<eT>& A, const Cube<eT>& B)
   out.set_size(final_A_n_rows, final_B_n_cols, B.n_slices);
   
   if(out.is_empty())  { return; }
+  
+  if(A.is_empty() || B.is_empty())  { out.zeros(); return; }
   
   for(uword s=0; s < B.n_slices; ++s)
     {
