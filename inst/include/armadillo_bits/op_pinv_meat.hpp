@@ -306,7 +306,7 @@ op_pinv::apply_gen(Mat<eT>& out, Mat<eT>& A, typename get_pod_type<eT>::result t
     }
   else
     {
-    auxlib::svd_econ(U, s, V, A, 'b');
+    status = auxlib::svd_econ(U, s, V, A, 'b');
     }
   
   if(status == false)  { return false; }

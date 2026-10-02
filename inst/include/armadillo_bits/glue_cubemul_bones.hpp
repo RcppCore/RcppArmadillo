@@ -38,6 +38,9 @@ struct glue_cubemul
   template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
   inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Mat<eT>& B);
   
+  template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
+  inline static void apply_noalias_single(Cube<eT>& out, const Cube<eT>& A);
+  
   //
   
   template<typename T1, typename T2>

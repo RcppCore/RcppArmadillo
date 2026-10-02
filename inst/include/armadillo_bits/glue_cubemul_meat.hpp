@@ -162,6 +162,17 @@ glue_cubemul::apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
   {
   arma_debug_sigprint();
   
+  constexpr bool has_xtrans = (do_strans_A || do_htrans_A || do_strans_B || do_htrans_B);
+  
+  if( has_xtrans && (&A == &B) )
+    {
+    arma_debug_print("optimisation for symmetric/hermitian result");
+    
+    glue_cubemul::apply_noalias_single<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, A);
+    
+    return;
+    }
+  
   const uword A_n_slices = A.n_slices;
   
   arma_conform_check( (A_n_slices != B.n_slices), "cubemul(): given cubes must have the same number of slices" );
@@ -220,6 +231,76 @@ glue_cubemul::apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
       else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A_slice_s) * htrans(B_slice_s); }
       else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A_slice_s) * strans(B_slice_s); }
       else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A_slice_s) * htrans(B_slice_s); }
+      }
+    }
+  }
+
+
+
+template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
+inline
+void
+glue_cubemul::apply_noalias_single(Cube<eT>& out, const Cube<eT>& A)
+  {
+  arma_debug_sigprint();
+  
+  const uword A_n_slices = A.n_slices;
+  
+  constexpr bool do_xtrans_A = (do_strans_A || do_htrans_A);
+  constexpr bool do_xtrans_B = (do_strans_B || do_htrans_B);
+  
+  const uword final_A_n_rows = (do_xtrans_A == false) ? A.n_rows : A.n_cols;
+  const uword final_A_n_cols = (do_xtrans_A == false) ? A.n_cols : A.n_rows;
+  
+  const uword final_B_n_rows = (do_xtrans_B == false) ? A.n_rows : A.n_cols;
+  const uword final_B_n_cols = (do_xtrans_B == false) ? A.n_cols : A.n_rows;
+  
+  if( (arma_config::check_conform) && (final_A_n_cols != final_B_n_rows) )
+    {
+    std::ostringstream tmp;
+    
+    tmp << "cubemul(): incompatible dimensions: " << final_A_n_rows << 'x' << final_A_n_cols << 'x' << A_n_slices << " and " << final_B_n_rows << 'x' << final_B_n_cols << 'x' << A_n_slices;
+    
+    arma_stop_logic_error(tmp.str());
+    }
+  
+  out.set_size(final_A_n_rows, final_B_n_cols, A_n_slices);
+  
+  if(out.is_empty())  { return; }
+  
+  if(A.is_empty())  { out.zeros(); return; }
+  
+  for(uword s=0; s < A_n_slices; ++s)
+    {
+    const Mat<eT> A_slice_s(const_cast<eT*>(A.slice_memptr(s)), A.n_rows, A.n_cols, false, true);
+    
+    Mat<eT> out_slice_s(out.slice_memptr(s), final_A_n_rows, final_B_n_cols, false, true);
+    
+    // glue_times has optimised handling for A*A' and A'*A 
+    
+    if( (do_xtrans_A == false) && (do_xtrans_B == false) )
+      {
+      out_slice_s = A_slice_s * A_slice_s;
+      }
+    else
+    if( (do_xtrans_A == false) && (do_xtrans_B == true ) )
+      {
+           if(do_strans_B)  { out_slice_s = A_slice_s * strans(A_slice_s); }
+      else if(do_htrans_B)  { out_slice_s = A_slice_s * htrans(A_slice_s); }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == false) )
+      {
+           if(do_strans_A)  { out_slice_s = strans(A_slice_s) * A_slice_s; }
+      else if(do_htrans_A)  { out_slice_s = htrans(A_slice_s) * A_slice_s; }
+      }
+    else
+    if( (do_xtrans_A == true ) && (do_xtrans_B == true ) )
+      {
+           if( (do_strans_A) && (do_strans_B) )  { out_slice_s = strans(A_slice_s) * strans(A_slice_s); }
+      else if( (do_strans_A) && (do_htrans_B) )  { out_slice_s = strans(A_slice_s) * htrans(A_slice_s); }
+      else if( (do_htrans_A) && (do_strans_B) )  { out_slice_s = htrans(A_slice_s) * strans(A_slice_s); }
+      else if( (do_htrans_A) && (do_htrans_B) )  { out_slice_s = htrans(A_slice_s) * htrans(A_slice_s); }
       }
     }
   }
