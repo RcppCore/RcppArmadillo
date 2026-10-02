@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.6.1-1 [github-only] (2026-10-02)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.6.1 (Medium Roast Agave)
+    \itemize{
+      \item Fix for failures in \code{pinv()} when using the (non-default)
+      "std" method
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.6.0-1 (2026-09-07)}{
   \itemize{
     \item Upgraded to Armadillo release 15.6.0 (Medium Roast Cortado)
