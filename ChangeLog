@@ -2,6 +2,10 @@
 
 	* inst/include/armadillo_bits/*: Armadillo 15.6.2
 
+	* vignettes/rmd/RcppArmadillo.bib: Updated several references
+	* vignettes/RcppArmadillo-intro.pdf: Regenerated
+	* vignettes/RcppArmadillo-sparseMatrix.pdf: Idem
+
 2026-10-02  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.6.1-1
