@@ -444,6 +444,19 @@ struct is_op_diagmat< const Op<T1,op_diagmat> >
   { static constexpr bool value = true; };
 
 
+template<typename T>
+struct is_gen_eye
+  { static constexpr bool value = false; };
+
+template<typename eT>
+struct is_gen_eye< Gen<Mat<eT>, gen_eye> >
+  { static constexpr bool value = true; };
+
+template<typename eT>
+struct is_gen_eye< const Gen<Mat<eT>, gen_eye> >
+  { static constexpr bool value = true; };
+
+
 //
 //
 

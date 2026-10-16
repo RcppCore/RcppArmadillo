@@ -5504,6 +5504,18 @@ Mat<eT>::Mat(const eOp<T1, eop_type>& X)
     if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return; }
     }
   
+  if(is_gen_eye<T1>::value && is_same_type<eop_type, eop_scalar_times>::value)
+    {
+    zeros();
+    
+    const eT    k = X.aux;
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    for(uword ii=0; ii < N; ++ii)  { at(ii,ii) = k; }
+    
+    return;
+    }
+  
   eop_type::apply(*this, X);
   }
 
@@ -5532,6 +5544,18 @@ Mat<eT>::operator=(const eOp<T1, eop_type>& X)
     
     if(          X.aux == eT(2)   )  { eop_square::apply(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
     if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    }
+  
+  if(is_gen_eye<T1>::value && is_same_type<eop_type, eop_scalar_times>::value)
+    {
+    zeros();
+    
+    const eT    k = X.aux;
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    for(uword ii=0; ii < N; ++ii)  { at(ii,ii) = k; }
+    
+    return *this;
     }
   
   eop_type::apply(*this, X);
@@ -5563,6 +5587,18 @@ Mat<eT>::operator+=(const eOp<T1, eop_type>& X)
     if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_plus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
     }
   
+  if(is_gen_eye<T1>::value && is_same_type<eop_type, eop_scalar_times>::value)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.get_n_rows(), X.get_n_cols(), "addition");
+    
+    const eT    k = X.aux;
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    for(uword ii=0; ii < N; ++ii)  { at(ii,ii) += k; }
+    
+    return *this;
+    }
+  
   eop_type::apply_inplace_plus(*this, X);
   
   return *this;
@@ -5590,6 +5626,18 @@ Mat<eT>::operator-=(const eOp<T1, eop_type>& X)
     
     if(          X.aux == eT(2)   )  { eop_square::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_square>& >(X)); return *this; }
     if(eT_ok && (X.aux == eT(0.5)))  {   eop_sqrt::apply_inplace_minus(*this, reinterpret_cast< const eOp<T1, eop_sqrt  >& >(X)); return *this; }
+    }
+  
+  if(is_gen_eye<T1>::value && is_same_type<eop_type, eop_scalar_times>::value)
+    {
+    arma_conform_assert_same_size(n_rows, n_cols, X.get_n_rows(), X.get_n_cols(), "subtraction");
+    
+    const eT    k = X.aux;
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    for(uword ii=0; ii < N; ++ii)  { at(ii,ii) -= k; }
+    
+    return *this;
     }
   
   eop_type::apply_inplace_minus(*this, X);
