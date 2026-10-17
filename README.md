@@ -152,4 +152,4 @@ GPL (>= 2)
 [cran pkg]: https://cran.r-project.org/package=RcppArmadillo
 [benchmark]: https://eddelbuettel.github.io/ldlasb2/benchmarks.html
 [ldlasb2]: https://github.com/eddelbuettel/ldlasb2
-[rcpparmapaper]: http://dx.doi.org/10.1016/j.csda.2013.02.005
+[rcpparmapaper]: https://dx.doi.org/10.1016/j.csda.2013.02.005

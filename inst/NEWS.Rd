@@ -3,9 +3,18 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.6.2-1 (2026-10-16)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.6.2 (Medium Roast Cortado)
+    \itemize{
+      \item Faster inplace addition of \code{eye()} expressions
+    }
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.6.1-1 [github-only] (2026-10-02)}{
   \itemize{
-    \item Upgraded to Armadillo release 15.6.1 (Medium Roast Agave)
+    \item Upgraded to Armadillo release 15.6.1 (Medium Roast Cortado)
     \itemize{
       \item Fix for failures in \code{pinv()} when using the (non-default)
       "std" method
