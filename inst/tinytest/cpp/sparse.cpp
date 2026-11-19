@@ -86,3 +86,34 @@ Rcpp::List sparseList(Rcpp::List l) {
 arma::sp_mat speye(int nrow, int ncol) {
     return arma::speye(nrow, ncol);
 }
+
+// The functions below return SEXP rather than arma::sp_mat so that wrap()
+// receives the unevaluated sparse expression, as it does inside
+// List::create(), instead of an sp_mat the return conversion already built.
+
+// [[Rcpp::export]]
+SEXP sparseWrapSpones(arma::sp_mat SM) {
+    return Rcpp::wrap(arma::spones(SM));
+}
+
+// [[Rcpp::export]]
+SEXP sparseWrapTranspose(arma::sp_mat SM) {
+    return Rcpp::wrap(SM.t());
+}
+
+// [[Rcpp::export]]
+SEXP sparseWrapGlue(arma::sp_mat SM) {
+    return Rcpp::wrap(SM + SM);
+}
+
+// [[Rcpp::export]]
+SEXP sparseWrapReal(arma::sp_mat SM) {
+    arma::sp_cx_mat C(SM, SM);
+    return Rcpp::wrap(arma::real(C));
+}
+
+// [[Rcpp::export]]
+SEXP sparseWrapMixedSchur(arma::sp_mat SM) {
+    arma::sp_fmat F = arma::conv_to<arma::sp_fmat>::from(SM);
+    return Rcpp::wrap(SM % F);
+}
