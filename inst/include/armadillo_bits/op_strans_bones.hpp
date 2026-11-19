@@ -80,6 +80,9 @@ struct op_strans
   
   template<typename T1>
   inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_strans>& in);
+  
+  template<typename T1>
+  inline static void apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_strans>& in);
   };
 
 

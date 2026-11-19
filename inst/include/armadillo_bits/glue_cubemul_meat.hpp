@@ -155,6 +155,96 @@ glue_cubemul::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue
 
 
 
+template<typename T1, typename T2>
+inline
+void
+glue_cubemul::apply(Cube_noalias<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_cubemul>& X)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const bool XA_is_permute_equiv_to_strans = is_permute_equiv_to_strans_expr<T1>::eval(X.A);
+  const bool XB_is_permute_equiv_to_strans = is_permute_equiv_to_strans_expr<T2>::eval(X.B);
+  
+  if(XA_is_permute_equiv_to_strans && XB_is_permute_equiv_to_strans)
+    {
+    arma_debug_print("case: X.A and X.B permute is equivalent to strans");
+    
+    const strip_permute<T1> SA(X.A);
+    const strip_permute<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = true;
+    constexpr bool do_htrans_A = false;
+    
+    constexpr bool do_strans_B = true;
+    constexpr bool do_htrans_B = false;
+    
+    const unwrap_cube<typename strip_permute<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_permute<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  else
+  if(XA_is_permute_equiv_to_strans)
+    {
+    arma_debug_print("case: X.A permute is equivalent to strans");
+    
+    const strip_permute<T1> SA(X.A);
+    const  strip_xtrans<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = true;
+    constexpr bool do_htrans_A = false;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const unwrap_cube<typename strip_permute<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename  strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  else
+  if(XB_is_permute_equiv_to_strans)
+    {
+    arma_debug_print("case: X.B permute is equivalent to strans");
+    
+    const  strip_xtrans<T1> SA(X.A);
+    const strip_permute<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = true;
+    constexpr bool do_htrans_B = false;
+    
+    const unwrap_cube<typename  strip_xtrans<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_permute<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  else
+    {
+    arma_debug_print("case: default operation");
+    
+    const strip_xtrans<T1> SA(X.A);
+    const strip_xtrans<T2> SB(X.B);
+    
+    constexpr bool do_strans_A = strip_xtrans<T1>::do_strans;
+    constexpr bool do_htrans_A = strip_xtrans<T1>::do_htrans;
+    
+    constexpr bool do_strans_B = strip_xtrans<T2>::do_strans;
+    constexpr bool do_htrans_B = strip_xtrans<T2>::do_htrans;
+    
+    const unwrap_cube<typename strip_xtrans<T1>::stored_type> UA(SA.M);
+    const unwrap_cube<typename strip_xtrans<T2>::stored_type> UB(SB.M);
+    
+    glue_cubemul::apply_noalias<eT, do_strans_A, do_htrans_A, do_strans_B, do_htrans_B>(out, UA.M, UB.M);
+    }
+  }
+
+
+
 template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
 inline
 void

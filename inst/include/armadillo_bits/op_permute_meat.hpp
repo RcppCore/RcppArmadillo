@@ -58,6 +58,31 @@ op_permute::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_permute>
 
 
 
+template<typename T1>
+inline
+void
+op_permute::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_permute>& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> U(in.m);
+  const Cube<eT>& X   = U.M;
+  
+  const uword d0 = in.aux_uword_a;
+  const uword d1 = in.aux_uword_b;
+  const uword d2 = in.aux_uword_c;
+  
+  const bool mapping_ok = (d0 <= uword(2)) && (d1 <= uword(2)) && (d2 <= uword(2)) && (d0 != d1) && (d0 != d2) && (d1 != d2);
+  
+  arma_conform_check( (mapping_ok == false), "permute(): each mapping dimension must be unique and one of: 0, 1, 2" );
+  
+  op_permute::apply_noalias(out, X, d0, d1, d2);
+  }
+
+
+
 template<typename eT>
 inline
 void

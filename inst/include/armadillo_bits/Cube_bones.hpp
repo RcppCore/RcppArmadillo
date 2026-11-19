@@ -561,4 +561,8 @@ class Cube_aux
 
 
 
+template<typename eT> class Cube_noalias : public Cube<eT> {};
+
+
+
 //! @}

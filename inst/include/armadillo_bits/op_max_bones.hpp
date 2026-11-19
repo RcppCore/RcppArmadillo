@@ -45,6 +45,9 @@ struct op_max
   template<typename T1>
   inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_max>& in);
   
+  template<typename T1>
+  inline static void apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_max>& in);
+  
   template<typename eT>
   inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim, const typename arma_not_cx<eT>::result* junk = nullptr);
   

@@ -26,20 +26,12 @@
 template<typename T1>
 arma_warn_unused
 inline
-SpMat<typename T1::elem_type>
+const SpOp<T1, spop_spones>
 spones(const SpBase<typename T1::elem_type, T1>& X)
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_spmat<T1> U(X.get_ref());
-  
-  SpMat<eT> out(arma_layout_indicator(), U.M);
-  
-  arrayops::inplace_set( access::rwp(out.values), eT(1), out.n_nonzero );
-  
-  return out;
+  return SpOp<T1, spop_spones>(X.get_ref());
   }
 
 

@@ -21,67 +21,28 @@
 //! @{
 
 
-struct span_alt {};
+template<typename T> struct span_base;
 
 
-template<typename junk = int>
+template<typename T>
 struct span_base
   {
-  static const span_alt all;
+  const uword a;
+  const uword b;
+  const bool  whole;
+  
+  constexpr          span_base()                                   : a(0),    b(0),    whole(true)  {}
+  constexpr explicit span_base(const uword in_a)                   : a(in_a), b(in_a), whole(false) {}
+  constexpr explicit span_base(const uword in_a, const uword in_b) : a(in_a), b(in_b), whole(false) {}
+  
+  static const span_base<T> all;
   };
 
 
-template<typename junk>
-const span_alt span_base<junk>::all = span_alt();
+template<typename T>
+const span_base<T> span_base<T>::all = span_base<T>();
 
-
-struct span : public span_base<>
-  {
-  uword a;
-  uword b;
-  bool  whole;
-  
-  inline
-  span()
-    : a(0)
-    , b(0)
-    , whole(true)
-    {
-    }
-  
-  
-  inline
-  span(const span_alt&)
-    : a(0)
-    , b(0)
-    , whole(true)
-    {
-    }
-  
-  
-  inline
-  explicit
-  span(const uword in_a)
-    : a(in_a)
-    , b(in_a)
-    , whole(false)
-    {
-    }
-  
-  
-  // the "explicit" keyword is required here to prevent automatic conversion of {a,b}
-  // into an instance of span() when submatrices are specified
-  inline
-  explicit
-  span(const uword in_a, const uword in_b)
-    : a(in_a)
-    , b(in_b)
-    , whole(false)
-    {
-    }
-
-  };
-
+typedef span_base<int> span;
 
 
 //! @}
