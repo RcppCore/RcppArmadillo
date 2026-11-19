@@ -1,3 +1,12 @@
+2026-11-19  Kevin Ushey  <kevinushey@gmail.com>
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Declare
+	wrap() for sparse expressions SpOp, SpGlue, mtSpOp and mtSpGlue
+	* inst/include/RcppArmadillo/interface/RcppArmadilloWrap.h: Define them
+	by evaluating to SpMat, as spones() now returns an SpOp
+	* inst/tinytest/cpp/sparse.cpp: Add tests
+	* inst/tinytest/test_sparse.R: Idem
+
 2026-11-19  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): RcppArmadillo 15.7.91-1
