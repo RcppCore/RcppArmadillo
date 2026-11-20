@@ -14,6 +14,8 @@
       \item More efficient handling of \code{spones()}
       \item Reworked detection of aliasing for cubes
     }
+    \item Added \code{wrap()} support for different sparse matrix expressions
+    (Kevin Ushey in \ghpr{514} fixing \ghit{513})
   }
 }
 
