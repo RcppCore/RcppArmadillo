@@ -369,7 +369,7 @@ glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,
   arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
-
+  
   const unwrap_cube<T1> A_tmp(X.A);
   const unwrap_cube<T2> B_tmp(X.B);
   
@@ -385,7 +385,7 @@ glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,
     {
     out.set_size(A.n_rows, A.n_cols, A.n_slices + B.n_slices);
     
-    out.slices(0,          A.n_slices-1  ) = A;
+    out.slices(0,            A.n_slices-1) = A;
     out.slices(A.n_slices, out.n_slices-1) = B;
     }
   else  // we have aliasing
@@ -397,7 +397,36 @@ glue_join_slices::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,
     
     out.steal_mem(C);
     }
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+glue_join_slices::apply(Cube_noalias<typename T1::elem_type>& out_noalias, const GlueCube<T1,T2,glue_join_slices>& X)
+  {
+  arma_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
+  Cube<eT>& out = static_cast< Cube<eT>& >(out_noalias);
+  
+  const unwrap_cube<T1> A_tmp(X.A);
+  const unwrap_cube<T2> B_tmp(X.B);
+  
+  const Cube<eT>& A = A_tmp.M;
+  const Cube<eT>& B = B_tmp.M;
+  
+  if(A.n_elem == 0)  { out = B; return; }
+  if(B.n_elem == 0)  { out = A; return; }
+  
+  arma_conform_check( ( (A.n_rows != B.n_rows) || (A.n_cols != B.n_cols) ), "join_slices(): size of slices must be the same" );
+  
+  out.set_size(A.n_rows, A.n_cols, A.n_slices + B.n_slices);
+  
+  out.slices(0,            A.n_slices-1) = A;
+  out.slices(A.n_slices, out.n_slices-1) = B;
   }
 
 

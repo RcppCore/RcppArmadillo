@@ -511,6 +511,33 @@ op_sum::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_sum>& in)
 
 
 
+template<typename T1>
+inline
+void
+op_sum::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_sum>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 2), "sum(): parameter 'dim' must be 0 or 1 or 2" );
+  
+  if((is_Cube<T1>::value) || (is_Cube<typename ProxyCube<T1>::stored_type>::value) || (arma_config::openmp && ProxyCube<T1>::use_mp))
+    {
+    const unwrap_cube<T1> U(in.m);
+    
+    op_sum::apply_cube_noalias(out, U.M, dim);
+    }
+  else
+    {
+    const ProxyCube<T1> P(in.m);
+    
+    op_sum::apply_proxy_noalias(out, P, dim);
+    }
+  }
+
+
+
 template<typename eT>
 inline
 void

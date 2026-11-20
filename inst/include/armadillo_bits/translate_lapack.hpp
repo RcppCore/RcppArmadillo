@@ -27,7 +27,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  getrf(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* ipiv, blas_int* info)
+  getrf(const blas_int* m, const blas_int* n, eT* a, const blas_int* lda, blas_int* ipiv, blas_int* info)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
@@ -42,20 +42,20 @@ namespace lapack
   template<typename eT>
   inline
   void
-  getrs(char* trans, blas_int* n, blas_int* nrhs, eT* a, blas_int* lda, blas_int* ipiv, eT* b, blas_int* ldb, blas_int* info)
+  getrs(const char* trans, const blas_int* n, const blas_int* nrhs, const eT* a, const blas_int* lda, const blas_int* ipiv, eT* b, const blas_int* ldb, blas_int* info)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info, 1); }
     #else
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgetrs)(trans, n, nrhs, (T*)a, lda, ipiv, (T*)b, ldb, info); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgetrs)(trans, n, nrhs, (const T*)a, lda, ipiv, (T*)b, ldb, info); }
     #endif
     }
     
@@ -310,7 +310,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  potrf(char* uplo, blas_int* n, eT* a, blas_int* lda, blas_int* info)
+  potrf(const char* uplo, const blas_int* n, eT* a, const blas_int* lda, blas_int* info)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
@@ -332,20 +332,20 @@ namespace lapack
   template<typename eT>
   inline
   void
-  potrs(char* uplo, blas_int* n, const blas_int* nrhs, eT* a, blas_int* lda, eT* b, blas_int* ldb, blas_int* info)
+  potrs(char* uplo, const blas_int* n, const blas_int* nrhs, const eT* a, const blas_int* lda, eT* b, const blas_int* ldb, blas_int* info)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_spotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_spotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1); }
     #else
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_spotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zpotrs)(uplo, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_spotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zpotrs)(uplo, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
     #endif
     }
   
@@ -718,20 +718,20 @@ namespace lapack
   template<typename eT>
   inline
   void
-  trtrs(char* uplo, char* trans, char* diag, blas_int* n, blas_int* nrhs, const eT* a, blas_int* lda, eT* b, blas_int* ldb, blas_int* info)
+  trtrs(const char* uplo, const char* trans, const char* diag, const blas_int* n, const blas_int* nrhs, const eT* a, const blas_int* lda, eT* b, const blas_int* ldb, blas_int* info)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_strtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dtrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_ctrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_strtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dtrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_ctrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info, 1, 1, 1); }
     #else
-           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_strtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dtrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_ctrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
-      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (T*)a, lda, (T*)b, ldb, info); }
+           if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_strtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dtrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_ctrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
+      else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_ztrtrs)(uplo, trans, diag, n, nrhs, (const T*)a, lda, (T*)b, ldb, info); }
     #endif
     }
   
@@ -992,22 +992,22 @@ namespace lapack
   template<typename eT>
   inline
   typename get_pod_type<eT>::result
-  lange(char* norm, blas_int* m, blas_int* n, eT* a, blas_int* lda, typename get_pod_type<eT>::result* work)
+  lange(const char* norm, const blas_int* m, const blas_int* n, const eT* a, const blas_int* lda, typename get_pod_type<eT>::result* work)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     typedef typename get_pod_type<eT>::result out_T;
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slange)(norm, m, n, (T*)a, lda, (pod_T*)work, 1) ); }
-      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlange)(norm, m, n, (T*)a, lda, (pod_T*)work, 1) ); }
-      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clange)(norm, m, n, (T*)a, lda, (pod_T*)work, 1) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlange)(norm, m, n, (T*)a, lda, (pod_T*)work, 1) ); }
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slange)(norm, m, n, (const T*)a, lda, (pod_T*)work, 1) ); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlange)(norm, m, n, (const T*)a, lda, (pod_T*)work, 1) ); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clange)(norm, m, n, (const T*)a, lda, (pod_T*)work, 1) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlange)(norm, m, n, (const T*)a, lda, (pod_T*)work, 1) ); }
     #else
-           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slange)(norm, m, n, (T*)a, lda, (pod_T*)work) ); }
-      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlange)(norm, m, n, (T*)a, lda, (pod_T*)work) ); }
-      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clange)(norm, m, n, (T*)a, lda, (pod_T*)work) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlange)(norm, m, n, (T*)a, lda, (pod_T*)work) ); }
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slange)(norm, m, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlange)(norm, m, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clange)(norm, m, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlange)(norm, m, n, (const T*)a, lda, (pod_T*)work) ); }
     #endif
     
     return out_T(0);
@@ -1018,22 +1018,22 @@ namespace lapack
   template<typename eT>
   inline
   typename get_pod_type<eT>::result
-  lansy(char* norm, char* uplo, blas_int* n, eT* a, blas_int* lda, typename get_pod_type<eT>::result* work)
+  lansy(const char* norm, const char* uplo, const blas_int* n, const eT* a, const blas_int* lda, typename get_pod_type<eT>::result* work)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     typedef typename get_pod_type<eT>::result out_T;
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
-      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
-      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
     #else
-           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
-      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
-      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlansy)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
+           if(    is_float<eT>::value)  { typedef float  pod_T; typedef float    T; return out_T( arma_fortran(arma_slansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if(   is_double<eT>::value)  { typedef double pod_T; typedef double   T; return out_T( arma_fortran(arma_dlansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlansy)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
     #endif
     
     return out_T(0);
@@ -1044,18 +1044,18 @@ namespace lapack
   template<typename eT>
   inline
   typename get_pod_type<eT>::result
-  lanhe(char* norm, char* uplo, blas_int* n, eT* a, blas_int* lda, typename get_pod_type<eT>::result* work)
+  lanhe(const char* norm, const char* uplo, const blas_int* n, const eT* a, const blas_int* lda, typename get_pod_type<eT>::result* work)
     {
     arma_type_check(( is_blas_type<eT>::value == false ));
     
     typedef typename get_pod_type<eT>::result out_T;
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clanhe)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlanhe)(norm, uplo, n, (T*)a, lda, (pod_T*)work, 1, 1) ); }
+           if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clanhe)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlanhe)(norm, uplo, n, (const T*)a, lda, (pod_T*)work, 1, 1) ); }
     #else
-           if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clanhe)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
-      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlanhe)(norm, uplo, n, (T*)a, lda, (pod_T*)work) ); }
+           if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; return out_T( arma_fortran(arma_clanhe)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
+      else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; return out_T( arma_fortran(arma_zlanhe)(norm, uplo, n, (const T*)a, lda, (pod_T*)work) ); }
     #endif
     
     return out_T(0);
@@ -1505,6 +1505,21 @@ namespace lapack
       else if( is_cx_float<eT>::value)  { typedef float  pod_T; typedef blas_cxf T; arma_fortran(arma_cgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
       else if(is_cx_double<eT>::value)  { typedef double pod_T; typedef blas_cxd T; arma_fortran(arma_zgebal)(job, n, (T*)a, lda, ilo, ihi, (pod_T*)scale, info); }
     #endif
+    }
+  
+  
+  
+  template<typename eT>
+  inline
+  void
+  gglse(const blas_int* m, const blas_int* n, const blas_int* p, eT* a, const blas_int* lda, eT* b, const blas_int* ldb, eT* c, eT* d, eT* x, eT* work, const blas_int* lwork, blas_int* info)
+    {
+    arma_type_check(( is_blas_type<eT>::value == false ));
+    
+         if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgglse)(m, n, p, (T*)a, lda, (T*)b, ldb, (T*)c, (T*)d, (T*)x, (T*)work, lwork, info); }
+    else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgglse)(m, n, p, (T*)a, lda, (T*)b, ldb, (T*)c, (T*)d, (T*)x, (T*)work, lwork, info); }
+    else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgglse)(m, n, p, (T*)a, lda, (T*)b, ldb, (T*)c, (T*)d, (T*)x, (T*)work, lwork, info); }
+    else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgglse)(m, n, p, (T*)a, lda, (T*)b, ldb, (T*)c, (T*)d, (T*)x, (T*)work, lwork, info); }
     }
   
   }

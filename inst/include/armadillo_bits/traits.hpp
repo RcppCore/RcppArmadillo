@@ -1475,6 +1475,35 @@ struct is_sym_expr< Op<T1, op_symmatl> >
 
 
 template<typename T1>
+struct is_trimatu_expr
+  {
+  static constexpr bool eval(const T1&)  { return false; }
+  };
+
+template<typename T1>
+struct is_trimatu_expr< Op<T1, op_trimat> >
+  {
+  static arma_inline bool eval(const Op<T1, op_trimat>& expr) { return (expr.aux_uword_a == uword(0)); }
+  };
+
+
+template<typename T1>
+struct is_trimatl_expr
+  {
+  static constexpr bool eval(const T1&)  { return false; }
+  };
+
+template<typename T1>
+struct is_trimatl_expr< Op<T1, op_trimat> >
+  {
+  static arma_inline bool eval(const Op<T1, op_trimat>& expr) { return (expr.aux_uword_a == uword(1)); }
+  };
+
+
+//
+
+
+template<typename T1>
 struct is_permute_equiv_to_strans_expr
   {
   static constexpr bool eval(const T1&)  { return false; }

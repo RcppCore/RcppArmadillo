@@ -82,6 +82,9 @@ struct glue_join_slices
   {
   template<typename T1, typename T2>
   inline static void apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_join_slices>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Cube_noalias<typename T1::elem_type>& out_noalias, const GlueCube<T1,T2,glue_join_slices>& X);
   };
 
 

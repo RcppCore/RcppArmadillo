@@ -298,6 +298,11 @@
   #define arma_cgebal cgebal
   #define arma_zgebal zgebal
   
+  #define arma_sgglse sgglse
+  #define arma_dgglse dgglse
+  #define arma_cgglse cgglse
+  #define arma_zgglse zgglse
+  
 #else
   
   #define arma_sgetrf SGETRF
@@ -563,6 +568,11 @@
   #define arma_cgebal CGEBAL
   #define arma_zgebal ZGEBAL
   
+  #define arma_sgglse SGGLSE
+  #define arma_dgglse DGGLSE
+  #define arma_cgglse CGGLSE
+  #define arma_zgglse ZGGLSE
+  
 #endif
 
 
@@ -624,8 +634,8 @@ extern "C"
   void arma_fortran(arma_dgeevx)(const char* balanc, const char* jobvl, const char* jobvr, const char* sense, const blas_int* n, double* a, const blas_int* lda, double* wr, double* wi, double* vl, const blas_int* ldvl, double* vr, const blas_int* ldvr, blas_int* ilo, blas_int* ihi, double* scale, double* abnrm, double* rconde, double* rcondv, double* work, const blas_int* lwork, blas_int* iwork, blas_int* info, blas_len balanc_len, blas_len jobvl_len, blas_len jobvr_len, blas_len sense_len) ARMA_NOEXCEPT;
   
   // eigen decomposition of general matrix (complex; advanced form)
-  void arma_fortran(arma_cgeevx)(const char* balanc, const char* jobvl, const char* jobvr, const char* sense, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_cxf* w, blas_cxf* vl, const blas_int* ldvl, blas_cxf* vr, const blas_int* ldvr, blas_int* ilo, blas_int* ihi,  float* scale,  float* abnrm,  float* rconde,  float* rcondv, blas_cxf* work, const blas_int* lwork,  float* rwork, const blas_int* info, blas_len balanc_len, blas_len jobvl_len, blas_len jobvr_len, blas_len sense_len) ARMA_NOEXCEPT;
-  void arma_fortran(arma_zgeevx)(const char* balanc, const char* jobvl, const char* jobvr, const char* sense, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_cxd* w, blas_cxd* vl, const blas_int* ldvl, blas_cxd* vr, const blas_int* ldvr, blas_int* ilo, blas_int* ihi, double* scale, double* abnrm, double* rconde, double* rcondv, blas_cxd* work, const blas_int* lwork, double* rwork, const blas_int* info, blas_len balanc_len, blas_len jobvl_len, blas_len jobvr_len, blas_len sense_len) ARMA_NOEXCEPT;
+  void arma_fortran(arma_cgeevx)(const char* balanc, const char* jobvl, const char* jobvr, const char* sense, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_cxf* w, blas_cxf* vl, const blas_int* ldvl, blas_cxf* vr, const blas_int* ldvr, blas_int* ilo, blas_int* ihi,  float* scale,  float* abnrm,  float* rconde,  float* rcondv, blas_cxf* work, const blas_int* lwork,  float* rwork, blas_int* info, blas_len balanc_len, blas_len jobvl_len, blas_len jobvr_len, blas_len sense_len) ARMA_NOEXCEPT;
+  void arma_fortran(arma_zgeevx)(const char* balanc, const char* jobvl, const char* jobvr, const char* sense, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_cxd* w, blas_cxd* vl, const blas_int* ldvl, blas_cxd* vr, const blas_int* ldvr, blas_int* ilo, blas_int* ihi, double* scale, double* abnrm, double* rconde, double* rcondv, blas_cxd* work, const blas_int* lwork, double* rwork, blas_int* info, blas_len balanc_len, blas_len jobvl_len, blas_len jobvr_len, blas_len sense_len) ARMA_NOEXCEPT;
   
   // eigen decomposition of symmetric real matrices
   void arma_fortran(arma_ssyev)(const char* jobz, const char* uplo, const blas_int* n,  float* a, const blas_int* lda,  float* w,  float* work, const blas_int* lwork, blas_int* info, blas_len jobz_len, blas_len uplo_len) ARMA_NOEXCEPT;
@@ -941,6 +951,12 @@ extern "C"
   void arma_fortran(arma_dgebal)(const char* job, const blas_int* n,   double* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_cgebal)(const char* job, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_zgebal)(const char* job, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info, blas_len job_len) ARMA_NOEXCEPT;
+  
+  // solve linear equality-constrained least squares problem
+  void arma_fortran(arma_sgglse)(const blas_int* m, const blas_int* n, const blas_int* p,    float* a, const blas_int* lda,    float* b, const blas_int* ldb,    float* c,    float* d,    float* x,    float* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_dgglse)(const blas_int* m, const blas_int* n, const blas_int* p,   double* a, const blas_int* lda,   double* b, const blas_int* ldb,   double* c,   double* d,   double* x,   double* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_cgglse)(const blas_int* m, const blas_int* n, const blas_int* p, blas_cxf* a, const blas_int* lda, blas_cxf* b, const blas_int* ldb, blas_cxf* c, blas_cxf* d, blas_cxf* x, blas_cxf* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_zgglse)(const blas_int* m, const blas_int* n, const blas_int* p, blas_cxd* a, const blas_int* lda, blas_cxd* b, const blas_int* ldb, blas_cxd* c, blas_cxd* d, blas_cxd* x, blas_cxd* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
   
 #else
   
@@ -1303,6 +1319,12 @@ extern "C"
   void arma_fortran(arma_dgebal)(const char* job, const blas_int* n,   double* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info) ARMA_NOEXCEPT;
   void arma_fortran(arma_cgebal)(const char* job, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ilo, blas_int* ihi,  float* scale, blas_int* info) ARMA_NOEXCEPT;
   void arma_fortran(arma_zgebal)(const char* job, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ilo, blas_int* ihi, double* scale, blas_int* info) ARMA_NOEXCEPT;
+  
+  // solve linear equality-constrained least squares problem
+  void arma_fortran(arma_sgglse)(const blas_int* m, const blas_int* n, const blas_int* p,    float* a, const blas_int* lda,    float* b, const blas_int* ldb,    float* c,    float* d,    float* x,    float* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_dgglse)(const blas_int* m, const blas_int* n, const blas_int* p,   double* a, const blas_int* lda,   double* b, const blas_int* ldb,   double* c,   double* d,   double* x,   double* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_cgglse)(const blas_int* m, const blas_int* n, const blas_int* p, blas_cxf* a, const blas_int* lda, blas_cxf* b, const blas_int* ldb, blas_cxf* c, blas_cxf* d, blas_cxf* x, blas_cxf* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
+  void arma_fortran(arma_zgglse)(const blas_int* m, const blas_int* n, const blas_int* p, blas_cxd* a, const blas_int* lda, blas_cxd* b, const blas_int* ldb, blas_cxd* c, blas_cxd* d, blas_cxd* x, blas_cxd* work, const blas_int* lwork, blas_int* info) ARMA_NOEXCEPT;
   
 #endif
 }

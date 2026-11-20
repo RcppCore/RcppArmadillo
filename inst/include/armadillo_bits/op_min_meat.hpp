@@ -181,6 +181,7 @@ op_min::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_min>& in)
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
+  
   arma_conform_check( (dim > 2), "min(): parameter 'dim' must be 0 or 1 or 2" );
   
   const unwrap_cube<T1> U(in.m);
@@ -197,6 +198,24 @@ op_min::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_min>& in)
     
     out.steal_mem(tmp);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_min::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_min>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword dim = in.aux_uword_a;
+  
+  arma_conform_check( (dim > 2), "min(): parameter 'dim' must be 0 or 1 or 2" );
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  op_min::apply_noalias(out, U.M, dim);
   }
 
 

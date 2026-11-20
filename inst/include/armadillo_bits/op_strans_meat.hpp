@@ -536,4 +536,18 @@ op_strans::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_strans>& 
 
 
 
+template<typename T1>
+inline
+void
+op_strans::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_strans>& in)
+  {
+  arma_debug_sigprint();
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  op_strans::apply_cube_noalias(out, U.M);
+  }
+
+
+
 //! @}

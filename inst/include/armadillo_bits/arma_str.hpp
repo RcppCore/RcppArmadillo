@@ -81,37 +81,46 @@ namespace arma_str
   
   
   template<typename T1, typename T2>
-  class basic_format
+  class format_arg
     {
     public:
     
     const T1& A;
     const T2& B;
     
-    inline basic_format(const T1& in_A, const T2& in_B) : A(in_A) , B(in_B) { }
+    inline format_arg(const T1& in_A, const T2& in_B) : A(in_A) , B(in_B) { }
     
     private:
-    basic_format();
+    format_arg();
     };
   
   
   
   template<typename T2>
   inline
-  basic_format< format, T2 >
+  format_arg< format, T2 >
   operator% (const format& X, const T2& arg)
     {
-    return basic_format< format, T2 >(X, arg);
+    return format_arg< format, T2 >(X, arg);
     }
   
   
   
   template<typename T1, typename T2, typename T3>
   inline
-  basic_format< basic_format<T1,T2>, T3 >
-  operator% (const basic_format<T1,T2>& X, const T3& arg)
+  format_arg< format_arg<T1,T2>, T3 >
+  operator% (const format_arg<T1,T2>& X, const T3& arg)
     {
-    return basic_format< basic_format<T1,T2>, T3 >(X, arg);
+    return format_arg< format_arg<T1,T2>, T3 >(X, arg);
+    }
+  
+  
+  
+  inline
+  std::string
+  str(const format& X)
+    {
+    return X.fmt;
     }
   
   
@@ -119,34 +128,38 @@ namespace arma_str
   template<typename T2>
   inline
   std::string
-  str(const basic_format< format, T2>& X)
+  str(const format_arg< format, T2>& X)
     {
-    std::string out;
     char_buffer buf;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.fmt.c_str(), X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.fmt.c_str(), X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -154,34 +167,38 @@ namespace arma_str
   template<typename T2, typename T3>
   inline
   std::string
-  str(const basic_format< basic_format< format, T2>, T3>& X)
+  str(const format_arg< format_arg< format, T2>, T3>& X)
     {
     char_buffer buf;
-    std::string out;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.fmt.c_str(), X.A.B, X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.fmt.c_str(), X.A.B, X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -189,34 +206,38 @@ namespace arma_str
   template<typename T2, typename T3, typename T4>
   inline
   std::string
-  str(const basic_format< basic_format< basic_format< format, T2>, T3>, T4>& X)
+  str(const format_arg< format_arg< format_arg< format, T2>, T3>, T4>& X)
     {
     char_buffer buf;
-    std::string out;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.fmt.c_str(), X.A.A.B, X.A.B, X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.fmt.c_str(), X.A.A.B, X.A.B, X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -224,34 +245,38 @@ namespace arma_str
   template<typename T2, typename T3, typename T4, typename T5>
   inline
   std::string
-  str(const basic_format< basic_format< basic_format< basic_format< format, T2>, T3>, T4>, T5>& X)
+  str(const format_arg< format_arg< format_arg< format_arg< format, T2>, T3>, T4>, T5>& X)
     {
     char_buffer buf;
-    std::string out;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.fmt.c_str(), X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.fmt.c_str(), X.A.A.A.B, X.A.A.B, X.A.B, X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -259,34 +284,38 @@ namespace arma_str
   template<typename T2, typename T3, typename T4, typename T5, typename T6>
   inline
   std::string
-  str(const basic_format< basic_format< basic_format< basic_format< basic_format< format, T2>, T3>, T4>, T5>, T6>& X)
+  str(const format_arg< format_arg< format_arg< format_arg< format_arg< format, T2>, T3>, T4>, T5>, T6>& X)
     {
     char_buffer buf;
-    std::string out;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -294,34 +323,116 @@ namespace arma_str
   template<typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
   inline
   std::string
-  str(const basic_format< basic_format< basic_format< basic_format< basic_format< basic_format< format, T2>, T3>, T4>, T5>, T6>, T7>& X)
+  str(const format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format, T2>, T3>, T4>, T5>, T6>, T7>& X)
     {
     char_buffer buf;
-    std::string out;
     
-    bool status = false;
+    bool printed = false;
+    bool resized = false;
     
-    while(status == false)
+    int required_size = 0;
+    
+    while(printed == false)
       {
-      int required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.A.B, X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.A.B, X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
       
       if(required_size < 0)  { break; }
       
-      if(uword(required_size) >= buf.n_chars)
+      if(uword(required_size) < buf.n_chars)
         {
-        if(buf.n_chars > char_buffer::n_chars_prealloc)  { break; }
-        
-        buf.set_size(1 + uword(required_size));
+        printed = true;
         }
       else
         {
-        status = true;
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
         }
-      
-      if(status)  { out = buf.mem; }
       }
     
-    return out;
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
+    }
+  
+  
+  
+  template<typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+  inline
+  std::string
+  str(const format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format, T2>, T3>, T4>, T5>, T6>, T7>, T8>& X)
+    {
+    char_buffer buf;
+    
+    bool printed = false;
+    bool resized = false;
+    
+    int required_size = 0;
+    
+    while(printed == false)
+      {
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.A.A.B, X.A.A.A.A.A.B, X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
+      
+      if(uword(required_size) < buf.n_chars)
+        {
+        printed = true;
+        }
+      else
+        {
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
+        }
+      }
+    
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
+    }
+  
+  
+  
+  template<typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
+  inline
+  std::string
+  str(const format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format_arg< format, T2>, T3>, T4>, T5>, T6>, T7>, T8>, T9>& X)
+    {
+    char_buffer buf;
+    
+    bool printed = false;
+    bool resized = false;
+    
+    int required_size = 0;
+    
+    while(printed == false)
+      {
+      required_size = (std::snprintf)(buf.mem, size_t(buf.n_chars), X.A.A.A.A.A.A.A.A.fmt.c_str(), X.A.A.A.A.A.A.A.B, X.A.A.A.A.A.A.B, X.A.A.A.A.A.B, X.A.A.A.A.B, X.A.A.A.B, X.A.A.B, X.A.B, X.B);
+      
+      if(required_size < 0)  { break; }
+      
+      if(uword(required_size) < buf.n_chars)
+        {
+        printed = true;
+        }
+      else
+        {
+        if(resized)  { break; }
+        
+        buf.set_size(uword(required_size) + uword(1));  // extra character required for the terminating null
+        
+        resized = true;
+        }
+      }
+    
+    const std::size_t len = (printed) ? std::size_t(required_size) : std::size_t(0);
+    
+    return std::string(buf.mem, len);
     }
   
   
@@ -344,7 +455,7 @@ namespace arma_str
   
   //template<>
   template<typename T1, typename T2>
-  struct format_metaprog< basic_format<T1,T2> >
+  struct format_metaprog< format_arg<T1,T2> >
     {
     static constexpr uword depth = 1 + format_metaprog<T1>::depth;
     
@@ -363,9 +474,9 @@ namespace arma_str
   template<typename T1, typename T2>
   inline
   std::string
-  str(const basic_format<T1,T2>& X)
+  str(const format_arg<T1,T2>& X)
     {
-    return format_metaprog< basic_format<T1,T2> >::get_fmt(X.A);
+    return format_metaprog< format_arg<T1,T2> >::get_fmt(X.A);
     }
   
   
@@ -373,7 +484,7 @@ namespace arma_str
   template<typename T1, typename T2>
   inline
   std::ostream&
-  operator<< (std::ostream& o, const basic_format<T1,T2>& X)
+  operator<< (std::ostream& o, const format_arg<T1,T2>& X)
     {
     o << str(X);
     return o;
@@ -387,11 +498,16 @@ namespace arma_str
   template<>           struct char_only<char         > { typedef char        result; };
   
   template<typename T>
-  struct basic_format_only { };
+  struct format_arg_only { };
   
   template<typename T1, typename T2>
-  struct basic_format_only< basic_format<T1, T2> > { typedef basic_format<T1,T2> result; };
+  struct format_arg_only< format_arg<T1, T2> > { typedef format_arg<T1,T2> result; };
   
+  template<typename T>
+  struct format_only { };
+  
+  template<>
+  struct format_only< format > { typedef format result; };
   
   
   template<typename T1>
@@ -424,7 +540,20 @@ namespace arma_str
   inline
   static
   std::string
-  str_wrapper(const T1& x, const typename basic_format_only<T1>::result* junk = nullptr)
+  str_wrapper(const T1& x, const typename format_arg_only<T1>::result* junk = nullptr)
+    {
+    arma_ignore(junk);
+    
+    return str(x);
+    }
+  
+  
+  
+  template<typename T1>
+  inline
+  static
+  std::string
+  str_wrapper(const T1& x, const typename format_only<T1>::result* junk = nullptr)
     {
     arma_ignore(junk);
     

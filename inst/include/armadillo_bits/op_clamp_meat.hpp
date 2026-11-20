@@ -192,7 +192,15 @@ op_clamp::apply(Cube<typename T1::elem_type>& out, const mtOpCube<typename T1::e
     {
     const unwrap_cube<T1> U(in.m);
     
-    op_clamp::apply_direct(out, U.M, min_val, max_val);
+    // detect in-place operation
+    if(&out == &(U.M))
+      {
+      arrayops::clamp(out.memptr(), out.n_elem, min_val, max_val);
+      }
+    else
+      {
+      op_clamp::apply_cube_noalias(out, U.M, min_val, max_val);
+      }
     }
   else
     {
@@ -215,34 +223,55 @@ op_clamp::apply(Cube<typename T1::elem_type>& out, const mtOpCube<typename T1::e
 
 
 
-template<typename eT>
+template<typename T1>
 inline
 void
-op_clamp::apply_direct(Cube<eT>& out, const Cube<eT>& X, const eT min_val, const eT max_val)
+op_clamp::apply(Cube_noalias<typename T1::elem_type>& out, const mtOpCube<typename T1::elem_type, T1, op_clamp>& in)
   {
   arma_debug_sigprint();
   
-  if(&out != &X)
+  typedef typename T1::elem_type eT;
+  
+  const eT min_val = in.aux;
+  const eT max_val = in.aux_out_eT;
+  
+  arma_conform_check( ((min_val <= max_val) == false), "clamp(): min_val must be less than max_val" );
+  
+  if(is_Cube<T1>::value)
     {
-    out.set_size(X.n_rows, X.n_cols, X.n_slices);
+    const unwrap_cube<T1> U(in.m);
     
-    const uword N = out.n_elem;
-    
-    const eT*   X_mem =   X.memptr();
-          eT* out_mem = out.memptr();
-    
-    for(uword i=0; i<N; ++i)
-      {
-      const eT val = X_mem[i];
-      
-      out_mem[i] = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
-      }
+    op_clamp::apply_cube_noalias(out, U.M, min_val, max_val);
     }
   else
     {
-    arma_debug_print("op_clamp::apply_direct(): inplace operation");
+    const ProxyCube<T1> P(in.m);
     
-    arrayops::clamp(out.memptr(), out.n_elem, min_val, max_val);
+    op_clamp::apply_proxy_noalias(out, P, min_val, max_val);
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_clamp::apply_cube_noalias(Cube<eT>& out, const Cube<eT>& X, const eT min_val, const eT max_val)
+  {
+  arma_debug_sigprint();
+  
+  out.set_size(X.n_rows, X.n_cols, X.n_slices);
+  
+  const uword N = out.n_elem;
+  
+  const eT*   X_mem =   X.memptr();
+        eT* out_mem = out.memptr();
+  
+  for(uword i=0; i<N; ++i)
+    {
+    const eT val = X_mem[i];
+    
+    out_mem[i] = (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
     }
   }
 

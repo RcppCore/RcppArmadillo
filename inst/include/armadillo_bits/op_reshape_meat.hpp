@@ -219,6 +219,10 @@ op_reshape::apply_proxy_noalias(Mat<typename T1::elem_type>& out, const Proxy<T1
 
 
 
+//
+
+
+
 template<typename T1>
 inline
 void
@@ -243,6 +247,27 @@ op_reshape::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_reshape>
     {
     op_reshape::apply_cube_noalias(out, A, new_n_rows, new_n_cols, new_n_slices);
     }
+  }
+  
+
+
+template<typename T1>
+inline
+void
+op_reshape::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_reshape>& in)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_cube<T1> U(in.m);
+  const Cube<eT>& A   = U.M;
+  
+  const uword new_n_rows   = in.aux_uword_a;
+  const uword new_n_cols   = in.aux_uword_b;
+  const uword new_n_slices = in.aux_uword_c;
+  
+  op_reshape::apply_cube_noalias(out, A, new_n_rows, new_n_cols, new_n_slices);
   }
   
 

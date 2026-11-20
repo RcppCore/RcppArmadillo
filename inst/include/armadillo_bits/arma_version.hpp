@@ -22,9 +22,9 @@
 
 
 #define ARMA_VERSION_MAJOR 15
-#define ARMA_VERSION_MINOR 6
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Medium Roast Cortado"
+#define ARMA_VERSION_MINOR 7
+#define ARMA_VERSION_PATCH 92
+#define ARMA_VERSION_NAME  "15.8-RC2"
 
 
 

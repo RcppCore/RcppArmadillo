@@ -26,6 +26,8 @@ struct op_permute
   {
   template<typename T1> inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_permute>& in);
   
+  template<typename T1> inline static void apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_permute>& in);
+  
   template<typename eT> inline static void apply_noalias(Cube<eT>& Y, const Cube<eT>& X, const uword d0, const uword d1, const uword d2);
   };
 
