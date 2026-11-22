@@ -3,9 +3,9 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
-\section{Changes in RcppArmadillo version 15.7.91-1 [github-only] (2026-11-19)}{
+\section{Changes in RcppArmadillo version 15.8.0-1 (2026-11-22)}{
   \itemize{
-    \item Upgraded to Armadillo release 15.7.91 (15.8-rc1)
+    \item Upgraded to Armadillo release 15.8.0 (Medium Roast Chill)
     \itemize{
       \item Added \code{solve_factoriser} class for reusing matrix factorisation to
       solve systems of linear equations
