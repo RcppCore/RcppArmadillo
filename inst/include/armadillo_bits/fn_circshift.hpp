@@ -23,7 +23,7 @@
 
 
 template<typename T1>
-[[deprecated("use circshift() instead")]]
+// [[deprecated("use circshift() instead")]]
 inline
 typename
 enable_if2
@@ -73,7 +73,7 @@ circshift
 
 
 template<typename T1>
-[[deprecated("use circshift() instead")]]
+// [[deprecated("use circshift() instead")]]
 inline
 typename
 enable_if2
@@ -139,7 +139,7 @@ circshift
 
 
 template<typename T1>
-[[deprecated("use circshift() instead")]]
+// [[deprecated("use circshift() instead")]]
 inline
 typename
 enable_if2
@@ -215,7 +215,7 @@ circshift
 
 
 template<typename T1>
-[[deprecated("use circshift() instead")]]
+// [[deprecated("use circshift() instead")]]
 inline
 SpMat<typename T1::elem_type>
 shift
