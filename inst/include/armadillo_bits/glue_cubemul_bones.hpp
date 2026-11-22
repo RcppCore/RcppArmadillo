@@ -27,6 +27,9 @@ struct glue_cubemul
   template<typename T1, typename T2>
   inline static void apply(Cube<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_cubemul>& X);
   
+  template<typename T1, typename T2>
+  inline static void apply(Cube_noalias<typename T1::elem_type>& out, const GlueCube<T1,T2,glue_cubemul>& X);
+  
   template<typename eT, bool do_strans_A, bool do_htrans_A, bool do_strans_B, bool do_htrans_B>
   inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B);
   

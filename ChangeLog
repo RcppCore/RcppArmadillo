@@ -1,3 +1,39 @@
+2026-11-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.8.0-1
+	* inst/NEWS.Rd: Idem
+	* configure.ac: Idem
+	* configure: Idem
+
+ 	* inst/include/armadillo*: Armadillo 15.8.0
+
+2026-11-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.7.92-1
+	* inst/NEWS.Rd: Idem
+	* configure.ac: Idem
+	* configure: Idem
+
+ 	* inst/include/armadillo*: Armadillo 15.7.92 aka 15.8-rc2
+
+2026-11-19  Kevin Ushey  <kevinushey@gmail.com>
+
+	* inst/include/RcppArmadillo/interface/RcppArmadilloForward.h: Declare
+	wrap() for sparse expressions SpOp, SpGlue, mtSpOp and mtSpGlue
+	* inst/include/RcppArmadillo/interface/RcppArmadilloWrap.h: Define them
+	by evaluating to SpMat, as spones() now returns an SpOp
+	* inst/tinytest/cpp/sparse.cpp: Add tests
+	* inst/tinytest/test_sparse.R: Idem
+
+2026-11-19  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): RcppArmadillo 15.7.91-1
+	* inst/NEWS.Rd: Idem
+	* configure.ac: Idem
+	* configure: Idem
+
+ 	* inst/include/armadillo*: Armadillo 15.7.91 aka 15.8-rc1
+
 2026-10-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/armadillo_bits/*: Armadillo 15.6.2

@@ -68,6 +68,16 @@ expect_equal(sqrt(SM), sparseSqrt(SM))#, msg="sqrtSparse")
 #test.sparse.square <- function() {
 expect_equal(SM^2, sparseSquare(SM))#, msg="squareSparse")
 
+#test.sparse.wrap.expressions <- function() {
+SX <- sparseMatrix(i = c(1, 3, 4, 2), j = c(1, 1, 2, 3), x = c(2, -1, 4, 3), dims = c(4, 3))
+SO <- SX
+SO@x[] <- 1
+expect_equal(SO, sparseWrapSpones(SX))              # SpOp (Armadillo 15.8 and later)
+expect_equal(t(SX), sparseWrapTranspose(SX))        # SpOp
+expect_equal(SX + SX, sparseWrapGlue(SX))           # SpGlue
+expect_equal(SX, sparseWrapReal(SX))                # mtSpOp
+expect_equal(SX * SX, sparseWrapMixedSchur(SX))     # mtSpGlue
+
 if (utils::packageVersion("Matrix") < "1.4-2") exit_file("Remainder needs Matrix 1.4-2 or later")
 #test.sparse.iterators <- function() {
 SM <- matrix(0, 5, 5)

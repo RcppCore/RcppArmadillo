@@ -202,4 +202,22 @@ op_repcube::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_repcube>
 
 
 
+template<typename T1>
+inline
+void
+op_repcube::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_repcube>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword copies_per_row   = in.aux_uword_a;
+  const uword copies_per_col   = in.aux_uword_b;
+  const uword copies_per_slice = in.aux_uword_c;
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  op_repcube::apply_noalias(out, U.M, copies_per_row, copies_per_col, copies_per_slice);
+  }
+
+
+
 //! @}

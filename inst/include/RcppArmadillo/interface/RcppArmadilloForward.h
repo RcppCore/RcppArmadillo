@@ -92,6 +92,18 @@ namespace Rcpp {
     template<typename out_eT, typename T1, typename T2, typename glue_type>
     SEXP wrap( const arma::mtGlue<out_eT,T1,T2,glue_type>& X );
 
+    template <typename T1, typename spop_type>
+    SEXP wrap( const arma::SpOp<T1,spop_type>& X ) ;
+
+    template <typename T1, typename T2, typename spglue_type>
+    SEXP wrap( const arma::SpGlue<T1,T2,spglue_type>& X ) ;
+
+    template <typename out_eT, typename T1, typename spop_type>
+    SEXP wrap( const arma::mtSpOp<out_eT,T1,spop_type>& X ) ;
+
+    template <typename out_eT, typename T1, typename T2, typename spglue_type>
+    SEXP wrap( const arma::mtSpGlue<out_eT,T1,T2,spglue_type>& X ) ;
+
     template <typename eT, typename gen_type>
     SEXP wrap( const arma::Gen<eT,gen_type>& X) ;
 

@@ -6113,6 +6113,69 @@ auxlib::solve_tridiag_fast(Mat<typename T1::elem_type>& out, const Mat<typename 
 
 
 
+//! solve linear equality-constrained least squares problem: find X that minimises ||A*X - C||_2 subject to B*X = D
+template<typename eT>
+inline
+bool
+auxlib::solve_lse(Mat<eT>& out, Mat<eT>& A, Mat<eT>& B, Mat<eT>& C, Mat<eT>& D)
+  {
+  arma_debug_sigprint();
+  
+  // NOTE: assuming matrix sizes have already been checked for conformance
+  // NOTE: assuming 'out' is already set to the correct size
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    arma_conform_assert_blas_size(out);
+    arma_conform_assert_blas_size(A);
+    arma_conform_assert_blas_size(B);
+    arma_conform_assert_blas_size(C);
+    arma_conform_assert_blas_size(D);
+    
+    blas_int m    = blas_int(A.n_rows);
+    blas_int n    = blas_int(A.n_cols);
+    blas_int p    = blas_int(B.n_rows);
+    blas_int lda  = blas_int(A.n_rows);
+    blas_int ldb  = blas_int(B.n_rows);
+    blas_int info = 0;
+    
+    blas_int lwork_min = (std::max)( blas_int(podarray_prealloc_n_elem::val), blas_int(m + n + p) );
+    
+    eT        work_query[2] = {};
+    blas_int lwork_query    = -1;
+    
+    arma_debug_print("lapack::gglse()");
+    lapack::gglse(&m, &n, &p, A.memptr(), &lda, B.memptr(), &ldb, C.memptr(), D.memptr(), out.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    blas_int lwork = (std::max)(lwork_min, lwork_proposed);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::gglse()");
+    lapack::gglse(&m, &n, &p, A.memptr(), &lda, B.memptr(), &ldb, C.memptr(), D.memptr(), out.memptr(), work.memptr(), &lwork, &info);
+    
+    // NOTE: A, B, C, D are overwritten by lapack::gglse()
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(A);
+    arma_ignore(B);
+    arma_ignore(C);
+    arma_ignore(D);
+    return false;
+    }
+  #endif
+  }
+
+
+
 //
 // Schur decomposition
 

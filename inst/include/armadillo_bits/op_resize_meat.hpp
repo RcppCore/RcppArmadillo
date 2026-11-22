@@ -69,6 +69,23 @@ op_resize::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_resize>& in)
 
 
 
+template<typename T1>
+inline
+void
+op_resize::apply(Mat_noalias<typename T1::elem_type>& out, const Op<T1,op_resize>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword new_n_rows = in.aux_uword_a;
+  const uword new_n_cols = in.aux_uword_b;
+  
+  const quasi_unwrap<T1> U(in.m);
+  
+  op_resize::apply_mat_noalias(out, U.M, new_n_rows, new_n_cols);
+  }
+
+
+
 template<typename eT>
 inline
 void
@@ -142,6 +159,24 @@ op_resize::apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_resize>& 
     {
     op_resize::apply_cube_noalias(out, A, new_n_rows, new_n_cols, new_n_slices);
     }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_resize::apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_resize>& in)
+  {
+  arma_debug_sigprint();
+  
+  const uword new_n_rows   = in.aux_uword_a;
+  const uword new_n_cols   = in.aux_uword_b;
+  const uword new_n_slices = in.aux_uword_c;
+  
+  const unwrap_cube<T1> U(in.m);
+  
+  op_resize::apply_cube_noalias(out, U.M, new_n_rows, new_n_cols, new_n_slices);
   }
 
 

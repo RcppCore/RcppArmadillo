@@ -347,6 +347,13 @@ struct auxlib
   
   
   //
+  // solve_lse
+  
+  template<typename eT>
+  inline static bool solve_lse(Mat<eT>& out, Mat<eT>& A, Mat<eT>& B, Mat<eT>& C, Mat<eT>& D);
+  
+  
+  //
   // Schur decomposition
   
   template<typename eT, typename T1>

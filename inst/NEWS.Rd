@@ -3,6 +3,22 @@
 \newcommand{\ghpr}{\href{https://github.com/RcppCore/RcppArmadillo/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/RcppCore/RcppArmadillo/issues/#1}{##1}}
 
+\section{Changes in RcppArmadillo version 15.8.0-1 (2026-11-22)}{
+  \itemize{
+    \item Upgraded to Armadillo release 15.8.0 (Medium Roast Chill)
+    \itemize{
+      \item Added \code{solve_factoriser} class for reusing matrix factorisation to
+      solve systems of linear equations
+      \item Added \code{solve_lse()} for solving linear least squares with
+      equality constraints
+      \item More efficient handling of \code{spones()}
+      \item Reworked detection of aliasing for cubes
+    }
+    \item Added \code{wrap()} support for different sparse matrix expressions
+    (Kevin Ushey in \ghpr{514} fixing \ghit{513})
+  }
+}
+
 \section{Changes in RcppArmadillo version 15.6.2-1 (2026-10-16)}{
   \itemize{
     \item Upgraded to Armadillo release 15.6.2 (Medium Roast Cortado)

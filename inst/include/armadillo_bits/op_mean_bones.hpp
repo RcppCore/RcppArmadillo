@@ -43,6 +43,9 @@ struct op_mean
   template<typename T1>
   inline static void apply(Cube<typename T1::elem_type>& out, const OpCube<T1,op_mean>& in);
   
+  template<typename T1>
+  inline static void apply(Cube_noalias<typename T1::elem_type>& out, const OpCube<T1,op_mean>& in);
+  
   template<typename eT>
   inline static void apply_noalias(Cube<eT>& out, const Cube<eT>& X, const uword dim);
   

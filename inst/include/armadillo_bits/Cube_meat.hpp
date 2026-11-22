@@ -2772,7 +2772,7 @@ Cube<eT>::Cube(const OpCube<T1, op_type>& X)
 
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
-  op_type::apply(*this, X);
+  op_type::apply(static_cast< Cube_noalias<eT>& >(*this), X);
   }
 
 
@@ -3067,7 +3067,7 @@ Cube<eT>::Cube(const mtOpCube<eT, T1, op_type>& X)
   {
   arma_debug_sigprint_this(this);
   
-  op_type::apply(*this, X);
+  op_type::apply(static_cast< Cube_noalias<eT>& >(*this), X);
   }
 
 
@@ -3163,7 +3163,10 @@ Cube<eT>::Cube(const GlueCube<T1, T2, glue_type>& X)
   {
   arma_debug_sigprint_this(this);
   
-  (*this).operator=(X);
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  glue_type::apply(static_cast< Cube_noalias<eT>& >(*this), X);
   }
 
 
@@ -3420,7 +3423,7 @@ Cube<eT>::Cube(const mtGlueCube<eT, T1, T2, glue_type>& X)
   {
   arma_debug_sigprint_this(this);
   
-  glue_type::apply(*this, X);
+  glue_type::apply(static_cast< Cube_noalias<eT>& >(*this), X);
   }
 
 
